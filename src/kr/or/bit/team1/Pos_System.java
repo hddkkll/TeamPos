@@ -69,9 +69,9 @@ class OrderList {
 		
 	}
 	
-	//전체취소
-	public void deleteOrderAll() { // 신지혁 
-		
+	// 전체취소
+	public void deleteOrderAll() { // 신지혁
+		orderlist.removeAll(orderlist);
 	}
 	
 	// 에매한~ 수량변경
