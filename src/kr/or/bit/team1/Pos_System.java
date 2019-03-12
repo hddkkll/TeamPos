@@ -5,356 +5,370 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Stack;
 
 import kr.or.bit.team1.util.TeamPatterns;
 
+// 寃곗젣, �쉶�썝�씠 紐⑦샇�븿
 
-// 결제, 회원이 모호함
-
-
-//Order 기능
+//Order 湲곕뒫
 //cancel
 //discount
 //refund
-enum OrderStatus {ORDER, DISCOUNT, CANCEL, REFUND, PAYED};
+enum OrderStatus {
+	ORDER, DISCOUNT, CANCEL, REFUND, PAYED
+};
 
-//현금
-//카드
-enum PayType {CASH, CARD};
+//�쁽湲�
+//移대뱶
+enum PayType {
+	CASH, CARD
+};
 
 class Menu {
 	String name;
 	int price;
+	Menu(String name, int price){
+		this.name=name;
+		this.price=price;
+	}
 }
 
 class Table {
 	int tableNo;
 	OrderList orderList;
-	//HashMap<Integer, OrderList> tables= new HashMap<Integer, OrderList>();
+	// HashMap<Integer, OrderList> tables= new HashMap<Integer, OrderList>();
 	Date date;
 	boolean isPayed;
-	
-	//테이블이동
-	public void moveTable(int fromTable, int toTable) {// 강기훈 
-		
+
+	// �뀒�씠釉붿씠�룞
+	public void moveTable(int fromTable, int toTable) {// 媛뺢린�썕
+
 	}
-	//테이블주문합치기
-	public void mergeTable(int fromTable, int toTable) {//권예지 
-		
+
+	// �뀒�씠釉붿＜臾명빀移섍린
+	public void mergeTable(int fromTable, int toTable) {// 沅뚯삁吏�
+
 	}
 }
 
-// 중간에 담는 그릇이 필요
+// 以묎컙�뿉 �떞�뒗 洹몃쫯�씠 �븘�슂
 class OrderList {
 	List<Orders> orderlist = new ArrayList<Orders>();
 	Customers customer;
-	
-	//주문내역을 보여줌
-	public void listOrders() {// 권순조 
-		// 메뉴명-단가-수량-금액
-	}
-	
-	//주문
-	public void addOrder(Orders order) { // Menu menu 신지혁 
-	
+
+	// 二쇰Ц�궡�뿭�쓣 蹂댁뿬以�
+	public void listOrders() {// 沅뚯닚議�
+		// 硫붾돱紐�-�떒媛�-�닔�웾-湲덉븸
 	}
 
-	//선택취소
-	public void deleteOrder(Orders order) { // 강기훈 
-		
+	// 주문
+	public void addOrder(Orders order) { // Menu menu 신지혁
+		orderlist.add(order);
 	}
-	
-	//전체취소
-	public void deleteOrderAll() { // 신지혁 
-		
+
+	// �꽑�깮痍⑥냼
+	public void deleteOrder(Orders order) { // 媛뺢린�썕
+
 	}
-	
-	// 에매한~ 수량변경
-	public void changeQty(Menu menu, int qty) { // 일찬님 
-		
+
+	// 전체취소
+	public void deleteOrderAll() { // 신지혁
+		orderlist.removeAll(orderlist);
 	}
-	
-	//전부 현금결제 // 결제와 오더리스트의 연결이 애메함
-	public void payCashAll(int amount) {// 권순조 
-		//받을금액, 받은금액, 거스름돈
-		//시재액과 연결이 미흡
-		//테이블 초기화
-		//영수증출력
+
+	// �뿉留ㅽ븳~ �닔�웾蹂�寃�
+	public void changeQty(Menu menu, int qty) { // �씪李щ떂
+
 	}
-	
-	//전부 카드결제
-	public void payCardAll() { // 이힘찬 
-		// 받은금액
-		// 테이블초기화
-		//영수증출력
+
+	// �쟾遺� �쁽湲덇껐�젣 // 寃곗젣�� �삤�뜑由ъ뒪�듃�쓽 �뿰寃곗씠 �븷硫뷀븿
+	public void payCashAll(int amount) {// 沅뚯닚議�
+		// 諛쏆쓣湲덉븸, 諛쏆�湲덉븸, 嫄곗뒪由꾨룉
+		// �떆�옱�븸怨� �뿰寃곗씠 誘명씉
+		// �뀒�씠釉� 珥덇린�솕
+		// �쁺�닔利앹텧�젰
 	}
-	
-	public void payCash(int no, int amount) {//권순조 
-		
+
+	// �쟾遺� 移대뱶寃곗젣
+	public void payCardAll() { // �씠�옒李�
+		// 諛쏆�湲덉븸
+		// �뀒�씠釉붿큹湲고솕
+		// �쁺�닔利앹텧�젰
 	}
-	
-	public void payCard(int no, int amount) {//권예지 
-		
+
+	public void payCash(int no, int amount) {// 沅뚯닚議�
+
 	}
-	
-	public void payDivideAmount(int amount) {//일찬님 
-		
+
+	public void payCard(int no, int amount) {// 沅뚯삁吏�
+
 	}
-	
-	
-	
+
+	public void payDivideAmount(int amount) {// �씪李щ떂
+
+	}
+
 //	print receipt
-	public void printReceipt() {// 권예지 
-		
+	public void printReceipt() {// 沅뚯삁吏�
+
 	}
-	
-	//회원등록
-	public void addMembers(Customers customers) {// 신지혁 
+
+	// 회원등록
+	public void addMembers(String phoneNumber) {// 신지혁
+		customer.customer.put(phoneNumber, 0);
 	}
-	
-	//포인트 적립
-	public void addPoints(Customers customers, String phoneNumber) {// 강기훈 
-		
+
+	// �룷�씤�듃 �쟻由�
+	public void addPoints(Customers customers, String phoneNumber) {// 媛뺢린�썕
+
 	}
-	//포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 힘찬이 
-		
+
+	// �룷�씤�듃 �궗�슜
+	public void usePoints(Customers customers, String phoneNumber) {// �옒李ъ씠
+
 	}
-	
-	
-	
-	//포인트 사용
+
+	// �룷�씤�듃 �궗�슜
 
 }
 
 class Orders {
 	static Long orderId;
 	Date orderDate;
-	Menu	menuItem;
+	Menu menuItem;
 	Payments payment;
-	
-	
+
 }
 
 interface Payments {
-//	현금
-//	카드
-//	분할계산
+//	�쁽湲�
+//	移대뱶
+//	遺꾪븷怨꾩궛
 	public void pay();
-		
+
 }
 
 class CashPayments implements Payments {
 
 	@Override
-	public void pay() { //일찬님 
+	public void pay() { // �씪李щ떂
 		System.out.println(PayType.CASH);
 	}
-	//포인트 적립
-	public void addPoints(Customers customers, String phoneNumber) { //이힘찬 
-		
+
+	// �룷�씤�듃 �쟻由�
+	public void addPoints(Customers customers, String phoneNumber) { // �씠�옒李�
+
 	}
-	//포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 권순조 
-		
+
+	// �룷�씤�듃 �궗�슜
+	public void usePoints(Customers customers, String phoneNumber) {// 沅뚯닚議�
+
 	}
-	
-	
+
 }
 
 class CardPayments implements Payments {
 
 	@Override
-	public void pay() {// 신지혁 
+	public void pay() {// �떊吏��쁺
 		System.out.println(PayType.CARD);
 	}
-	
-	//포인트 적립
-	public void addPoints(Customers customers, String phoneNumber) {// 권예지 
-		
+
+	// �룷�씤�듃 �쟻由�
+	public void addPoints(Customers customers, String phoneNumber) {// 沅뚯삁吏�
+
 	}
-	//포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 강기훈 
-		
+
+	// �룷�씤�듃 �궗�슜
+	public void usePoints(Customers customers, String phoneNumber) {// 媛뺢린�썕
+
 	}
 
 }
 
-
-
-
 class Customers {
-	HashMap<String,Integer> customer = new HashMap<String,Integer>();// 키값: 전화번호,
-	// 밸류값: 포인트 
-	
-	// 고객 추가
-	public void addCustomers(String phoneNumber) {// 권순조 
-		
+	HashMap<String, Integer> customer = new HashMap<String, Integer>();// �궎媛�: �쟾�솕踰덊샇,
+	// 諛몃쪟媛�: �룷�씤�듃
+
+	// 怨좉컼 異붽�
+	public void addCustomers(String phoneNumber) {// 沅뚯닚議�
+
 	}
-	// 고객 수정
-	
+	// 怨좉컼 �닔�젙
+
 	/*
 	 * @method name : modifyCustomers
 	 * 
 	 * @date : 2019.03.12
 	 * 
-	 * @author : 정일찬
+	 * @author : �젙�씪李�
 	 * 
-	 * @description : 고객정보를 수정한다.
+	 * @description : 怨좉컼�젙蹂대�� �닔�젙�븳�떎.
 	 * 
 	 * @parameters : String oldPhoneNumber, String phoneNumber
 	 * 
 	 * @return : void
 	 */
 	public void modifyCustomers(String oldPhoneNumber, String phoneNumber) {
-		if(TeamPatterns.iscellPhoneMetPattern(phoneNumber)) {		// 핸드폰 정규표현식
-			if(customer.containsKey(oldPhoneNumber)) {
-				customer.put(phoneNumber, customer.get(oldPhoneNumber)); // 포인트를 새로운 핸드폰으로 옮김
-				customer.remove(oldPhoneNumber);					     // 기존 폰넘버 삭제
+		if (TeamPatterns.iscellPhoneMetPattern(phoneNumber)) { // �빖�뱶�룿 �젙洹쒗몴�쁽�떇
+			if (customer.containsKey(oldPhoneNumber)) {
+				customer.put(phoneNumber, customer.get(oldPhoneNumber)); // �룷�씤�듃瑜� �깉濡쒖슫 �빖�뱶�룿�쑝濡� �삷源�
+				customer.remove(oldPhoneNumber); // 湲곗〈 �룿�꽆踰� �궘�젣
 			}
 		} else {
-			System.out.println("핸드폰번호를 확인하고 입력하세요");
+			System.out.println("�빖�뱶�룿踰덊샇瑜� �솗�씤�븯怨� �엯�젰�븯�꽭�슂");
 		}
 	}
-	
+
 	// 고객 조회
 	public void findCustomers(String phoneNumber) { // 신지혁 
-		
+		if(customer.get(phoneNumber)!=null)
+			System.out.println(phoneNumber + "의 포인트는 : " + customer.get(phoneNumber) + "원 입니다");
+		else
+			System.out.println("고객이아닙니다");
 	}
-	// 고객 탈퇴
-	public void deleCustomers(String phoneNumber) { // 이힘찬 
-		
+
+	// 怨좉컼 �깉�눜
+	public void deleCustomers(String phoneNumber) { // �씠�옒李�
+
 	}
-	
-	// 고객현황
-	public void listCustomers() {// 강기훈 
-		
+
+	// 怨좉컼�쁽�솴
+	public void listCustomers() {// 媛뺢린�썕
+
 	}
 }
 
-
 class Pos {
-	
+
 	Scanner sc = new Scanner(System.in);
-	
-	//log 저장디렉토리
+
+	// log ���옣�뵒�젆�넗由�
 	String logPath = "C:\\temp\\log";
-	
-	// 시재금액
+
+	// �떆�옱湲덉븸
 	Integer amount;
 	List<Orders> orders = new ArrayList<Orders>();
 	OrderList orderList;
-	
-	// 판매관리, 매출관리, 회원관리, 메뉴관리, 테이블관리, 시스템 종료
-	
-	// 주문(테이블)
-	public void orderTable(Integer tableNo, Menu menu) { //일찬님 
-		// 테이블에 order add
-	}
-	
-	// 결제 (테이블)
-	public void payTableCash(Integer tableNo, Integer amount) {// 이힘찬 
-		// 테이블에서 order를 하나씩 가져와서 결제함
+
+	// �뙋留ㅺ�由�, 留ㅼ텧愿�由�, �쉶�썝愿�由�, 硫붾돱愿�由�, �뀒�씠釉붽�由�, �떆�뒪�뀥 醫낅즺
+
+	// 二쇰Ц(�뀒�씠釉�)
+	public void orderTable(Integer tableNo, Menu menu) { // �씪李щ떂
+		// �뀒�씠釉붿뿉 order add
 	}
 
-	public void payTableCard(Integer tableNo) {// 권순조 
-		// 테이블에서 order를 하나씩 가져와서 결제함
+	// 寃곗젣 (�뀒�씠釉�)
+	public void payTableCash(Integer tableNo, Integer amount) {// �씠�옒李�
+		// �뀒�씠釉붿뿉�꽌 order瑜� �븯�굹�뵫 媛��졇���꽌 寃곗젣�븿
 	}
 
-	// 결제 (테이블)
-	public void payTableCardAll(Integer tableNo) { // 일찬님 
-		// 테이블의 order를 한가지 결제형식으로 
+	public void payTableCard(Integer tableNo) {// 沅뚯닚議�
+		// �뀒�씠釉붿뿉�꽌 order瑜� �븯�굹�뵫 媛��졇���꽌 寃곗젣�븿
 	}
-	
-	public void payTableCashAll(Integer tableNo, Integer amount) {// 이힘찬 
-		// 테이블의 order를 한가지 결제형식으로 
+
+	// 寃곗젣 (�뀒�씠釉�)
+	public void payTableCardAll(Integer tableNo) { // �씪李щ떂
+		// �뀒�씠釉붿쓽 order瑜� �븳媛�吏� 寃곗젣�삎�떇�쑝濡�
 	}
-	
-	
-	
+
+	public void payTableCashAll(Integer tableNo, Integer amount) {// �씠�옒李�
+		// �뀒�씠釉붿쓽 order瑜� �븳媛�吏� 寃곗젣�삎�떇�쑝濡�
+	}
+
 	List<Menu> menuItem = new ArrayList<Menu>();
-	// 메뉴관리
-	// 메뉴 추가
-	public void addMenu(String name, Integer price) {// 이힘찬 
-		
+
+	// 硫붾돱愿�由�
+	// 硫붾돱 異붽�
+	public void addMenu(String name, Integer price) {// �씠�옒李�
+
 	}
+
 	// 메뉴 수정
-	public void modifyMenu(String oldname, String name, Integer price) {// 신지혁 
-		
+	public void modifyMenu(String oldname, String name, Integer price) {// 신지혁
+		for(int i = 0; i<menuItem.size();i++) {
+			if(menuItem.get(i).name.equals(oldname)) {
+				System.out.println("dddddd");
+				menuItem.remove(i);
+				menuItem.add(new Menu(name, price));
+				break;
+			}
+		}	
 	}
-	// 메뉴 삭제
-	public void deleteMenu(String name) {// 권예지 
-		
+
+	// 硫붾돱 �궘�젣
+	public void deleteMenu(String name) {// 沅뚯삁吏�
+
 	}
-	
-	// 테이블관리
+
+	// �뀒�씠釉붽�由�
 	List<Table> tables = new ArrayList<Table>();
-	// 테이블 추가
-	public void addTables() {// 권순조 
-		
+
+	// �뀒�씠釉� 異붽�
+	public void addTables() {// 沅뚯닚議�
+
 	}
-	// 테이블 삭제
-	public void deleteTables() {//강기훈 
-		
+
+	// �뀒�씠釉� �궘�젣
+	public void deleteTables() {// 媛뺢린�썕
+
 	}
-	
-	// 고객관리
-	Customers customers = new Customers(); 
-	
-	//고객가입
-	
-	//고객조회
-	//고객탈퇴
-	//고객현황
-	
+
+	// 怨좉컼愿�由�
+	Customers customers = new Customers();
+
+	// 怨좉컼媛��엯
+
+	// 怨좉컼議고쉶
+	// 怨좉컼�깉�눜
+	// 怨좉컼�쁽�솴
+
 	// overloading
 //	public void deleCustomers(String name) {
 //		
 //	}
-	
-	
-		
-	// 현금관리
-	public void cashAdjustment() { // 이힘찬 
-		// 현금시재액을 보여준다
-		
-	}
-	// 매출
-	// 메뉴별 매출 (일별)
-	public void printSalesMenu(String date) { //강기훈 
-		// 메뉴-수량-금액
+
+	// �쁽湲덇�由�
+	public void cashAdjustment() { // �씠�옒李�
+		// �쁽湲덉떆�옱�븸�쓣 蹂댁뿬以��떎
+
 	}
 
-	// 결제별 매출 (일별)
-	public void printSalesPayment(String date) { // 신지혁 
-		// 메뉴-카드(현금)-수량-금액
+	// 留ㅼ텧
+	// 硫붾돱蹂� 留ㅼ텧 (�씪蹂�)
+	public void printSalesMenu(String date) { // 媛뺢린�썕
+		// 硫붾돱-�닔�웾-湲덉븸
 	}
 
-	// 엑셀 export (메뉴별,결제별 매출)
-	public void exportToExcel(String salesType) {// 일찬님 
-		
+	// 寃곗젣蹂� 留ㅼ텧 (�씪蹂�)
+	public void printSalesPayment(String date) { // �떊吏��쁺
+		// 硫붾돱-移대뱶(�쁽湲�)-�닔�웾-湲덉븸
 	}
 
-	// 데이터 저장 (시스템 종료시 데이터 저장)
-	public void save(String date) { //권예지 
-		
+	// �뿊�� export (硫붾돱蹂�,寃곗젣蹂� 留ㅼ텧)
+	public void exportToExcel(String salesType) {// �씪李щ떂
+
 	}
-	// 데이터 로드 (시스템 시작시 데이터 로드)
-	public void load(String date) {// 권예지 
-		
+
+	// �뜲�씠�꽣 ���옣 (�떆�뒪�뀥 醫낅즺�떆 �뜲�씠�꽣 ���옣)
+	public void save(String date) { // 沅뚯삁吏�
+
 	}
-	// 일별 log // method마다 util에서 정의된 것을 사용
+
+	// �뜲�씠�꽣 濡쒕뱶 (�떆�뒪�뀥 �떆�옉�떆 �뜲�씠�꽣 濡쒕뱶)
+	public void load(String date) {// 沅뚯삁吏�
+
+	}
+	// �씪蹂� log // method留덈떎 util�뿉�꽌 �젙�쓽�맂 寃껋쓣 �궗�슜
 }
 
 public class Pos_System {
-	
+
 	public static void main(String[] args) {
 		Customers cu = new Customers();
 		cu.customer.put("010-3350-8078", 10);
 		cu.customer.put("010-3240-3377", 20);
-		
-		
+
 		cu.modifyCustomers("010-3350-8078", "010-1111-2222");
 		System.out.println(cu.customer.toString());
 
