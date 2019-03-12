@@ -191,31 +191,30 @@ class Customers {
 	public void addCustomers(String phoneNumber) {// 권순조 
 		
 	}
-	// 고객 수정
 	
 	/*
-	 * @method name : modifyCustomers
-	 * 
-	 * @date : 2019.03.12
-	 * 
-	 * @author : 정일찬
-	 * 
-	 * @description : 고객정보를 수정한다.
-	 * 
-	 * @parameters : String oldPhoneNumber, String phoneNumber
-	 * 
-	 * @return : void
-	 */
-	public void modifyCustomers(String oldPhoneNumber, String phoneNumber) {
-		if(TeamPatterns.iscellPhoneMetPattern(phoneNumber)) {		// 핸드폰 정규표현식
-			if(customer.containsKey(oldPhoneNumber)) {
-				customer.put(phoneNumber, customer.get(oldPhoneNumber)); // 포인트를 새로운 핸드폰으로 옮김
-				customer.remove(oldPhoneNumber);					     // 기존 폰넘버 삭제
-			}
-		} else {
-			System.out.println("핸드폰번호를 확인하고 입력하세요");
-		}
-	}
+     * @method name : modifyCustomers
+     *
+     * @date : 2019.03.12
+     *
+     * @author : 정일찬
+     *
+     * @description : 고객정보를 수정한다.
+     *
+     * @parameters : String oldPhoneNumber, String phoneNumber
+     *
+     * @return : void
+     */
+    public void modifyCustomers(String oldPhoneNumber, String phoneNumber) {
+        if(TeamPatterns.iscellPhoneMetPattern(phoneNumber)) {        // 핸드폰 정규표현식
+            if(customer.containsKey(oldPhoneNumber)) {
+                customer.put(phoneNumber, customer.get(oldPhoneNumber)); // 포인트를 새로운 핸드폰으로 옮김
+                customer.remove(oldPhoneNumber);                         // 기존 폰넘버 삭제
+            }
+        } else {
+            System.out.println("핸드폰번호를 확인하고 입력하세요");
+        }
+    }
 	
 	// 고객 조회
 	public void findCustomers(String phoneNumber) { // 신지혁 
@@ -347,15 +346,7 @@ class Pos {
 }
 
 public class Pos_System {
-	
 	public static void main(String[] args) {
-		Customers cu = new Customers();
-		cu.customer.put("010-3350-8078", 10);
-		cu.customer.put("010-3240-3377", 20);
-		
-		
-		cu.modifyCustomers("010-3350-8078", "010-1111-2222");
-		System.out.println(cu.customer.toString());
 
 	}
 }
