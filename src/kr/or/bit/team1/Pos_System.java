@@ -25,6 +25,17 @@ enum PayType {CASH, CARD};
 class Menu {
 	String name;
 	int price;
+	
+	public Menu(String name, int price) {
+		super();
+		this.name = name;
+		this.price = price;
+	}
+	
+	@Override
+	public String toString() {
+		return "Menu [name=" + name + ", price=" + price + "]";
+	}
 }
 
 class Table {
@@ -128,11 +139,24 @@ class OrderList {
 }
 
 class Orders {
-	static Long orderId;
+
+	static Long orderId = 0L;
 	Date orderDate;
 	Menu	menuItem;
 	Payments payment;
 	
+	public Orders(Menu menuItem, Payments payment) {
+		orderId ++;
+		this.orderDate = new Date();
+		this.menuItem = menuItem;
+		this.payment = payment;
+	}
+
+	@Override
+	public String toString() {
+		return "Orders [orderDate=" + orderDate + ", menuItem=" + menuItem + ", payment=" + payment + "]";
+	}
+
 	
 }
 
@@ -347,6 +371,14 @@ class Pos {
 
 public class Pos_System {
 	public static void main(String[] args) {
-
+		List<Menu> menuItem = new ArrayList<Menu>();
+		menuItem.add(new Menu("짜장", 5000));
+		menuItem.add(new Menu("짬뽕", 6000));
+		menuItem.add(new Menu("우동", 5500));
+		
+		System.out.println(menuItem.toString());
+		System.out.println(menuItem.get(1));
+		
+		
 	}
 }
