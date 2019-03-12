@@ -29,17 +29,17 @@ class Orders {
 } 
 class Table {
 	
-	int tableNo;
-	OrderList orderList;
-	//HashMap<Integer, OrderList> tables= new HashMap<Integer, OrderList>();
+	//int tableNo;
+	//OrderList orderList;
+	HashMap<Integer, OrderList> tables= new HashMap<Integer, OrderList>();
 	Date date;
 	boolean isPayed;
 	
-	public Table(int tableNo){
-		this.tableNo = tableNo;
-		this.orderList = new OrderList();
+	
+	public Table(){
 		this.date = new Date();
 		this.isPayed = false;
+	
 	}
 	
 	
@@ -50,8 +50,12 @@ public void showTable() {
 	
 	//테이블이동
 	public void moveTable(int fromTable, int toTable) {// 강기훈 
-	  
-		
+	 OrderList temp = new OrderList();
+	 temp = tables.get(fromTable);
+	 tables.remove(toTable);
+	 tables.put(toTable, temp);
+	 tables.remove(fromTable);
+	
 	}
 	//테이블주문합치기
 	public void mergeTable(int fromTable, int toTable) {//권예지 
@@ -79,7 +83,7 @@ class OrderList {
 	}
 
 	//포인트 적립
-	public void addPoints(Customers customers, String phoneNumber) {// 강기훈 
+	public void addPoints(Customers customers, String phoneNumber) {// 강기
 		
 	}
 }
