@@ -1,0 +1,8 @@
+﻿.metadata
+.metadata/
+*.class
+/testJava/
+*.classpath
+*.project
+org.eclipse.wst.common.project.facet.core.xml
+*.prefs
