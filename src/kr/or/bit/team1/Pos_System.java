@@ -25,6 +25,11 @@ enum PayType {CASH, CARD};
 class Menu {
 	String name;
 	int price;
+	public Menu(String name, int price) {
+		super();
+		this.name = name;
+		this.price = price;
+	}
 }
 
 class Table {
@@ -54,9 +59,9 @@ class OrderList {
 		// 메뉴명-단가-수량-금액
 	}
 	
-	//주문
-	public void addOrder(Orders order) { // Menu menu 신지혁 
-	
+	// 주문
+	public void addOrder(Orders order) { // Menu menu 신지혁
+		orderlist.add(order);
 	}
 
 	//선택취소
@@ -108,8 +113,9 @@ class OrderList {
 		
 	}
 	
-	//회원등록
+	//회원등록  (이동)
 	public void addMembers(Customers customers) {// 신지혁 
+		
 	}
 	
 	//포인트 적립
@@ -192,6 +198,13 @@ class Customers {
 		
 	}
 	
+	//회원등록 OrderList클래스에서 이동받음..
+	public void addMembers(String phoneNumber) {// 신지혁
+		customer.put(phoneNumber, 0);
+		System.out.println(phoneNumber+"추가 완료");
+	}
+
+	
 	/*
      * @method name : modifyCustomers
      *
@@ -218,7 +231,10 @@ class Customers {
 	
 	// 고객 조회
 	public void findCustomers(String phoneNumber) { // 신지혁 
-		
+		if(customer.get(phoneNumber)!=null)
+			System.out.println(phoneNumber + "의 포인트는 : " + customer.get(phoneNumber) + "원 입니다");
+		else
+			System.out.println("고객이아닙니다");
 	}
 	// 고객 탈퇴
 	public void deleCustomers(String phoneNumber) { // 이힘찬 
@@ -278,8 +294,18 @@ class Pos {
 		
 	}
 	// 메뉴 수정
-	public void modifyMenu(String oldname, String name, Integer price) {// 신지혁 
-		
+	public void modifyMenu(String oldname, String name, Integer price) {// 신지혁
+		for(int i = 0; i<menuItem.size();i++) {
+			if(menuItem.get(i).name.equals(oldname)) {
+				System.out.println("dddddd");
+				menuItem.remove(i);
+				menuItem.add(new Menu(name, price));
+				break;
+			}
+		}
+		Customers c = new Customers();
+		c.addMembers("77777");
+		System.out.println(c);
 	}
 	// 메뉴 삭제
 	public void deleteMenu(String name) {// 권예지 
