@@ -583,7 +583,7 @@ class Pos {
      *
      * @author : 신지혁
      *
-     * @description : 회원등록호출
+     * @description : 카드/현금 일별 매출
      *
      * @parameters : String date
      *
