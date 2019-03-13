@@ -1,5 +1,8 @@
 package kr.or.bit.team1;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -149,6 +152,7 @@ class OrderList {
 				orderlist.remove(i);
 			}
 		}
+		order.orderId--;
 	}
 
 	// 전체취소
@@ -264,14 +268,14 @@ class OrderList {
 	}
 
 	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber, int amount) {// 강기훈
+	public void addPoints(Customers customers, String phoneNumber) {// 강기훈7
 		int currPoint = customers.customer.get(phoneNumber);
-		customers.customer.put(phoneNumber, (int) (currPoint + amount * 0.05));
+		customers.customer.put(phoneNumber, (int) (currPoint + orderSum() * 0.05));
 	}
 
 	// 포인트 사용
 	public void usePoints(Customers customers, String phoneNumber) {// 힘찬이
-
+          
 	}
 
 	/*
@@ -352,7 +356,7 @@ class CashPayments implements Payments {
 
 	// 포인트 사용
 	public void usePoints(Customers customers, String phoneNumber, int amount) {// 권순조
-
+         
 	}
 
 }
@@ -370,8 +374,13 @@ class CardPayments implements Payments {
 	}
 
 	// 포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 강기훈
-
+	public int usePoints(Customers customers, String phoneNumber) {// 강기훈
+           
+		int currPoint = customers.customer.get(phoneNumber);
+		customers.customer.put(phoneNumber, 0);
+		
+		
+		return currPoint;
 	}
 
 }
@@ -471,6 +480,137 @@ class Pos {
 	List<Menu> menuItem = new ArrayList<Menu>();
 	Customers customers = new Customers();
 
+   void viewTable(int seatCount) {
+	 
+		for(int i = 1; i<=seatCount;i++) {
+			System.out.printf("[%d]",i);
+			if(i%3==0) {
+				System.out.println();
+			}
+			 
+		}
+	   
+   }
+   void showMenu() {
+	 
+	   
+	   
+	   
+	   
+	  
+	   
+	   
+   }
+   
+   void menuManage() {
+	  
+	   
+	   
+	while(true) {  
+	    System.out.println(menuItem.toString());
+		
+		 int menuNum=0;
+		   String menuName = null;
+		   String oldName = null;
+		   
+		   int menuPrice = 0;
+		   System.out.println("메뉴를 추가하거나 수정할 수 있습니다.");
+		   System.out.println("1.메뉴추가");
+		   System.out.println("2.메뉴수정");
+		   System.out.println("3.메뉴삭제");
+		   System.out.println("4.종료");
+		   System.out.println("원하는 번호를 입력하세요");
+		   
+		menuNum = Integer.parseInt(sc.nextLine());
+	  switch(menuNum) {
+	  
+	  case 1:
+		   System.out.println("메뉴이름: ");
+		   menuName = sc.nextLine();
+		   
+		   System.out.println("가격:");
+		   menuPrice = Integer.parseInt(sc.nextLine());
+		  
+		   addMenu(menuName,menuPrice);
+		   break;
+	  case 2:
+		  System.out.println("수정할 메뉴를 입력하세요 ");
+		  oldName = sc.nextLine();
+		  
+		  System.out.println("새로운 메뉴를 입력하세요 ");
+		  menuName = sc.nextLine();
+		  
+
+		  System.out.println("새로운 가격을 입력하세요 ");
+		   menuPrice = Integer.parseInt(sc.nextLine());
+		  
+		  
+		  modifyMenu(oldName, menuName,menuPrice);
+		  break;
+		  
+	  case 3:
+          System.out.println("삭제할 메뉴를 입력하세요: ");
+          
+          menuName = sc.nextLine();
+          
+          deleteMenu(menuName);
+          break;
+          
+          
+	  case 4:
+		    posStart();
+		    
+	  
+      default:
+		 System.out.println("다시 입력하세요");
+		  
+		  
+	  }
+		  
+	  
+	  
+	  
+	  
+	  
+	  
+	  }
+	   
+	   
+	   
+	   
+   }
+	
+	
+   public void posStart() {
+		 int menuNum = 0;
+		System.out.println("POS SYSTEM");
+		System.out.println("1.판매관리");
+		System.out.println("2.매출관리");
+		System.out.println("3.회원관리");
+	    System.out.println("4.메뉴관리");
+	    System.out.println("5.테이블관리");
+	    System.out.println("6.시스템종료");
+	    
+	    System.out.print("번호를 입력하세요:");
+	    menuNum = Integer.parseInt(sc.nextLine());
+	    
+	    switch(menuNum) {
+	    
+	    case 1:
+	    	 viewTable(9);
+	    	  break;
+	    case 4:
+	    	  menuManage();
+	    
+	          break;
+	    
+	    
+	    }
+	    	
+	    	
+	    
+		
+	}
 	// 판매관리, 매출관리, 회원관리, 메뉴관리, 테이블관리, 시스템 종료
 
 //	// 주문(테이블)
@@ -546,11 +686,19 @@ class Pos {
 	// 메뉴별 매출 (일별)
 	public void printSalesMenu(String date) { // 강기훈
 		// 메뉴-수량-금액
+      
+		
+		
+		
+		
 	}
 
 	// 결제별 매출 (일별)
 	public void printSalesPayment(String date) { // 신지혁
 		// 메뉴-카드(현금)-수량-금액
+		
+		
+		
 	}
 
 	// 엑셀 export (메뉴별,결제별 매출)
@@ -558,10 +706,21 @@ class Pos {
 
 	}
 
-	// 데이터 저장 (시스템 종료시 데이터 저장)
+	
 	public void save(String date) { // 권예지
-
-	}
+        TeamFormat tf = new TeamFormat();
+        try {
+            FileOutputStream fos = new FileOutputStream(logPath, true);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(tf);
+            oos.close();
+            bos.close();
+            fos.close();
+            System.out.println(date + " 저장 완료");
+        } catch (Exception e) {
+        }
+    }
 
 	// 데이터 로드 (시스템 시작시 데이터 로드)
 	public void load(String date) {// 권예지
@@ -629,6 +788,8 @@ public class Pos_System {
 		afterLunch.isPayed=true;
 		System.out.println(yourbill);
 		System.out.println("손님의 포인트 : " + sonnom.customer.toString());
+		
+		pos.posStart();
 		
 	}
 }
