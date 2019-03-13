@@ -45,7 +45,8 @@ class Menu {
 
 	// 메뉴 삭제
 	public void deleteMenu(String name) {// 권예지
-
+		menu.remove(name);
+		
 	}
 
 }
