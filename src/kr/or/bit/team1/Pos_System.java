@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+
 
 interface Payments {
 //	현금
@@ -29,14 +33,13 @@ class Orders {
 } 
 class Table {
 	
-	//int tableNo;
-	//OrderList orderList;
 	HashMap<Integer, OrderList> tables= new HashMap<Integer, OrderList>();
 	Date date;
 	boolean isPayed;
 	
 	
-	public Table(){
+	public Table(int tableNo,OrderList orderList){
+		tables.put(tableNo, orderList);
 		this.date = new Date();
 		this.isPayed = false;
 	
@@ -52,10 +55,8 @@ public void showTable() {
 	public void moveTable(int fromTable, int toTable) {// 강기훈 
 	 OrderList temp = new OrderList();
 	 temp = tables.get(fromTable);
-	 tables.remove(toTable);
 	 tables.put(toTable, temp);
 	 tables.remove(fromTable);
-	
 	}
 	//테이블주문합치기
 	public void mergeTable(int fromTable, int toTable) {//권예지 
@@ -67,7 +68,11 @@ class Customers {
 
 	//고객 현황 
 public void listCustomers() {// 강기훈 
-		
+	  for( Map.Entry<String, Integer> obj: customer.entrySet()) {
+		  System.out.println("전화번호:"+obj.getKey()+"/ Point:" +obj.getValue());
+		  
+	  }
+	     
 	}
 	
 }
@@ -79,12 +84,18 @@ class OrderList {
 
 	//선택취소
 	public void deleteOrder(Orders order) { // 강기훈 
+       for(int i=0; i<orderlist.size();i++) {
+    	   if(orderlist.get(i).orderId.equals(order.orderId)) {
+    		   orderlist.remove(i);
+    	   }
+       }
 		
 	}
 
 	//포인트 적립
-	public void addPoints(Customers customers, String phoneNumber) {// 강기
-		
+	public void addPoints(Customers customers, String phoneNumber, int amount) {// 강기훈
+		int currPoint = customers.customer.get(phoneNumber);
+		customers.customer.put(phoneNumber,(int)(currPoint+amount*0.05));
 	}
 }
 class Pos {
@@ -101,10 +112,14 @@ class Pos {
 	
 	// 판매관리, 매출관리, 회원관리, 메뉴관리, 테이블관리, 시스템 종료
 	
-
+	List<Table> tables = new ArrayList<Table>();
 	// 테이블 삭제
 		public void deleteTables() {//강기훈 
-			
+		for(int i =0; i<tables.size();i++) {
+			if(tables.get(i).isPayed) {
+				tables.remove(i);
+			}
+		}	
 		}
 		// 고객관리
 		Customers customers = new Customers(); 
