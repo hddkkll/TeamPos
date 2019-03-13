@@ -320,7 +320,27 @@ class OrderList {
 		}
 		return usePointsResult;
 	}
-
+	
+	public void isUsePoint() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("포인트를 사용하시겠습니까?");
+        String choice = sc.nextLine();//포인트를 사용할지 확인하는 로직 시작
+        if (choice.equals("Y")) {
+            System.out.println("포인트사용 로직 시작합니다.");
+            String phNum = sc.nextLine();
+            usePoints(phNum);
+        } else if (choice.equals("N")) {
+            System.out.println("가입하시겠습니까? Y/N");
+            String choice2 = sc.nextLine();
+            if(choice.equals("Y")) {
+                choice2 = sc.nextLine();
+                Customers customers = new Customers();
+                customers.addCustomers(choice2);
+            } else if(choice.equals("N")) {
+                System.out.println("결제 로직 시작합니다.");
+            }
+        }
+    }
 	/*
 	 * @method name : orderSum
 	 *
