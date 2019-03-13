@@ -281,7 +281,7 @@ class OrderList {
 		System.out.println("=====================================");
 		System.out.println("메뉴이름\t\t단가\t수량\t금액\t");
 		System.out.println("=====================================");
-		System.out.println(orderlist);
+		listOrders();
 		System.out.println("=====================================");
 		System.out.println("총합계: " + orderSum());
 		System.out.println("받은돈: " + pay);
@@ -289,19 +289,36 @@ class OrderList {
 
 	}
 
-	// 회원등록
-	public void addMembers(Customers customers) {// 신지혁
-	}
-
 	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber, int amount) {// 강기훈
-		int currPoint = customers.customer.get(phoneNumber);
-		customers.customer.put(phoneNumber, (int) (currPoint + amount * 0.05));
+	public void addPoints(Customers customers, String phoneNumber, int amount) { // 권예지^^
+		OrderList orderlist = new OrderList();
+		int paypoint = customers.customer.get(phoneNumber);
+		customers.customer.put(phoneNumber, (int) (paypoint + (orderlist.orderSum() * 0.05)));
 	}
 
 	// 포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 힘찬이
-
+	public int usePoints(String phoneNumber) {// 권예지^^
+		int usePointsResult = 0;
+		int result = 0;
+		Customers cus = new Customers();
+		Scanner sc = new Scanner(System.in);
+		if (!cus.customer.containsKey(phoneNumber)) {
+			System.out.println("등록된 회원 번호가 없습니다.");
+			System.out.println("가입하시겠습니까?");
+			System.out.println("가입 : 1, 취소 : 2");
+			String st = sc.nextLine();
+			if (st == "1") {
+				System.out.println("가입을 진행합니다. 번호를 입력해주세요");
+				st = sc.nextLine();
+				cus.addCustomers(st);
+			} else if (st == "2") {
+				System.out.println("포인트 사용을 취소합니다.");
+			}
+		} else {
+			usePointsResult = cus.customer.get(phoneNumber);
+			cus.customer.put(phoneNumber, 0);
+		}
+		return usePointsResult;
 	}
 
 	/*
@@ -376,16 +393,6 @@ class CashPayments implements Payments {
 		System.out.println(PayType.CASH);
 	}
 
-	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber, int amount) { // 이힘찬
-
-	}
-
-	// 포인트 사용
-	public void usePoints(Customers customers, String phoneNumber, int amount) {// 권순조
-
-	}
-
 }
 
 class CardPayments implements Payments {
@@ -393,19 +400,6 @@ class CardPayments implements Payments {
 	@Override
 	public void pay() {// 신지혁
 		System.out.println(PayType.CARD);
-	}
-
-	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber) {// 권예지
-		
-		OrderList orderlist = new OrderList();
-		int paypoint = customers.customer.get(phoneNumber);
-		customers.customer.put(phoneNumber, (int) (paypoint + (orderlist.orderSum() * 0.05)));
-	}
-
-	// 포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 강기훈
-
 	}
 
 }
@@ -591,12 +585,12 @@ class Pos {
 
 	// 데이터저장(시스템종료시데이터저장)
 	public void save(String date) { // 권예지
-		TeamFormat tf = new TeamFormat();
+		Pos pos = new Pos();
 		try {
 			FileOutputStream fos = new FileOutputStream(logPath, true);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			ObjectOutputStream oos = new ObjectOutputStream(bos);
-			oos.writeObject(tf);
+			oos.writeObject(pos);
 			oos.close();
 			bos.close();
 			fos.close();
@@ -607,6 +601,7 @@ class Pos {
 
 	// 데이터로드(시스템시작시데이터로드)
 	public void load(String date) {// 권예지
+		Pos pos = new Pos();
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
 		ObjectInputStream ois = null;
@@ -614,10 +609,9 @@ class Pos {
 			fis = new FileInputStream(logPath);
 			bis = new BufferedInputStream(fis);
 			ois = new ObjectInputStream(bis);
-			Object obj = null;
-			// while ((obj = ois.readObject()) != null) {
-			// System.out.println(obj.toString());
-			// } 파일을로드해오는걸어떻게해야할까요...ㅠ
+
+			pos = (Pos) ois.readObject();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
