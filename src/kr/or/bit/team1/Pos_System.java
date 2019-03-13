@@ -171,8 +171,10 @@ class CashPayments implements Payments {
 class CardPayments implements Payments {
 
 	@Override
-	public void pay() {// 신지혁 
+	public void pay() {// 신지혁
 		System.out.println(PayType.CARD);
+		System.out.print("총 금액 : ");
+		System.out.println("받은 금액 : ");
 	}
 	
 	//포인트 적립
