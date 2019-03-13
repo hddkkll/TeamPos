@@ -59,6 +59,20 @@ class OrderList {
 		// 메뉴명-단가-수량-금액
 	}
 	
+	/*
+     * @method name : addOrder
+     *
+     * @date : 2019.03.12
+     *
+     * @author : 신지혁
+     *
+     * @description : 메뉴 주문
+     *
+     * @parameters : Orders order
+     *
+     * @return : void
+     */
+	
 	// 주문
 	public void addOrder(Orders order) { // Menu menu 신지혁
 		orderlist.add(order);
@@ -68,6 +82,20 @@ class OrderList {
 	public void deleteOrder(Orders order) { // 강기훈 
 		
 	}
+	
+	/*
+     * @method name : deleteOrderAll
+     *
+     * @date : 2019.03.12
+     *
+     * @author : 신지혁
+     *
+     * @description : 주문 전체취소
+     *
+     * @parameters :
+     *
+     * @return : void
+     */
 	
 	// 전체취소
 	public void deleteOrderAll() { // 신지혁
@@ -200,6 +228,20 @@ class Customers {
 		
 	}
 	
+	/*
+     * @method name : addMembers
+     *
+     * @date : 2019.03.12
+     *
+     * @author : 신지혁
+     *
+     * @description : 회원등록
+     *
+     * @parameters : String phoneNumber
+     *
+     * @return : void
+     */
+	
 	//회원등록 OrderList클래스에서 이동받음..
 	public void addMembers(String phoneNumber) {// 신지혁
 		customer.put(phoneNumber, 0);
@@ -231,6 +273,20 @@ class Customers {
         }
     }
 	
+    
+	/*
+     * @method name : findCustomers
+     *
+     * @date : 2019.03.12
+     *
+     * @author : 신지혁
+     *
+     * @description : 고객조회
+     *
+     * @parameters : String phoneNumber
+     *
+     * @return : void
+     */
 	// 고객 조회
 	public void findCustomers(String phoneNumber) { // 신지혁 
 		if(customer.get(phoneNumber)!=null)
@@ -295,6 +351,20 @@ class Pos {
 	public void addMenu(String name, Integer price) {// 이힘찬 
 		
 	}
+	
+	/*
+     * @method name : modifyMenu
+     *
+     * @date : 2019.03.12
+     *
+     * @author : 신지혁
+     *
+     * @description : 메뉴수정
+     *
+     * @parameters : String oldname, String name, Integer price
+     *
+     * @return : void
+     */
 	// 메뉴 수정
 	public void modifyMenu(String oldname, String name, Integer price) {// 신지혁
 		for(int i = 0; i<menuItem.size();i++) {
