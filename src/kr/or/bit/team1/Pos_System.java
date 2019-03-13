@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-import kr.or.bit.team1.util.TeamPatterns;
+import kr.or.bit.team1.util.TeamFormat;
 
 
 // 결제, 회원이 모호함
@@ -57,9 +57,15 @@ class Table {
 
 // 중간에 담는 그릇이 필요
 class OrderList {
-	List<Orders> orderlist = new ArrayList<Orders>();
+
+	ArrayList<Orders> orderlist;
 	Customers customer;
-	
+
+	public OrderList() {
+		this.orderlist = new ArrayList<Orders>();
+		this.customer = new Customers();
+	}
+
 	//주문내역을 보여줌
 	public void listOrders() {// 권순조 
 		// 메뉴명-단가-수량-금액
@@ -132,10 +138,10 @@ class OrderList {
 		
 	}
 	
-	
-	
-	//포인트 사용
-
+	@Override
+	public String toString() {
+		return "OrderList [orderlist=" + orderlist + ", customer=" + customer + "]";
+	}	
 }
 
 class Orders {
@@ -145,6 +151,14 @@ class Orders {
 	Menu	menuItem;
 	Payments payment;
 	
+	public Orders(Menu menuItem) {
+		orderId ++;
+		this.orderDate = new Date();
+		this.menuItem = menuItem;
+		this.payment = new CashPayments(); // initalization
+	}
+	
+
 	public Orders(Menu menuItem, Payments payment) {
 		orderId ++;
 		this.orderDate = new Date();
@@ -208,14 +222,20 @@ class CardPayments implements Payments {
 
 
 class Customers {
-	HashMap<String,Integer> customer = new HashMap<String,Integer>();// 키값: 전화번호,
+	HashMap<String,Integer> customer;// 키값: 전화번호,
 	// 밸류값: 포인트 
+	
+	public Customers() {
+		this.customer = new HashMap<String, Integer>();
+	}
+	
 	
 	// 고객 추가
 	public void addCustomers(String phoneNumber) {// 권순조 
 		
 	}
 	
+
 	/*
      * @method name : modifyCustomers
      *
@@ -230,7 +250,7 @@ class Customers {
      * @return : void
      */
     public void modifyCustomers(String oldPhoneNumber, String phoneNumber) {
-        if(TeamPatterns.iscellPhoneMetPattern(phoneNumber)) {        // 핸드폰 정규표현식
+        if(TeamFormat.iscellPhoneMetPattern(phoneNumber)) {        // 핸드폰 정규표현식
             if(customer.containsKey(oldPhoneNumber)) {
                 customer.put(phoneNumber, customer.get(oldPhoneNumber)); // 포인트를 새로운 핸드폰으로 옮김
                 customer.remove(oldPhoneNumber);                         // 기존 폰넘버 삭제
@@ -376,9 +396,19 @@ public class Pos_System {
 		menuItem.add(new Menu("짬뽕", 6000));
 		menuItem.add(new Menu("우동", 5500));
 		
-		System.out.println(menuItem.toString());
-		System.out.println(menuItem.get(1));
+//		System.out.println(menuItem.toString());
+//		System.out.println(menuItem.get(1));
 		
+		Orders order = new Orders(menuItem.get(1));
+		Orders order2 = new Orders(menuItem.get(0));
+		//System.out.println(order.toString());
 		
+		OrderList orderList = new OrderList();
+		orderList.orderlist.add(order);
+		orderList.orderlist.add(order2);
+		orderList.customer=new Customers();
+		System.out.println(orderList.toString());
+		
+		System.out.println(TeamFormat.dateTimeFormat(new Date()));
 	}
 }
