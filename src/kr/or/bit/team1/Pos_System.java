@@ -359,10 +359,29 @@ class CashPayments implements Payments {
 	}
 
 	// 포인트 사용
-	public void usePoints(Customers customers, String phoneNumber, int amount) {// 권순조
-
+	public int usePoints(String phoneNumber) {// 권순조
+		int usePointsResult = 0;
+		int result = 0;
+		Customers cus = new Customers();
+		Scanner sc = new Scanner(System.in);
+		String st=sc.nextLine();
+		if(!cus.customer.containsKey(st)) {
+			System.out.println("등록된 회원 번호가 없습니다.");
+			System.out.println("가입하시겠습니까?");
+			System.out.println("가입 : 1, 취소 : 2");
+			st = sc.nextLine();
+			if(st == "1") {
+				System.out.println("가입을 진행합니다. 번호를 입력해주세요");
+				st = sc.nextLine();
+				cus.addCustomers(st);
+			} else if(st == "2") {
+				System.out.println("포인트 사용을 취소합니다.");
+			}
+		} else {
+			result = usePointsResult;
+		}
+		return result;
 	}
-
 }
 
 class CardPayments implements Payments {
