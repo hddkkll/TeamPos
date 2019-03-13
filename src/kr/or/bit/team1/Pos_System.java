@@ -17,9 +17,6 @@ enum PayType {
 	CASH, CARD
 };
 
-
-
-
 class Menu {
 	String name;
 	int price;
@@ -32,7 +29,7 @@ class Menu {
 		super();
 		this.name = name;
 		this.price = price;
-	}	
+	}
 
 	@Override
 	public String toString() {
@@ -46,7 +43,7 @@ class Table {
 	Date date;
 	boolean isPayed;
 
-	//정일찬 : 생성자변경
+	// 정일찬 : 생성자변경
 	public Table() {
 		tables = new HashMap<Integer, OrderList>();
 		this.date = new Date();
@@ -58,7 +55,7 @@ class Table {
 
 	}
 
-	// 정일찬 : 
+	// 정일찬 :
 	// addOrdetList 추가
 	public void addOrderList(Integer tableNo, OrderList orderList) {
 		// 테이블에 order add
@@ -83,7 +80,6 @@ class Table {
 //		// 테이블의 order를 한가지 결제형식으로
 //	}
 
-
 	// 테이블이동
 	public void moveTable(int fromTable, int toTable) {// 강기훈
 		OrderList temp = new OrderList();
@@ -96,21 +92,21 @@ class Table {
 	public void mergeTable(int fromTable, int toTable) {// 권예지
 
 	}
-	
+
 	// 테이블 추가
 	// 정일찬 OrderList orderList parameter 삭제
 	public void addTable(int tableNo) {// 권순조
 		this.tables.put(tableNo, null);
-		
+
 	}
 
 	// 테이블 삭제
-	// 정일찬  int tableNo parameter 추가
+	// 정일찬 int tableNo parameter 추가
 	public void deleteTable(int tableNo) {// 강기훈
-		for(Map.Entry<Integer, OrderList> obj : tables.entrySet()) {
-		      if(obj.getValue().isPayed) {
-		    	  tables.put(obj.getKey(), new OrderList());
-		      }
+		for (Map.Entry<Integer, OrderList> obj : tables.entrySet()) {
+			if (obj.getValue().isPayed) {
+				tables.put(obj.getKey(), new OrderList());
+			}
 		}
 	}
 
@@ -121,13 +117,13 @@ class OrderList {
 
 	ArrayList<Orders> orderlist;
 	Customers customer;
-	//강기훈 :  isPayed추가
+	// 강기훈 : isPayed추가
 	boolean isPayed;
 
 	public OrderList() {
 		this.orderlist = new ArrayList<Orders>();
 		this.customer = null;
-		this.isPayed=false;
+		this.isPayed = false;
 	}
 
 	// 주문내역을 보여줌
@@ -174,26 +170,27 @@ class OrderList {
 	 */
 
 	// 전부 현금결제 // 결제와 오더리스트의 연결이 애메함
-    public void payCashAll(int amount, int tableNum) {// 권순조 받은 현금이 물건의 총합보다 높으면 사용
-        int exchange = 0;// 거스름돈을 저장할 공간 선언
-        customer = new Customers();
-        Scanner sc = new Scanner(System.in);
-        int i = Integer.parseInt(sc.nextLine());
-        
-        System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
-        if (i == 1) {
-            String s = sc.nextLine();
-            int point = customer.customer.get(s);
-            exchange = amount + point - orderSum();// 받을금액, 받은금액, 거스름돈
-        } else if(i == 2) {
-            exchange = amount - orderSum();
-        }
-        System.out.println(exchange);
-        Table tb = new Table();
-        tb.tables.remove(tableNum);
-        tb.tables.put(tableNum, new OrderList());// 테이블 초기화
-        printReceipt();//영수증 출력
-    }
+	public void payCashAll(int amount, int tableNum) {// 권순조 받은 현금이 물건의 총합보다 높으면 사용
+		int exchange = 0;// 거스름돈을 저장할 공간 선언
+		customer = new Customers();
+		Scanner sc = new Scanner(System.in);
+		int i = Integer.parseInt(sc.nextLine());
+
+		System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
+		if (i == 1) {
+			String s = sc.nextLine();
+			int point = customer.customer.get(s);
+			exchange = amount + point - orderSum();// 받을금액, 받은금액, 거스름돈
+		} else if (i == 2) {
+			exchange = amount - orderSum();
+		}
+		System.out.println(exchange);
+		Table tb = new Table();
+		tb.tables.remove(tableNum);
+		tb.tables.put(tableNum, new OrderList());// 테이블 초기화
+		printReceipt();// 영수증 출력
+	}
+
 	// 전부 카드결제
 	public void payCardAll() { // 이힘찬
 		// 받은금액
@@ -304,6 +301,52 @@ class OrderList {
 		return sum;// 합계를 반환
 	}
 
+	public int usePoints(String phoneNumber) {// 권순조
+		int usePointsResult = 0;
+		int result = 0;
+		Customers cus = new Customers();
+		Scanner sc = new Scanner(System.in);
+		String st = sc.nextLine();
+		if (!cus.customer.containsKey(phoneNumber)) {
+			System.out.println("등록된 회원 번호가 없습니다.");
+			System.out.println("가입하시겠습니까?");
+			System.out.println("가입 : 1, 취소 : 2");
+			st = sc.nextLine();
+			if (st == "1") {
+				System.out.println("가입을 진행합니다. 번호를 입력해주세요");
+				st = sc.nextLine();
+				cus.addCustomers(st);
+			} else if (st == "2") {
+				System.out.println("포인트 사용을 취소합니다.");
+			}
+		} else {
+			cus.customer.get(phoneNumber);
+			result = usePointsResult;
+		}
+		return result;
+	}
+	
+	public void isUsePoint() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("포인트를 사용하시겠습니까?");
+		String choice = sc.nextLine();//포인트를 사용할지 확인하는 로직 시작
+		if (choice.equals("Y")) {
+			System.out.println("포인트사용 로직 시작합니다.");
+			String phNum = sc.nextLine();
+			usePoints(phNum);
+		} else if (choice.equals("N")) {
+			System.out.println("가입하시겠습니까? Y/N");
+			String choice2 = sc.nextLine();
+			if(choice.equals("Y")) {
+				choice2 = sc.nextLine();
+				Customers customers = new Customers();
+				customers.addCustomers(choice2);
+			} else if(choice.equals("N")) {
+				System.out.println("결제 로직 시작합니다.");
+			}
+		}
+	}
+
 	@Override
 	public String toString() {
 		return "OrderList [orderlist=" + orderlist + ", customer=" + customer + "]";
@@ -333,7 +376,8 @@ class Orders {
 
 	@Override
 	public String toString() {
-		return "Orders [orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + ", payment=" + payment + "]";
+		return "Orders [orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + ", payment="
+				+ payment + "]";
 	}
 
 }
@@ -364,17 +408,17 @@ class CashPayments implements Payments {
 		int result = 0;
 		Customers cus = new Customers();
 		Scanner sc = new Scanner(System.in);
-		String st=sc.nextLine();
-		if(!cus.customer.containsKey(st)) {
+		String st = sc.nextLine();
+		if (!cus.customer.containsKey(st)) {
 			System.out.println("등록된 회원 번호가 없습니다.");
 			System.out.println("가입하시겠습니까?");
 			System.out.println("가입 : 1, 취소 : 2");
 			st = sc.nextLine();
-			if(st == "1") {
+			if (st == "1") {
 				System.out.println("가입을 진행합니다. 번호를 입력해주세요");
 				st = sc.nextLine();
 				cus.addCustomers(st);
-			} else if(st == "2") {
+			} else if (st == "2") {
 				System.out.println("포인트 사용을 취소합니다.");
 			}
 		} else {
@@ -416,12 +460,11 @@ class Customers {
 	public void addCustomers(String phoneNumber) {// 권순조
 //		Scanner sc = new Scanner(System.in);
 //		String PhonNum = sc.nextLine();
-		if(TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
-			if(customer.containsKey(phoneNumber)) {
-				customer.put(phoneNumber, 0);					
+		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
+			if (customer.containsKey(phoneNumber)) {
+				customer.put(phoneNumber, 0);
 			}
 		}
-		
 
 	}
 
@@ -476,13 +519,12 @@ class Customers {
 		}
 
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Customers [customer=" + customer + "]";
 	}
-	
-	
+
 }
 
 class Pos {
@@ -493,7 +535,7 @@ class Pos {
 	String logPath = "C:\\temp\\log";
 
 	// 시재금액
-	Integer amount=200000;
+	Integer amount = 200000;
 	List<Orders> orders = new ArrayList<Orders>();
 	OrderList orderList;
 	Table tables = new Table();
@@ -525,7 +567,6 @@ class Pos {
 //		
 //	}
 
-
 	// 메뉴관리
 	// 메뉴 추가
 	public void addMenu(String name, Integer price) {// 이힘찬
@@ -540,12 +581,12 @@ class Pos {
 	public void deleteMenu(String name) {// 권예지
 
 	}
-	
+
 	public Menu getMenu(String name) {
-		Menu menu=null;
+		Menu menu = null;
 		for (Menu m : menuItem) {
-			if(m.name.trim().equalsIgnoreCase(name)) {
-				menu=m;
+			if (m.name.trim().equalsIgnoreCase(name)) {
+				menu = m;
 			}
 		}
 		return menu;
@@ -602,30 +643,30 @@ class Pos {
 public class Pos_System {
 	public static void main(String[] args) {
 
-		Pos pos=new Pos();
+		Pos pos = new Pos();
 		pos.addMenu("짜장", 5000);
 		pos.addMenu("짬뽕", 6000);
 		pos.addMenu("우동", 5500);
-		
-		Menu pickMenu=pos.getMenu("짜장");
+
+		Menu pickMenu = pos.getMenu("짜장");
 
 		System.out.println(pickMenu.toString());
 
 		// Order 생성
-		Orders order1=new Orders(pos.getMenu("짜장"));
-		Orders order2=new Orders(pos.getMenu("짬뽕"));
-		
+		Orders order1 = new Orders(pos.getMenu("짜장"));
+		Orders order2 = new Orders(pos.getMenu("짬뽕"));
+
 		System.out.println(order1.toString());
-		
+
 		// OrderList 생성
-		OrderList orderList=new OrderList();
+		OrderList orderList = new OrderList();
 		orderList.addOrder(order1);
 		orderList.addOrder(order2);
 		System.out.println(orderList.toString());
-		
-		// Table 
+
+		// Table
 		Table tables = new Table();
-		
+
 		// add table
 		tables.addTable(1);
 		tables.addTable(2);
@@ -635,29 +676,29 @@ public class Pos_System {
 		// add OrderList to Table
 		tables.addOrderList(1, orderList);
 		System.out.println(tables.tables.toString());
-		
+
 		// 결제
 		Customers sonnom = new Customers();
 		sonnom.addCustomers("010-2222-3333");
 		System.out.println("손님 : " + sonnom.customer.toString());
 
-		
 		int yourbill = 20000;
 		// cash
-		OrderList afterLunch=tables.tables.get(1);
-		for(int i=0; i<afterLunch.orderlist.size();i++) {
-			afterLunch.orderlist.get(i).payment=new CashPayments();
+		OrderList afterLunch = tables.tables.get(1);
+		for (int i = 0; i < afterLunch.orderlist.size(); i++) {
+			afterLunch.orderlist.get(i).payment = new CashPayments();
 			yourbill -= afterLunch.orderlist.get(i).menuItem.price;
-			//point 적립
-			int new_point=sonnom.customer.get("010-2222-3333") + (int)(afterLunch.orderlist.get(i).menuItem.price*0.05);
+			// point 적립
+			int new_point = sonnom.customer.get("010-2222-3333")
+					+ (int) (afterLunch.orderlist.get(i).menuItem.price * 0.05);
 			sonnom.customer.put("010-2222-3333", new_point);
 			afterLunch.orderlist.get(i).payment.pay();
-			
+
 		}
 		// 결제완료
-		afterLunch.isPayed=true;
+		afterLunch.isPayed = true;
 		System.out.println(yourbill);
 		System.out.println("손님의 포인트 : " + sonnom.customer.toString());
-		
+
 	}
 }
