@@ -3,9 +3,11 @@ package kr.or.bit.team1;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import kr.or.bit.team1.util.TeamFormat;
 
@@ -18,17 +20,16 @@ enum PayType {
 };
 
 class Menu {
-//	String name;
-//	int price;
+
 	HashMap <String, Integer> menu;
 
-	public Menu(String name, int price) {
+	public Menu() {
 		menu=new HashMap<String, Integer>();
 	}
 
 	// 메뉴 추가
 	public void addMenu(String name, Integer price) {// 이힘찬
-
+		menu.put(name, price);
 	}
 
 	// 메뉴 수정
@@ -39,7 +40,17 @@ class Menu {
 	public void deleteMenu(String name) {// 권예지
 
 	}
+	
+	public List getMenuList() {
+		List list=null;
+		return list;
+	}
+	
 
+	@Override
+	public String toString() {
+		return "Menu [menu=" + menu.toString() + "]";
+	}
 	
 }
 
@@ -505,24 +516,31 @@ class Pos {
 
 public class Pos_System {
 	public static void main(String[] args) {
-		List<Menu> menuItem = new ArrayList<Menu>();
-		menuItem.add(new Menu("짜장", 5000));
-		menuItem.add(new Menu("짬뽕", 6000));
-		menuItem.add(new Menu("우동", 5500));
 
-//		System.out.println(menuItem.toString());
-//		System.out.println(menuItem.get(1));
-
-		Orders order = new Orders(menuItem.get(1));
-		Orders order2 = new Orders(menuItem.get(0));
-		// System.out.println(order.toString());
-
-		OrderList orderList = new OrderList();
-		orderList.orderlist.add(order);
-		orderList.orderlist.add(order2);
-		orderList.customer = new Customers();
-		System.out.println(orderList.toString());
-
-		System.out.println(TeamFormat.dateTimeFormat(new Date()));
+		// Menu 생성
+		Menu menu = new Menu();
+		menu.addMenu("짜장", 5000);
+		menu.addMenu("짬뽕", 6000);
+		menu.addMenu("우동", 5500);
+		
+		System.out.println(menu.toString());
+		System.out.println(menu.menu.keySet());
+		Set menulist=menu.menu.keySet();
+		Iterator itr=menulist.iterator();
+		while(itr.hasNext()) {
+			System.out.println(itr.next());
+		}
+		// Order 생성
+		Orders order = new Orders(menu.menu.get("짜장")));
+//		Orders order2 = new Orders();
+//		// System.out.println(order.toString());
+//
+//		OrderList orderList = new OrderList();
+//		orderList.orderlist.add(order);
+//		orderList.orderlist.add(order2);
+//		orderList.customer = new Customers();
+//		System.out.println(orderList.toString());
+//
+//		System.out.println(TeamFormat.dateTimeFormat(new Date()));
 	}
 }
