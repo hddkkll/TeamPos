@@ -48,11 +48,8 @@ class Menu {
 	public void modifyMenu(String oldname, String name, Integer price) {// 신지혁
 		for(int i = 0; i<menu.size();i++) {
 			if(menu.containsKey(oldname)) {
-				System.out.println(menu);
-				System.out.println("dddddd");
 				menu.remove(oldname);
 				menu.put(name, price);
-				System.out.println(menu);
 				break;
 			}
 		}
