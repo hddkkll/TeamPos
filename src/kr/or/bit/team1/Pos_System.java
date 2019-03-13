@@ -290,11 +290,6 @@ class OrderList {
 
 	}
 
-	// 회원등록
-	public void addMembers(Customers customers) {// 신지혁
-		
-	}
-
 	// 포인트 적립
 	public void addPoints(Customers customers, String phoneNumber, int amount) {// 강기훈
 		int currPoint = customers.customer.get(phoneNumber);
@@ -390,8 +385,19 @@ class CashPayments implements Payments {
 }
 
 class CardPayments implements Payments {
-	OrderList ol = new OrderList();
-	
+	/*
+     * @method name : pay
+     *
+     * @date : 2019.03.13
+     *
+     * @author : 신지혁
+     *
+     * @description : print 카드계산
+     *
+     * @parameters :
+     *
+     * @return : void
+     */
 	@Override
 	public void pay() {// 신지혁
 		System.out.println(PayType.CARD);
