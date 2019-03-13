@@ -102,8 +102,15 @@ class OrderList {
 	}
 
 	public void payCard(int no, int amount) {// 권예지
+//		class Menu {
+//			String name;
+//			int price;
+//		}
+
+		System.out.println("결제금액은 " + " 입니다.");
 
 	}
+
 
 	public void payDivideAmount(int amount) {// 일찬님
 
@@ -112,9 +119,22 @@ class OrderList {
 //	print receipt
 	public void printReceipt() {// 권예지 , 파라메터에 table의 주솟값을 받게 바꿔야할것같습니다..
 		Table table = new Table();
+		Pos pos = new Pos();
+		PayType paytype = null;
+
 		System.out.println("테이블 번호 : " + table.tableNo + "\n");
-		System.out.println("거래 일시 : " + table.date);
-		System.out.println("거래 유형 : " + );
+		System.out.println("거래 일시 : " + pos.date);
+		System.out.println("거래 유형 : " + paytype);
+		System.out.println("할부 기간 : 일시불");
+		System.out.println("=====================================");
+		System.out.println("메뉴 이름 \t\t단가\t수량\t금액\t");
+		System.out.println("=====================================");
+		System.out.println(orderlist);
+		System.out.println("=====================================");
+		System.out.println("총 합계 : ");
+		System.out.println("받은 돈 : ");
+		System.out.println("\t\t\t\t적립포인트:"+addPoints());
+
 //		class Table {
 //			int tableNo;
 //			OrderList orderList;
