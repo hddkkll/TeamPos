@@ -109,7 +109,11 @@ class Table {
 	// 테이블 삭제
 	// 정일찬  int tableNo parameter 추가
 	public void deleteTable(int tableNo) {// 강기훈
-
+		for(Map.Entry<Integer, OrderList> obj : tables.entrySet()) {
+		      if(obj.getValue().isPayed) {
+		    	  tables.put(obj.getKey(), new OrderList());
+		      }
+		}
 	}
 
 }
