@@ -46,7 +46,7 @@ class Menu {
 	// 메뉴 삭제
 	public void deleteMenu(String name) {// 권예지
 		menu.remove(name);
-		
+
 	}
 
 }
@@ -79,7 +79,25 @@ class Table {
 
 	// 테이블주문합치기
 	public void mergeTable(int fromTable, int toTable) {// 권예지
-
+		
+//		HashMap<Integer, OrderList> tables;
+//		Date date;
+//		boolean isPayed;
+//
+//		public Table(int tableNo, OrderList orderList) {
+//			tables = new HashMap<Integer, OrderList>();
+//			tables.put(tableNo, orderList);
+//			this.date = new Date();
+//			this.isPayed = false;
+		
+		
+		OrderList temp1 = new OrderList();
+		temp1 = tables.get(fromTable);
+		
+		OrderList temp2 = new OrderList();
+		temp2 = tables.get(toTable);
+		
+		
 	}
 
 	// 테이블 추가
@@ -354,6 +372,10 @@ class CardPayments implements Payments {
 
 	// 포인트 적립
 	public void addPoints(Customers customers, String phoneNumber) {// 권예지
+		OrderList orderlist = new OrderList();
+
+		int paypoint = customers.customer.get(phoneNumber);
+		customers.customer.put(phoneNumber, (int) (paypoint + (orderlist.orderSum() * 0.05)));
 
 	}
 

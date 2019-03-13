@@ -6,3 +6,4 @@
 *.project
 org.eclipse.wst.common.project.facet.core.xml
 *.prefs
+/bin/
