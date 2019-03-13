@@ -1,5 +1,8 @@
 package kr.or.bit.team1;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,12 +94,28 @@ class Table {
 
 	// 테이블주문합치기
 	public void mergeTable(int fromTable, int toTable) {// 권예지
-
+//		Date date;
+//		boolean isPayed;
+//
+//		public Table(int tableNo, OrderList orderList) {
+//			tables = new HashMap<Integer, OrderList>();
+//			tables.put(tableNo, orderList);
+//			this.date = new Date();
+//			this.isPayed = false;
+		
+		OrderList temp = new OrderList();
+		temp = tables.get(fromTable);
+		OrderList temp2 = new OrderList();
+		temp2 = tables.get(toTable);
+		
+		for(int i=0; i<temp2.orderlist.size();i++)
+			temp.orderlist.add(temp2.orderlist.get(i));
+		
 	}
 	
 	// 테이블 추가
 	public void addTables() {// 권순조
-
+		
 	}
 
 	// 테이블 삭제
@@ -108,7 +127,6 @@ class Table {
 
 // 중간에 담는 그릇이 필요
 class OrderList {
-
 	ArrayList<Orders> orderlist;
 	Customers customer;
 
@@ -372,10 +390,14 @@ class CashPayments implements Payments {
 }
 
 class CardPayments implements Payments {
-
+	OrderList ol = new OrderList();
+	
 	@Override
 	public void pay() {// 신지혁
 		System.out.println(PayType.CARD);
+		System.out.println("카드계산 입니다...");
+
+		
 	}
 
 	// 포인트 적립
@@ -403,7 +425,6 @@ class Customers {
 		Scanner sc = new Scanner(System.in);
 		String PhonNum = sc.nextLine();
 		customer.put(PhonNum, 0);
-
 	}
 
 	/*
@@ -554,9 +575,42 @@ class Pos {
 		// 메뉴-수량-금액
 	}
 
+	
+	/*
+     * @method name : printSalesPayment
+     *
+     * @date : 2019.03.13
+     *
+     * @author : 신지혁
+     *
+     * @description : 회원등록호출
+     *
+     * @parameters : String date
+     *
+     * @return : void
+     */
 	// 결제별 매출 (일별)
 	public void printSalesPayment(String date) { // 신지혁
 		// 메뉴-카드(현금)-수량-금액
+		try {
+			FileInputStream fis = new FileInputStream("date.txt");
+			BufferedInputStream bis = new BufferedInputStream(fis);
+			ObjectInputStream ois = new ObjectInputStream(bis);
+
+			
+			//String data ="";
+			Object data = null;
+			while((data = ois.readObject()) != null) {
+				System.out.println(data.toString());
+			}
+			fis.close();
+			bis.close();
+			ois.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	// 엑셀 export (메뉴별,결제별 매출)
@@ -578,22 +632,26 @@ class Pos {
 
 public class Pos_System {
 	public static void main(String[] args) {
-		List<Menu> menuItem = new ArrayList<Menu>();
-		menuItem.add(new Menu("짜장", 5000));
-		menuItem.add(new Menu("짬뽕", 6000));
-		menuItem.add(new Menu("우동", 5500));
-
-
-		Orders order = new Orders(menuItem.get(1));
-		Orders order2 = new Orders(menuItem.get(0));
-		// System.out.println(order.toString());
-
-		OrderList orderList = new OrderList();
-		orderList.orderlist.add(order);
-		orderList.orderlist.add(order2);
-		orderList.customer = new Customers();
-		System.out.println(orderList.toString());
-
-		System.out.println(TeamFormat.dateTimeFormat(new Date()));
+		Pos p = new Pos();
+		p.printSalesPayment("a");
+		
+		
+		
+//		List<Menu> menuItem = new ArrayList<Menu>();
+//		menuItem.add(new Menu("짜장", 5000));
+//		menuItem.add(new Menu("짬뽕", 6000));
+//		menuItem.add(new Menu("우동", 5500));
+//
+//		Orders order = new Orders(menuItem.get(1));
+//		Orders order2 = new Orders(menuItem.get(0));
+//		// System.out.println(order.toString());
+//
+//		OrderList orderList = new OrderList();
+//		orderList.orderlist.add(order);
+//		orderList.orderlist.add(order2);
+//		orderList.customer = new Customers();
+//		System.out.println(orderList.toString());
+//
+//		System.out.println(TeamFormat.dateTimeFormat(new Date()));
 	}
 }
