@@ -540,7 +540,7 @@ class Pos {
 
 	// 메뉴 삭제
 	public void deleteMenu(String name) {// 권예지
-
+		menuItem.remove(name);
 	}
 
 	public Menu getMenu(String name) {
