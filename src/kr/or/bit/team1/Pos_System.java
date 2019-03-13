@@ -18,28 +18,39 @@ enum PayType {
 };
 
 class Menu {
-	String name;
-	int price;
+//	String name;
+//	int price;
+	HashMap <String, Integer> menu;
 
 	public Menu(String name, int price) {
-		super();
-		this.name = name;
-		this.price = price;
+		menu=new HashMap<String, Integer>();
 	}
 
-	@Override
-	public String toString() {
-		return "Menu [name=" + name + ", price=" + price + "]";
+	// 메뉴 추가
+	public void addMenu(String name, Integer price) {// 이힘찬
+
 	}
+
+	// 메뉴 수정
+	public void modifyMenu(String oldname, String name, Integer price) {// 신지혁
+	}
+
+	// 메뉴 삭제
+	public void deleteMenu(String name) {// 권예지
+
+	}
+
+	
 }
 
 class Table {
 
-	HashMap<Integer, OrderList> tables = new HashMap<Integer, OrderList>();
+	HashMap<Integer, OrderList> tables;
 	Date date;
 	boolean isPayed;
 
 	public Table(int tableNo, OrderList orderList) {
+		tables = new HashMap<Integer, OrderList>();
 		tables.put(tableNo, orderList);
 		this.date = new Date();
 		this.isPayed = false;
@@ -62,6 +73,17 @@ class Table {
 	public void mergeTable(int fromTable, int toTable) {// 권예지
 
 	}
+	
+	// 테이블 추가
+	public void addTables() {// 권순조
+
+	}
+
+	// 테이블 삭제
+	public void deleteTables() {// 강기훈
+
+	}
+
 }
 
 // 중간에 담는 그릇이 필요
@@ -78,9 +100,6 @@ class OrderList {
 	// 주문내역을 보여줌
 	public void listOrders() {// 권순조
 		// 메뉴명-단가-수량-금액
-		for (Orders or : orderlist) {
-			System.out.println(or.menuItem.name + "/" + or.menuItem.price);
-		}
 	}
 
 	// 주문
@@ -235,10 +254,10 @@ class OrderList {
 	 */
 	public int orderSum() {
 		int sum = 0; // 구매한 물품의 총합을 구하는 공간 선언
-		for (int i = 0; i < orderlist.size(); i++) {// 구매한 물품의 총합을 구하는 포문
-			Orders order = orderlist.get(i);
-			sum += order.menuItem.price; // sum에 저장
-		}
+//		for (int i = 0; i < orderlist.size(); i++) {// 구매한 물품의 총합을 구하는 포문
+//			Orders order = orderlist.get(i);
+//			sum += order.menuItem.price; // sum에 저장
+//		}
 		return sum;// 합계를 반환
 	}
 
@@ -292,12 +311,12 @@ class CashPayments implements Payments {
 	}
 
 	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber) { // 이힘찬
+	public void addPoints(Customers customers, String phoneNumber, int amount) { // 이힘찬
 
 	}
 
 	// 포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 권순조
+	public void usePoints(Customers customers, String phoneNumber, int amount) {// 권순조
 
 	}
 
@@ -431,43 +450,10 @@ class Pos {
 	List<Menu> menuItem = new ArrayList<Menu>();
 
 	// 메뉴관리
-	// 메뉴 추가
-	public void addMenu(String name, Integer price) {// 이힘찬
-
-	}
-
-	// 메뉴 수정
-	public void modifyMenu(String oldname, String name, Integer price) {// 신지혁
-		for (int i = 0; i < menuItem.size(); i++) {
-			if (menuItem.get(i).name.equals(oldname)) {
-				System.out.println("dddddd");
-				menuItem.remove(i);
-				menuItem.add(new Menu(name, price));
-				break;
-			}
-		}
-		Customers c = new Customers();
-		c.addMembers("77777");
-		System.out.println(c);
-	}
-
-	// 메뉴 삭제
-	public void deleteMenu(String name) {// 권예지
-
-	}
 
 	// 테이블관리
 	List<Table> tables = new ArrayList<Table>();
 
-	// 테이블 추가
-	public void addTables() {// 권순조
-
-	}
-
-	// 테이블 삭제
-	public void deleteTables() {// 강기훈
-
-	}
 
 	// 고객관리
 	Customers customers = new Customers();
