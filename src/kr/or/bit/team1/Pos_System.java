@@ -514,6 +514,7 @@ class Customers {
 	 *
 	 * @return : void
 	 */
+
 	public void modifyCustomers(String oldPhoneNumber, String phoneNumber) {
 		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // 핸드폰 정규표현식
 			if (customer.containsKey(oldPhoneNumber)) {
@@ -559,7 +560,9 @@ class Customers {
 }
 
 class Pos {
-
+	
+	TeamFormat tf = new TeamFormat();
+	
 	Scanner sc = new Scanner(System.in);
 
 	// log 저장디렉토리
@@ -664,6 +667,7 @@ class Pos {
 
 	public void posStart() {
 		int menuNum = 0;
+		String date = null;
 		System.out.println("POS SYSTEM");
 		System.out.println("1.판매관리");
 		System.out.println("2.매출관리");
@@ -681,13 +685,23 @@ class Pos {
 			viewTable(9);
 			break;
 		case 2:
+			totalsales();
+			break;
 		case 3:
+			memberManage();
+			break;
 		case 4:
 			menuManage();
 			break;
 		case 5:
 		case 6:
-			System.exit(0);
+			System.out.println("<<저장시스템>>");
+			System.out.println("날짜를 입력하시면 저장이 완료됩니다.");
+			date = sc.nextLine();
+			save(date);
+			break;
+
+			
 
 		}
 
@@ -773,14 +787,29 @@ class Pos {
 	public void addMembers(String phoneNumber) {// 신지혁
 		customers.addCustomers(phoneNumber);
 	}
-	// 고객조회
-	// 고객탈퇴
-	// 고객현황
 
-	// overloading
-//	public void deleCustomers(String name) {
-//		
-//	}
+	// 고객수정
+	public void modifyMembers(String oldPhoneNumber, String phoneNumber) {// 신지혁
+		customers.modifyCustomers(oldPhoneNumber, phoneNumber);
+
+	}
+
+	// 고객조회
+	public void findMembers(String phoneNumber) {// 신지혁
+		customers.findCustomers(phoneNumber);
+
+	}
+
+	// 고객탈퇴
+	public void deleteMembers(String phoneNumber) {// 신지혁
+		customers.deleCustomers(phoneNumber);
+
+	}
+
+	// 고객현황
+	public void listMembers() {// 신지혁
+		customers.listCustomers();
+	}
 
 	// 현금관리
 	public void cashAdjustment() { // 이힘찬
@@ -804,7 +833,96 @@ class Pos {
 
 	}
 
+	public void totalsales() {
+		int num = 0;
+		String date = null;
+		System.out.println("\n<<매출관리 메뉴>>");
+		System.out.println("1.메뉴 별 매출");
+		System.out.println("2.결제 별 매출");
+		System.out.println("3.엑셀로 저장");
+		System.out.print("선택 : ");
+		num = Integer.parseInt(sc.nextLine());
+		switch (num) {
+		case 1:
+			System.out.print("메뉴 입력 : ");
+			date = sc.nextLine();
+			printSalesMenu(date);
+			break;
+		case 2:
+			System.out.print("결제 방식 입력(카드or현금) : ");
+			date = sc.nextLine();
+			printSalesPayment(date);
+			break;
+		case 3:
+			System.out.println("엑셀로 저장할 매출을 선택하세요");
+			exportToExcel(date);
+			break;
+		default:
+		}
 
+	}
+
+	void memberManage() {
+		while (true) {
+			int num = 0;
+			String phoneNumber = "";
+			String oldphoneNumber = "";
+			System.out.println("회원을 추가, 수정, 조회, 탈퇴, 현황을 볼수 있습니다");
+			System.out.println("1.회원 추가");
+			System.out.println("2.회원 수정");
+			System.out.println("3.회원 조회");
+			System.out.println("4.회원 탈퇴");
+			System.out.println("5.회원 현황");
+			System.out.println("0.종료");
+			System.out.println("원하는 번호를 입력하세요");
+			num = Integer.parseInt(sc.nextLine());
+
+			switch (num) {
+			case 0:
+				posStart();
+				break;
+			case 1:
+				System.out.println("추가할 회원의 번호를 입력해주세요");
+				phoneNumber = sc.nextLine();
+				addMembers(phoneNumber);
+				break;
+
+			case 2:
+				System.out.println("회원정보를 수정합니다");
+				System.out.println("oldPhoneNumber를 입력해주세요");
+				oldphoneNumber = sc.nextLine();
+				System.out.println("새로운 PhoneNumber를 입력해주세요");
+				phoneNumber = sc.nextLine();
+
+				modifyMembers(oldphoneNumber, phoneNumber);
+				break;
+
+			case 3:
+				System.out.println("조회할 전화번호를 입력해주세요");
+				phoneNumber = sc.nextLine();
+				findMembers(phoneNumber);
+				break;
+
+			case 4:
+				System.out.println("탈퇴할 전화번호를 입력해주세요");
+				phoneNumber = sc.nextLine();
+				deleteMembers(phoneNumber);
+				break;
+
+			case 5:
+				System.out.println("회원현황 입니다");
+				listMembers();
+				break;
+
+			default:
+				break;
+			}
+		}
+
+	}
+
+	
+	
 	// 데이터 저장 (시스템 종료시 데이터 저장)
 	public void save(String date) { // 권예지
 		Pos pos = new Pos();
@@ -846,6 +964,9 @@ class Pos {
 			}
 		}
 	}
+	
+	
+	
 }
 
 public class Pos_System {
