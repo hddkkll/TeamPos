@@ -2,11 +2,13 @@ package kr.or.bit.team1;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import kr.or.bit.team1.util.TeamFiles;
 import kr.or.bit.team1.util.TeamFormat;
 import kr.or.bit.team1.util.TeamLogger;
 
@@ -25,7 +28,7 @@ enum PayType {
 	CASH, CARD
 };
 
-class Menu {
+class Menu implements Serializable {
 	String name;
 	int price;
 
@@ -41,7 +44,7 @@ class Menu {
 	}
 }
 
-class Table {
+class Table implements Serializable {
 
 	HashMap<Integer, OrderList> tables;
 	Date date;
@@ -68,6 +71,7 @@ class Table {
 	}
 
 	// 테이블 이동
+	// FIX
 	public void moveTable(int fromTable, int toTable) {// 강기훈
 		TeamLogger.info("moveTable(int fromTable, int toTable)");
 		OrderList temp = new OrderList();
@@ -78,7 +82,6 @@ class Table {
 
 	// 테이블 주문 합치기
 	public void mergeTable(int fromTable, int toTable) {// 권예지
-
 		OrderList temp = new OrderList();
 		temp = tables.get(fromTable);
 		OrderList temp2 = new OrderList();
@@ -99,6 +102,7 @@ class Table {
 
 	// 테이블 삭제
 	// 정일찬 int tableNo parameter 추가
+	// FIX
 	public void deleteTable(int tableNo) {// 강기훈
 		for (Map.Entry<Integer, OrderList> obj : tables.entrySet()) {
 			if (obj.getValue().isPayed) {
@@ -110,7 +114,7 @@ class Table {
 }
 
 // 중간에 담는 그릇이 필요
-class OrderList {
+class OrderList implements Serializable {
 
 	ArrayList<Orders> orderlist;
 	Customers customer;
@@ -143,10 +147,10 @@ class OrderList {
 	}
 
 	// 전체취소
+	// FIX
 	public void deleteOrderAll() { // 신지혁
 		int num = orderlist.size();
 		orderlist.removeAll(orderlist);
-
 		for (int i = 0; i < num; i++)
 			Orders.orderId--;
 	}
@@ -189,7 +193,8 @@ class OrderList {
 	 *
 	 * @return : void
 	 */
-
+	// ADD System.out.println("고객명을 입력하세요");
+	// FIX
 	public void payCashAll(int amount, int tableNum) {// 권순조 받은 현금이 물건의 총합보다 높으면 사용
 		int exchange = 0;// 거스름돈을 저장할 공간 선언
 		customer = new Customers();
@@ -212,6 +217,7 @@ class OrderList {
 	}
 
 	// 전부 카드결제
+	// FIX
 	public void payCardAll() { // 이힘찬
 		// 받은금액
 		System.out.println("결제 금액 : " + orderSum());
@@ -234,7 +240,7 @@ class OrderList {
 	 *
 	 * @return : int
 	 */
-
+	// ?
 	public int payCash(int amount) {// 권순조
 
 		int result = 0;// 현금을 한번 계산하고 남은 금액을 저장할 공간
@@ -243,20 +249,7 @@ class OrderList {
 		return result; // 리턴후 payDividieAmount에서 사용
 	}
 
-	/*
-	 * @method name : payCard
-	 *
-	 * @date : 2019.03.12
-	 *
-	 * @author : 권순조
-	 *
-	 * @description : 현금으로 결제 금액을 처리한다.
-	 *
-	 * @parameters : int no, int amount > int amount
-	 *
-	 * @return : int
-	 */
-
+	// ?
 	public int payCard(int amount) {// 권예지
 
 		int result = 0;// 현금을 한번 계산하고 남은 금액을 저장할 공간
@@ -264,6 +257,8 @@ class OrderList {
 		return result; // 리턴후 payDividieAmount에서 사용
 	}
 
+	
+	// FIX
 	public void payDivideAmount(int no, int amount) {// 일찬님
 		if (no == 3) {
 			do {
@@ -283,6 +278,7 @@ class OrderList {
 	}
 
 //	print receipt
+	// ADJUST tf
 	public void printReceipt() {// 권예지, 파라메터에table의주솟값을받게바꿔야할것같습니다..
 		TeamFormat tf = new TeamFormat();
 		Pos pos = new Pos();
@@ -318,6 +314,7 @@ class OrderList {
 	}
 
 	// 포인트 사용
+	// FIX customer를 받아야 함
 	public int usePoints(String phoneNumber) {// 권예지^^
 		int usePointsResult = 0;
 		int result = 0;
@@ -342,7 +339,8 @@ class OrderList {
 		return usePointsResult;
 	}
 
-	public void isUsePoint() {
+	// FIX : 기존 customer객체를 가져와야 함
+	public void isUsePoint() {					// 권예지
 		Scanner sc = new Scanner(System.in);
 		System.out.println("포인트를 사용하시겠습니까?");
 		String choice = sc.nextLine();// 포인트를 사용할지 확인하는 로직 시작
@@ -378,10 +376,10 @@ class OrderList {
 	 */
 	public int orderSum() {
 		int sum = 0; // 구매한 물품의 총합을 구하는 공간 선언
-//		for (int i = 0; i < orderlist.size(); i++) {// 구매한 물품의 총합을 구하는 포문
-//			Orders order = orderlist.get(i);
-//			sum += order.menuItem.price; // sum에 저장
-//		}
+		for (int i = 0; i < orderlist.size(); i++) {// 구매한 물품의 총합을 구하는 포문
+			Orders order = orderlist.get(i);
+			sum += order.menuItem.price; // sum에 저장
+		}
 		return sum;// 합계를 반환
 	}
 
@@ -415,7 +413,7 @@ class OrderList {
 
 }
 
-class Orders {
+class Orders implements Serializable {
 
 	static Long orderId = 0L;
 	Date orderDate;
@@ -455,7 +453,7 @@ interface Payments {
 
 }
 
-class CashPayments implements Payments {
+class CashPayments implements Payments, Serializable {
 
 	@Override
 	public void pay() { // 일찬님
@@ -464,7 +462,7 @@ class CashPayments implements Payments {
 
 }
 
-class CardPayments implements Payments {
+class CardPayments implements Payments, Serializable {
 
 	@Override
 	public void pay() {// 신지혁
@@ -474,7 +472,7 @@ class CardPayments implements Payments {
 
 }
 
-class Customers {
+class Customers implements Serializable {
 
 	HashMap<String, Integer> customer;// 키값: 전화번호,
 	// 밸류값: 포인트
@@ -484,18 +482,20 @@ class Customers {
 	}
 
 	// 고객 추가
+	// FIX :if (customer.containsKey(phoneNumber))을 제거해야 함
 	public void addCustomers(String phoneNumber) {// 권순조
 //		Scanner sc = new Scanner(System.in);
 //		String PhonNum = sc.nextLine();
 		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
-			if (customer.containsKey(phoneNumber)) {
+//			if (customer.containsKey(phoneNumber)) {
 				customer.put(phoneNumber, 0);
-			}
+//			}
 		}
 
 	}
 
 	// 회원등록 OrderList클래스에서 이동받음..
+	// FIX : 정규표현식 TeamFormat.iscellPhoneMetPattern(phoneNumber) 추가 필요
 	public void addMembers(String phoneNumber) {// 신지혁
 		customer.put(phoneNumber, 0);
 		System.out.println(phoneNumber + "추가 완료");
@@ -558,15 +558,15 @@ class Customers {
 
 }
 
-class Pos {
+class Pos implements Serializable {
 
-	Scanner sc = new Scanner(System.in);
+	transient Scanner sc = new Scanner(System.in);
 
 	// log 저장디렉토리
 	String logPath = "C:\\temp\\log";
 
 	// 시재금액
-	Integer amount = 200000;
+	static int amount = 200000;
 	List<Orders> orders = new ArrayList<Orders>();
 	OrderList orderList;
 	Table tables = new Table();
@@ -800,57 +800,42 @@ class Pos {
 
 	}
 
-	// 데이터 저장 (시스템 종료시 데이터 저장)
+	// 데이터 저장 
 	public void save(String date) { // 권예지
-		Pos pos = new Pos();
-		try {
-			FileOutputStream fos = new FileOutputStream(logPath, true);
-			BufferedOutputStream bos = new BufferedOutputStream(fos);
-			ObjectOutputStream oos = new ObjectOutputStream(bos);
-			oos.writeObject(pos);
-			oos.close();
-			bos.close();
-			fos.close();
-			System.out.println(date + " 저장 완료");
-		} catch (Exception e) {
-		}
 	}
 
 	// 데이터 로드 (시스템 시작시 데이터 로드)
-	public void load(String date) {// 권예지
-		Pos pos = new Pos();
-		FileInputStream fis = null;
-		BufferedInputStream bis = null;
-		ObjectInputStream ois = null;
-		try {
-			fis = new FileInputStream(logPath);
-			bis = new BufferedInputStream(fis);
-			ois = new ObjectInputStream(bis);
-
-			pos = (Pos) ois.readObject();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				bis.close();
-				ois.close();
-				fis.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	public void load() {// 권예지
+		
 	}
 }
 
 public class Pos_System {
 	public static void main(String[] args) {
 		Pos pos = new Pos();
-		pos.posStart();
+		
+//		// 데이터 로드 (시스템 시작시 데이터 로드)
+//		String pathFile = "C:\\Temp\\pos.obj";
+//		pos=(Pos)TeamFiles.loadObject(pathFile);
+//		
+//		
+//		pos.posStart();
+//
+//		// 데이터 저장 (시스템 종료시 데이터 저장)
+//		TeamFiles.saveObject(pos, "pathFile");
+		
 
+		
 		// ========================
 		// 이하 테스트용도
 
+		Customers client = new Customers();
+		client.addCustomers("010-1111-1111");
+		client.addCustomers("010-2222-2222");
+		client.addCustomers("010-3333-3333");
+		client.listCustomers();
+		
+		
 		pos.addMenu("짜장", 5000);
 		pos.addMenu("짬뽕", 6000);
 		pos.addMenu("우동", 5500);
