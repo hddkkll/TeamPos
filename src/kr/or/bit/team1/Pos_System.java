@@ -91,7 +91,6 @@ class Table implements Serializable {
 
 }
 
-
 class Bucket implements Serializable {
 
 	ArrayList<Orders> orderlist;
@@ -104,23 +103,30 @@ class Bucket implements Serializable {
 		this.isPayed = false;
 	}
 
-	// 주문내역을 보여줌
-	public void listOrders() {// 권순조
-		List<String> menuSet = new ArrayList<String>();
+	/*
+	 * @method name : listOrders
+	 *
+	 * @date : 2019.03.14
+	 *
+	 * @author : 권순조
+	 *
+	 * @description : 주문내역을 보여준다
+	 *
+	 * @parameters :
+	 *
+	 * @return : void
+	 */
+	public void listOrders() {
+		TeamLogger.info("listOrders");
+		Set<String> menuSet = new HashSet<String>();
 
 		for (int i = 0; i < orderlist.size(); i++) {
-			String name = orderlist.get(i).menuItem.name;
-			menuSet.add(name);
-			System.out.println(menuSet.toString());
-			for (int j = 0; j < menuSet.size(); j++) {
-				if (name.equals(menuSet.get(j))) {
-					continue;
-				} else {
-					int price = orderlist.get(i).menuItem.price;
-					int quty = menuQty(orderlist.get(i).menuItem);
-					int bill = price * quty;
-					System.out.printf("메뉴: %s        단가 : %d   수량 : %d  금액 : %d \n", name, price, quty, bill);
-				}
+			if (menuSet.add(orderlist.get(i).menuItem.name)) {
+				String name = orderlist.get(i).menuItem.name;
+				int price = orderlist.get(i).menuItem.price;
+				int quty = menuQty(orderlist.get(i).menuItem);
+				int bill = price * quty;
+				System.out.printf("메뉴: %s\t        단가: %d   수량: %d   금액: %d\n", name, price, quty, bill);
 			}
 		}
 	}
@@ -195,10 +201,9 @@ class Bucket implements Serializable {
 	 *
 	 * @return : void
 	 * 
-	 * @example
-	 *  해당 메뉴를 2개 추가하면 qty=2, 2개 제외하면 qty=-2
+	 * @example 해당 메뉴를 2개 추가하면 qty=2, 2개 제외하면 qty=-2
 	 */
-	public void changeQty(Menu menu, int qty) { 
+	public void changeQty(Menu menu, int qty) {
 		TeamLogger.info("changeQty(Menu menu, int qty)");
 		if (qty < 0) { // 주문취소
 
@@ -225,35 +230,60 @@ class Bucket implements Serializable {
 	/*
 	 * @method name : payCashAll
 	 *
-	 * @date : 2019.03.12
+	 * @date : 2019.03.14
 	 *
 	 * @author : 권순조
 	 *
 	 * @description : 현금으로 결제 금액 전액 처리한다.
 	 *
-	 * @parameters : int amount
+	 * @parameters : int amount, Customers customer
 	 *
 	 * @return : void
 	 */
-	// ADD System.out.println("고객명을 입력하세요");
-	// FIX
-	public void payCashAll(int amount) {// 권순조 받은 현금이 물건의 총합보다 높으면 사용
-		int exchange = 0;// 거스름돈을 저장할 공간 선언
-		customer = new Customers();
-		Scanner sc = new Scanner(System.in);
-		int i = Integer.parseInt(sc.nextLine());
+	public void payCashAll(int amount, Customers customer) {
+		TeamLogger.info("payCashAll");
 
-		System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
-		if (i == 1) {
-			String s = sc.nextLine();
-			int point = customer.customer.get(s);
-			exchange = amount + point - orderSum();// 받을금액, 받은금액, 거스름돈
-		} else if (i == 2) {
-			exchange = amount - orderSum();
+		if (amount > orderSum()) {
+			int change = 0; // 거스름돈을 저장할 공간 선언
+
+			Scanner sc = new Scanner(System.in);
+
+			System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
+			int i = Integer.parseInt(sc.nextLine());
+			if (i == 1) {
+				System.out.println("고객 핸드폰번호를 입력하세요");
+				String s = sc.nextLine();
+				if (customer.customer.containsKey(s)) {
+					int point = customer.customer.get(s);
+					change = amount + point - orderSum();// 받을금액, 받은금액, 거스름돈
+
+					Pos.amount = Pos.amount + amount - point - change;
+					this.isPayed = true;
+					this.customer = customer.findCustomers(s);
+
+					System.out.println("받을 금액 : " + orderSum());
+					System.out.println("포인트     : " + point);
+					System.out.println("받은 금액 : " + amount);
+					System.out.println("받은 금액 : " + change);
+				} else {
+					System.out.println("해당 고객이 없습니다.");
+					return;
+				}
+			} else if (i == 2) {
+				change = amount - orderSum();
+
+				Pos.amount = Pos.amount + amount - change;
+				this.isPayed = true;
+
+				System.out.println("받을 금액 : " + orderSum());
+				System.out.println("받은 금액 : " + amount);
+				System.out.println("받은 금액 : " + change);
+			}
+
+			printReceipt();// 영수증 출력
+		} else {
+			System.out.println("금액이 부족합니다.");
 		}
-		System.out.println(exchange);
-
-		printReceipt();// 영수증 출력
 	}
 
 	// 전부 카드결제
@@ -474,9 +504,8 @@ class Bucket implements Serializable {
 
 	@Override
 	public String toString() {
-		return "OrderList [orderlist=" + orderlist + ", customer=" + customer + "]";
+		return "Bucket [orderlist=" + orderlist + ", customer=" + customer + ", isPayed=" + isPayed + "]";
 	}
-
 }
 
 class Pos implements Serializable {

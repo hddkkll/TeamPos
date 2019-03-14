@@ -82,14 +82,17 @@ public class Customers implements Serializable {
 	 *
 	 * @parameters : String phoneNumber
 	 *
-	 * @return : void
+	 * @return : HashMap
 	 */
-	public void findCustomers(String phoneNumber) { // 신지혁
-		TeamLogger.info("findCustomers");
-		if (customer.get(phoneNumber) != null)
+	public Customers findCustomers(String phoneNumber) { // 신지혁
+		Customers result = new Customers();
+		if (customer.get(phoneNumber) != null) {
 			System.out.println(phoneNumber + "의 포인트는 : " + customer.get(phoneNumber) + "원 입니다");
-		else
-			System.out.println("핸드폰번호를 확인하고 입력하세요");
+			result.customer.put(phoneNumber, customer.get(phoneNumber));
+		} else {
+			System.out.println("고객이아닙니다");
+		}
+		return result;
 	}
 
 	/*
