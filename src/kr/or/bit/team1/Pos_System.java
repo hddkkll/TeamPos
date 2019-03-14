@@ -250,8 +250,8 @@ class Bucket implements Serializable {
 			Scanner sc = new Scanner(System.in);
 
 			System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
-			int i = Integer.parseInt(sc.nextLine());
-			if (i == 1) {
+			int choice = Integer.parseInt(sc.nextLine());
+			if (choice == 1) {
 				System.out.println("고객 핸드폰번호를 입력하세요");
 				String s = sc.nextLine();
 				if (customer.customer.containsKey(s)) {
@@ -260,7 +260,7 @@ class Bucket implements Serializable {
 
 					Pos.amount = Pos.amount + amount - point - change;
 					this.customer = customer.findCustomers(s);
-					customer.setPoint(s, 0);                     // point 0
+					customer.setPoint(s, 0); // point 0
 					System.out.println("받을 금액 : " + orderSum());
 					System.out.println("포인트     : " + point);
 					System.out.println("받은 금액 : " + amount);
@@ -269,7 +269,7 @@ class Bucket implements Serializable {
 					System.out.println("해당 고객이 없습니다.");
 					return;
 				}
-			} else if (i == 2) {
+			} else if (choice == 2) {
 				change = amount - orderSum();
 
 				Pos.amount = Pos.amount + amount - change;
@@ -280,6 +280,9 @@ class Bucket implements Serializable {
 			}
 
 			this.isPayed = true;
+			for (int i = 0; i < this.orderlist.size(); i++) {
+				this.orderlist.get(i).payment = new CardPayments();
+			}
 			this.payment = new CashPayments();
 
 			printReceipt();// 영수증 출력
@@ -302,35 +305,38 @@ class Bucket implements Serializable {
 	 * @return : void
 	 */
 	public void payCardAll(Customers customer) { // 이힘찬
+		TeamLogger.info("payCardAll");
+		Scanner sc = new Scanner(System.in);
 
-			Scanner sc = new Scanner(System.in);
+		System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
+		int choice = Integer.parseInt(sc.nextLine());
+		if (choice == 1) {
+			System.out.println("고객 핸드폰번호를 입력하세요");
+			String s = sc.nextLine();
+			if (customer.customer.containsKey(s)) {
+				int point = customer.customer.get(s);
 
-			System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
-			int i = Integer.parseInt(sc.nextLine());
-			if (i == 1) {
-				System.out.println("고객 핸드폰번호를 입력하세요");
-				String s = sc.nextLine();
-				if (customer.customer.containsKey(s)) {
-					int point = customer.customer.get(s);
-
-					this.customer = customer.findCustomers(s);
-					customer.setPoint(s, 0);                     // point 0
-					System.out.println("받을 금액 : " + orderSum());
-					System.out.println("포인트     : " + point);
-					System.out.println("결제 금액  : " + (orderSum()-point));
-				} else {
-					System.out.println("해당 고객이 없습니다.");
-					return;
-				}
-			} else if (i == 2) {
+				this.customer = customer.findCustomers(s);
+				customer.setPoint(s, 0); // point 0
 				System.out.println("받을 금액 : " + orderSum());
-				System.out.println("결제 금액  : " + orderSum());
+				System.out.println("포인트     : " + point);
+				System.out.println("결제 금액  : " + (orderSum() - point));
+			} else {
+				System.out.println("해당 고객이 없습니다.");
+				return;
 			}
+		} else if (choice == 2) {
+			System.out.println("받을 금액 : " + orderSum());
+			System.out.println("결제 금액  : " + orderSum());
+		}
 
-			this.isPayed = true;
-			this.payment = new CardPayments();
+		this.isPayed = true;
+		for (int i = 0; i < this.orderlist.size(); i++) {
+			this.orderlist.get(i).payment = new CardPayments();
+		}
+		this.payment = new CardPayments();
 
-			printReceipt();// 영수증 출력
+		printReceipt();// 영수증 출력
 	}
 
 	/*
@@ -347,13 +353,74 @@ class Bucket implements Serializable {
 	 * @return : int
 	 */
 	// ?
-	public int payCash(int amount) {// 권순조
+	
+	public int payCash(Long id, int amount, Customers customer) {// 권순조
 
-		int result = 0;// 현금을 한번 계산하고 남은 금액을 저장할 공간
-		int sum = 0; // 구매한 물품의 총합을 구하는 공간 선언
-		result = orderSum() - amount;// 물건의 총합에서 받은 현금을 馨 남은 것을 결과로 저장
-		return result; // 리턴후 payDividieAmount에서 사용
+        int result = 0;// 현금을 한번 계산하고 남은 금액을 저장할 공간
+        int sum = 0; // 구매한 물품의 총합을 구하는 공간 선언
+        result = orderSum() - amount;// 물건의 총합에서 받은 현금을 馨 남은 것을 결과로 저장
+        return result; // 리턴후 payDividieAmount에서 사용
+    }
+	
+	public void test() {
+		for (int i = 0; i < orderlist.size(); i++) {
+			long id = orderlist.get(i).orderId;
+			String name = orderlist.get(i).menuItem.name;
+			int price = orderlist.get(i).menuItem.price;
+			System.out.printf("ID %d    메뉴: %s\t     금액: %d\n",id, name, price);
+		}
+		
 	}
+	
+//	public int payCash(int amount, Customers customer) {// 권순조
+//		Scanner sc = new Scanner(System.in);
+//		
+//		
+//		if (amount > orderSum()) {
+//			int change = 0; // 거스름돈을 저장할 공간 선언
+//
+//
+//			System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
+//			int choice = Integer.parseInt(sc.nextLine());
+//			if (choice == 1) {
+//				System.out.println("고객 핸드폰번호를 입력하세요");
+//				String s = sc.nextLine();
+//				if (customer.customer.containsKey(s)) {
+//					int point = customer.customer.get(s);
+//					change = amount + point - orderSum();// 받을금액, 받은금액, 거스름돈
+//
+//					Pos.amount = Pos.amount + amount - point - change;
+//					this.customer = customer.findCustomers(s);
+//					customer.setPoint(s, 0); // point 0
+//					System.out.println("받을 금액 : " + orderSum());
+//					System.out.println("포인트     : " + point);
+//					System.out.println("받은 금액 : " + amount);
+//					System.out.println("받은 금액 : " + change);
+//				} else {
+//					System.out.println("해당 고객이 없습니다.");
+//					return;
+//				}
+//			} else if (choice == 2) {
+//				change = amount - orderSum();
+//
+//				Pos.amount = Pos.amount + amount - change;
+//
+//				System.out.println("받을 금액 : " + orderSum());
+//				System.out.println("받은 금액 : " + amount);
+//				System.out.println("받은 금액 : " + change);
+//			}
+//
+//			this.isPayed = true;
+//			for (int i = 0; i < this.orderlist.size(); i++) {
+//				this.orderlist.get(i).payment = new CardPayments();
+//			}
+//			this.payment = new CashPayments();
+//
+//			printReceipt();// 영수증 출력
+//		} else {
+//			System.out.println("금액이 부족합니다.");
+//		}
+//	}
 
 	// ?
 	public int payCard(int amount) {// 권예지
@@ -363,24 +430,24 @@ class Bucket implements Serializable {
 		return result; // 리턴후 payDividieAmount에서 사용
 	}
 
-	// FIX
-	public void payDivideAmount(int no, int amount) {// 일찬님
-		if (no == 3) {
-			do {
-				System.out.println("결재 방식을 선택하세요");
-				Scanner sc = new Scanner(System.in);
-				int select = Integer.parseInt(sc.nextLine());
-				if (select == 1) {// 1을
-					System.out.println("현금 결재를 선택하셨습니다.");
-					payCash(amount);
-
-				} else if (select == 2) {
-					System.out.println("카드 결재를 선택하셨습니다.");
-					payCard(amount);
-				}
-			} while (payCard(amount) == 0 || payCash(amount) == 0);
-		}
-	}
+//	// FIX
+//	public void payDivideAmount(int no, int amount) {// 일찬님
+//		if (no == 3) {
+//			do {
+//				System.out.println("결재 방식을 선택하세요");
+//				Scanner sc = new Scanner(System.in);
+//				int select = Integer.parseInt(sc.nextLine());
+//				if (select == 1) {// 1을
+//					System.out.println("현금 결재를 선택하셨습니다.");
+//					payCash(amount);
+//
+//				} else if (select == 2) {
+//					System.out.println("카드 결재를 선택하셨습니다.");
+//					payCard(amount);
+//				}
+//			} while (payCard(amount) == 0 || payCash(amount) == 0);
+//		}
+//	}
 
 //	print receipt
 	// ADJUST tf
@@ -543,7 +610,7 @@ class Bucket implements Serializable {
 		return "Bucket [orderlist=" + orderlist + ", customer=" + customer + ", payment=" + payment + ", isPayed="
 				+ isPayed + "]";
 	}
-	
+
 }
 
 class Pos implements Serializable {

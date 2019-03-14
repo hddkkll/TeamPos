@@ -18,6 +18,8 @@ public class Test {
 		Orders order3 = new Orders(pos.getMenu("짬뽕"));
 
 		System.out.println(order1.toString());
+		System.out.println(order2.toString());
+		System.out.println(order3.toString());
 
 		Bucket bucketList = new Bucket();
 		bucketList.addOrder(order1);
@@ -39,7 +41,8 @@ public class Test {
 		//bucketList.listOrders();
 		
 		//bucketList.payCashAll(20000, pos.customers);
-		bucketList.payCardAll(pos.customers);
+		//bucketList.payCardAll(pos.customers);
+		bucketList.test();
 		System.out.println(bucketList.toString());
 		
 //		System.out.println("짬뽕의 object " + bucketList.getOrder(pos.getMenu("짬뽕")).toString());
