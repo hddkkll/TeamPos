@@ -602,7 +602,108 @@ class Pos {
 		System.out.println("주문받을 테이블을 선택하세요! ");
 
 	}
-
+	   
+	  void showMenu(int tableNum) {
+		  int menuNum = 0; 
+		  OrderList orderlist = new OrderList();
+		  
+		 orderlist= tables.tables.get(tableNum);
+			 
+			 System.out.println("메뉴를 선택하세요");
+			 System.out.println("1.주문하기");
+			 System.out.println("2.주문삭제");
+			 System.out.println("3.주문전체삭제");
+			 System.out.println("4.수량변경");
+			 System.out.println("5.결제하기");
+			 
+			 menuNum = Integer.parseInt(sc.nextLine());
+			 
+		     
+			 switch(menuNum) {
+		     case 1 :
+		    	 orderlist = new OrderList();
+		       
+		       while(true) { 
+		    	   
+		        System.out.println("메뉴를 선택하세요. 뒤로가기는 0번");
+		        System.out.println(menuItem.toString());
+		      
+		       String menuName=sc.nextLine();
+		        if(menuName.equals("0")) {
+		            showMenu(tableNum);
+		        }
+		        	
+		        for(int i =0; i<menuItem.size(); i++) {
+		          if(menuName.equals(menuItem.get(i).name)) {
+		               orderlist.orderlist.add(new Orders(menuItem.get(i)));
+		               System.out.println(menuItem.get(i).name+"가 주문되었습니다.");
+		           }
+		        }  }
+		    	  
+		            
+			case 2 :
+		    	   System.out.println("취소할 주문을 선택하세요");
+		    	   System.out.println(orderlist.orderlist);
+		    	   
+		         
+		           String menuName2=sc.nextLine();
+		           if(menuName2.equals("0")) {
+		           	selectTable();
+		           }
+		        	
+		           for(int i =0; i<menuItem.size(); i++) {
+		              if(menuName2.equals(menuItem.get(i).name)) {
+		            	  orderlist.deleteOrder(orderlist.getOrder(menuItem.get(i)));
+		                  //orderlist.orderlist.remove(menuItem.get(i));
+		                  System.out.println(menuItem.get(i).name+"가 취소되었습니다.");
+		              }
+		           } 
+		    	 
+		    	   break;
+		    	 
+		     case 3 :
+		    	 orderlist.deleteOrderAll();
+		    	 
+		     case 4 :
+		    	 System.out.println("수량변경 할 메뉴를 선택하세요");
+		    	 String menuName3 = sc.nextLine();
+		    	 System.out.println("수량을 입력하세요");
+		    	 int qty = Integer.parseInt(sc.nextLine());
+		        
+		    	 for(int i =0; i<menuItem.size(); i++){
+		    		 if(menuName3.equals(menuItem.get(i).name)) {
+		           	    orderlist.changeQty(menuItem.get(i),qty);
+		              
+		                 System.out.println(menuItem.get(i).name+"이 "+qty+"개로 변경되었습니다.");
+		             }
+		    	 }
+		         
+		    	 
+		     case 5 :
+		    	 
+		    	 
+		    	 
+		     }
+			 
+			 
+			 }
+		  
+	  
+	   
+	   
+	   
+	  void selectTable() {
+		      
+		  int tableNum = 0;
+		  System.out.println("테이블을 선택하세요! ");
+		  tableNum = Integer.parseInt(sc.nextLine());
+		  showMenu(tableNum);
+		
+		 //System.out.println(orderlist.listOrders()); listOrders(): 반환값을 스트링으로 리턴해줄 것 ! 
+		 
+		 
+		 }
+		 
 	void menuManage() {
 
 		while (true) {
@@ -683,6 +784,7 @@ class Pos {
 
 		case 1:
 			viewTable(9);
+	    	selectTable();
 			break;
 		case 2:
 			totalsales();
