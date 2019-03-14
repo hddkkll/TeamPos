@@ -1,22 +1,16 @@
 package kr.or.bit.team1;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
-import kr.or.bit.team1.util.TeamFiles;
 import kr.or.bit.team1.util.TeamFormat;
 import kr.or.bit.team1.util.TeamLogger;
 
@@ -27,22 +21,6 @@ enum OrderStatus {
 enum PayType {
 	CASH, CARD
 };
-
-class Menu implements Serializable {
-	String name;
-	int price;
-
-	public Menu(String name, int price) {
-		TeamLogger.info("Menu(String name, int price)");
-		this.name = name;
-		this.price = price;
-	}
-
-	@Override
-	public String toString() {
-		return "Menu [name=" + name + ", price=" + price + "]";
-	}
-}
 
 class Table implements Serializable {
 
@@ -113,12 +91,11 @@ class Table implements Serializable {
 
 }
 
-// 중간에 담는 그릇이 필요
+
 class Bucket implements Serializable {
 
 	ArrayList<Orders> orderlist;
 	Customers customer;
-	// 강기훈 : isPayed추가
 	boolean isPayed;
 
 	public Bucket() {
@@ -129,34 +106,99 @@ class Bucket implements Serializable {
 
 	// 주문내역을 보여줌
 	public void listOrders() {// 권순조
-		// 메뉴명-단가-수량-금액
-	}
+		List<String> menuSet = new ArrayList<String>();
 
-	// 주문
-	public void addOrder(Orders order) { // Menu menu 신지혁
-		orderlist.add(order);
-	}
-
-	// 선택취소
-	public void deleteOrder(Orders order) { // 강기훈
 		for (int i = 0; i < orderlist.size(); i++) {
-			if (orderlist.get(i).orderId.equals(order.orderId)) {
-				orderlist.remove(i);
+			String name = orderlist.get(i).menuItem.name;
+			menuSet.add(name);
+			System.out.println(menuSet.toString());
+			for (int j = 0; j < menuSet.size(); j++) {
+				if (name.equals(menuSet.get(j))) {
+					continue;
+				} else {
+					int price = orderlist.get(i).menuItem.price;
+					int quty = menuQty(orderlist.get(i).menuItem);
+					int bill = price * quty;
+					System.out.printf("메뉴: %s        단가 : %d   수량 : %d  금액 : %d \n", name, price, quty, bill);
+				}
 			}
 		}
 	}
 
-	// 전체취소
-	// FIX
-	public void deleteOrderAll() { // 신지혁
-		int num = orderlist.size();
-		orderlist.removeAll(orderlist);
-		for (int i = 0; i < num; i++)
-			Orders.orderId--;
+	/*
+	 * @method name : addOrder
+	 *
+	 * @date : 2019.03.12
+	 *
+	 * @author : 신지혁
+	 *
+	 * @description : order를 추가한다.
+	 *
+	 * @parameters : Orders order
+	 *
+	 * @return : void
+	 */
+	public void addOrder(Orders order) {
+		TeamLogger.info("addOrder");
+		orderlist.add(order);
 	}
 
-	// 해당 메뉴를 2개 추가하면 qty=2, 2개 제외하면 qty=-2
-	public void changeQty(Menu menu, int qty) { // 일찬님
+	/*
+	 * @method name : deleteOrder
+	 *
+	 * @date : 2019.03.14
+	 *
+	 * @author : 강기훈
+	 *
+	 * @description : order를 제거한다.
+	 *
+	 * @parameters : Orders order
+	 *
+	 * @return : void
+	 */
+	public void deleteOrder(Orders order) { // 강기훈
+		TeamLogger.info("deleteOrder(Orders order)");
+		if (order != null) {
+			changeQty(order.menuItem, -1);
+		}
+	}
+
+	/*
+	 * @method name : deleteOrderAll
+	 *
+	 * @date : 2019.03.13
+	 *
+	 * @author : 신지혁
+	 *
+	 * @description : 전체 order를 제거한다.
+	 *
+	 * @parameters :
+	 *
+	 * @return : void
+	 */
+	public void deleteOrderAll() {
+		TeamLogger.info("deleteOrderAll");
+		int num = orderlist.size();
+		orderlist.removeAll(orderlist);
+	}
+
+	/*
+	 * @method name : changeQty
+	 *
+	 * @date : 2019.03.13
+	 *
+	 * @author : 신지혁
+	 *
+	 * @description : 전체 order를 제거한다.
+	 *
+	 * @parameters : Menu menu, int qty
+	 *
+	 * @return : void
+	 * 
+	 * @example
+	 *  해당 메뉴를 2개 추가하면 qty=2, 2개 제외하면 qty=-2
+	 */
+	public void changeQty(Menu menu, int qty) { 
 		TeamLogger.info("changeQty(Menu menu, int qty)");
 		if (qty < 0) { // 주문취소
 
@@ -195,7 +237,7 @@ class Bucket implements Serializable {
 	 */
 	// ADD System.out.println("고객명을 입력하세요");
 	// FIX
-	public void payCashAll(int amount, int tableNum) {// 권순조 받은 현금이 물건의 총합보다 높으면 사용
+	public void payCashAll(int amount) {// 권순조 받은 현금이 물건의 총합보다 높으면 사용
 		int exchange = 0;// 거스름돈을 저장할 공간 선언
 		customer = new Customers();
 		Scanner sc = new Scanner(System.in);
@@ -210,9 +252,7 @@ class Bucket implements Serializable {
 			exchange = amount - orderSum();
 		}
 		System.out.println(exchange);
-		Table tb = new Table();
-		tb.tables.remove(tableNum);
-		tb.tables.put(tableNum, new Bucket());// 테이블 초기화
+
 		printReceipt();// 영수증 출력
 	}
 
@@ -257,7 +297,6 @@ class Bucket implements Serializable {
 		return result; // 리턴후 payDividieAmount에서 사용
 	}
 
-	
 	// FIX
 	public void payDivideAmount(int no, int amount) {// 일찬님
 		if (no == 3) {
@@ -340,7 +379,7 @@ class Bucket implements Serializable {
 	}
 
 	// FIX : 기존 customer객체를 가져와야 함
-	public void isUsePoint() {					// 권예지
+	public void isUsePoint() { // 권예지
 		Scanner sc = new Scanner(System.in);
 		System.out.println("포인트를 사용하시겠습니까?");
 		String choice = sc.nextLine();// 포인트를 사용할지 확인하는 로직 시작
@@ -375,15 +414,29 @@ class Bucket implements Serializable {
 	 * @return : int
 	 */
 	public int orderSum() {
-		int sum = 0; // 구매한 물품의 총합을 구하는 공간 선언
-		for (int i = 0; i < orderlist.size(); i++) {// 구매한 물품의 총합을 구하는 포문
+		TeamLogger.info("orderSum");
+		int sum = 0;
+		for (int i = 0; i < orderlist.size(); i++) {
 			Orders order = orderlist.get(i);
-			sum += order.menuItem.price; // sum에 저장
+			sum += order.menuItem.price;
 		}
 		return sum;// 합계를 반환
 	}
 
-	// 정일찬 추가 : 해당 메뉴별 수량을 반환
+	/*
+	 * @method name : menuQty
+	 *
+	 * @date : 2019.03.13
+	 *
+	 * @author : 정일찬
+	 *
+	 * @description : 해당 메뉴별 수량을 반환
+	 *
+	 * @parameters : Menu menu
+	 *
+	 * @return : int
+	 */
+
 	public int menuQty(Menu menu) {
 		TeamLogger.info("menuQty(Menu menu)");
 		int qty = 0;
@@ -395,8 +448,21 @@ class Bucket implements Serializable {
 		return qty;
 	}
 
-	// 정일찬 추가 :해당 메뉴에 해당하는 order를 반환
+	/*
+	 * @method name : getOrder
+	 *
+	 * @date : 2019.03.13
+	 *
+	 * @author : 정일찬
+	 *
+	 * @description : 해당 메뉴에 해당하는 order를 반환
+	 *
+	 * @parameters : Menu menu
+	 *
+	 * @return : Orders
+	 */
 	public Orders getOrder(Menu menu) {
+		TeamLogger.info("getOrder");
 		Orders order = null;
 		for (int i = 0; i < this.orderlist.size(); i++) {
 			if (orderlist.get(i).menuItem.equals(menu)) {
@@ -409,122 +475,6 @@ class Bucket implements Serializable {
 	@Override
 	public String toString() {
 		return "OrderList [orderlist=" + orderlist + ", customer=" + customer + "]";
-	}
-
-}
-
-class Orders implements Serializable {
-
-	static Long orderId = 0L;
-	Date orderDate;
-	Menu menuItem;
-	Payments payment;
-	// OrderStatus orderStatus;
-
-	public Orders(Menu menuItem) {
-		orderId++;
-		this.orderDate = new Date();
-		this.menuItem = menuItem;
-		this.payment = null; // initalization
-		// this.orderStatus = OrderStatus.ORDER;
-	}
-
-	public Orders(Menu menuItem, Payments payment) {
-		orderId++;
-		this.orderDate = new Date();
-		this.menuItem = menuItem;
-		this.payment = payment;
-		// this.orderStatus = OrderStatus.ORDER;
-	}
-
-	@Override
-	public String toString() {
-		return "Orders [orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + ", payment="
-				+ payment + "]";
-	}
-
-}
-
-class Customers implements Serializable {
-
-	HashMap<String, Integer> customer;// 키값: 전화번호,
-	// 밸류값: 포인트
-
-	public Customers() {
-		this.customer = new HashMap<String, Integer>();
-	}
-
-	// 고객 추가
-	// FIX : !customer.containsKey(phoneNumber))
-	public void addCustomers(String phoneNumber) {// 권순조
-		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
-			if (!customer.containsKey(phoneNumber)) {
-				customer.put(phoneNumber, 0);
-			}
-		}
-
-	}
-
-	// 회원등록 OrderList클래스에서 이동받음..
-	// FIX : 정규표현식 TeamFormat.iscellPhoneMetPattern(phoneNumber) 추가 필요
-	public void addMembers(String phoneNumber) {// 신지혁
-		customer.put(phoneNumber, 0);
-		System.out.println(phoneNumber + "추가 완료");
-	}
-
-	/*
-	 * @method name : modifyCustomers
-	 *
-	 * @date : 2019.03.12
-	 *
-	 * @author : 정일찬
-	 *
-	 * @description : 고객정보를 수정한다.
-	 *
-	 * @parameters : String oldPhoneNumber, String phoneNumber
-	 *
-	 * @return : void
-	 */
-	public void modifyCustomers(String oldPhoneNumber, String phoneNumber) {
-		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // 핸드폰 정규표현식
-			if (customer.containsKey(oldPhoneNumber)) {
-				customer.put(phoneNumber, customer.get(oldPhoneNumber)); // 포인트를 새로운 핸드폰으로 옮김
-				customer.remove(oldPhoneNumber); // 기존 폰넘버 삭제
-			}
-		} else {
-			System.out.println("핸드폰번호를 확인하고 입력하세요");
-		}
-	}
-
-	// 고객 조회
-	public void findCustomers(String phoneNumber) { // 신지혁
-		if (customer.get(phoneNumber) != null)
-			System.out.println(phoneNumber + "의 포인트는 : " + customer.get(phoneNumber) + "원 입니다");
-		else
-			System.out.println("고객이아닙니다");
-	}
-
-	// 고객 탈퇴
-	public void deleCustomers(String phoneNumber) { // 이힘찬
-		if (customer.get(phoneNumber) != null) {
-			customer.remove(phoneNumber);
-			System.out.println("탈퇴 되었습니다.");
-		} else {
-			System.out.println("해당 전화번호가 없습니다.");
-		}
-	}
-
-	// 고객 현황
-	public void listCustomers() {// 강기훈
-		for (Map.Entry<String, Integer> obj : customer.entrySet()) {
-			System.out.println("전화번호:" + obj.getKey() + "/ Point:" + obj.getValue());
-
-		}
-	}
-
-	@Override
-	public String toString() {
-		return "Customers [customer=" + customer + "]";
 	}
 
 }
@@ -771,20 +721,20 @@ class Pos implements Serializable {
 
 	}
 
-	// 데이터 저장 
-	public void save(String date) { // 권예지
+	// 데이터 저장
+	public void save(Object object, String pathFile) { // 권예지
 	}
 
 	// 데이터 로드 (시스템 시작시 데이터 로드)
-	public void load() {// 권예지
-		
+	public void load(Object object, String pathFile) {// 권예지
+
 	}
 }
 
 public class Pos_System {
 	public static void main(String[] args) {
 		Pos pos = new Pos();
-		
+
 //		// 데이터 로드 (시스템 시작시 데이터 로드)
 //		String pathFile = "C:\\Temp\\pos.obj";
 //		pos=(Pos)TeamFiles.loadObject(pathFile);
@@ -794,9 +744,7 @@ public class Pos_System {
 //
 //		// 데이터 저장 (시스템 종료시 데이터 저장)
 //		TeamFiles.saveObject(pos, "pathFile");
-		
 
-		
 		// ========================
 		// 이하 테스트용도
 
@@ -804,9 +752,11 @@ public class Pos_System {
 		client.addCustomers("010-1111-1111");
 		client.addCustomers("010-2222-2222");
 		client.addCustomers("010-3333-3333");
-		client.listCustomers();
-		
-		
+		client.deleCustomers("010-1111-2222");
+		client.findCustomers("010-2222-1111");
+
+		System.out.println(client.toString());
+
 		pos.addMenu("짜장", 5000);
 		pos.addMenu("짬뽕", 6000);
 		pos.addMenu("우동", 5500);
