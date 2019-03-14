@@ -46,14 +46,14 @@ class Menu implements Serializable {
 
 class Table implements Serializable {
 
-	HashMap<Integer, OrderList> tables;
+	HashMap<Integer, Bucket> tables;
 	Date date;
 	boolean isPayed; // @ deprecated
 
 	// 정일찬 : 생성자변경
 	public Table() {
 		TeamLogger.info("Table()");
-		tables = new HashMap<Integer, OrderList>();
+		tables = new HashMap<Integer, Bucket>();
 		this.date = new Date();
 		this.isPayed = false;
 
@@ -65,7 +65,7 @@ class Table implements Serializable {
 
 	// 정일찬 :
 	// addOrdetList 추가
-	public void addOrderList(Integer tableNo, OrderList orderList) {
+	public void addOrderList(Integer tableNo, Bucket orderList) {
 		TeamLogger.info("addOrderList(Integer tableNo, OrderList orderList)");
 		tables.put(tableNo, orderList);
 	}
@@ -74,7 +74,7 @@ class Table implements Serializable {
 	// FIX
 	public void moveTable(int fromTable, int toTable) {// 강기훈
 		TeamLogger.info("moveTable(int fromTable, int toTable)");
-		OrderList temp = new OrderList();
+		Bucket temp = new Bucket();
 		temp = tables.get(fromTable);
 		tables.put(toTable, temp);
 		tables.remove(fromTable);
@@ -82,9 +82,9 @@ class Table implements Serializable {
 
 	// 테이블 주문 합치기
 	public void mergeTable(int fromTable, int toTable) {// 권예지
-		OrderList temp = new OrderList();
+		Bucket temp = new Bucket();
 		temp = tables.get(fromTable);
-		OrderList temp2 = new OrderList();
+		Bucket temp2 = new Bucket();
 		temp2 = tables.get(toTable);
 
 		for (int i = 0; i < temp2.orderlist.size(); i++)
@@ -104,9 +104,9 @@ class Table implements Serializable {
 	// 정일찬 int tableNo parameter 추가
 	// FIX
 	public void deleteTable(int tableNo) {// 강기훈
-		for (Map.Entry<Integer, OrderList> obj : tables.entrySet()) {
+		for (Map.Entry<Integer, Bucket> obj : tables.entrySet()) {
 			if (obj.getValue().isPayed) {
-				tables.put(obj.getKey(), new OrderList());
+				tables.put(obj.getKey(), new Bucket());
 			}
 		}
 	}
@@ -114,14 +114,14 @@ class Table implements Serializable {
 }
 
 // 중간에 담는 그릇이 필요
-class OrderList implements Serializable {
+class Bucket implements Serializable {
 
 	ArrayList<Orders> orderlist;
 	Customers customer;
 	// 강기훈 : isPayed추가
 	boolean isPayed;
 
-	public OrderList() {
+	public Bucket() {
 		this.orderlist = new ArrayList<Orders>();
 		this.customer = null;
 		this.isPayed = false;
@@ -212,7 +212,7 @@ class OrderList implements Serializable {
 		System.out.println(exchange);
 		Table tb = new Table();
 		tb.tables.remove(tableNum);
-		tb.tables.put(tableNum, new OrderList());// 테이블 초기화
+		tb.tables.put(tableNum, new Bucket());// 테이블 초기화
 		printReceipt();// 영수증 출력
 	}
 
@@ -308,7 +308,7 @@ class OrderList implements Serializable {
 
 	// 포인트 적립
 	public void addPoints(Customers customers, String phoneNumber, int amount) { // 권예지^^
-		OrderList orderlist = new OrderList();
+		Bucket orderlist = new Bucket();
 		int paypoint = customers.customer.get(phoneNumber);
 		customers.customer.put(phoneNumber, (int) (paypoint + (orderlist.orderSum() * 0.05)));
 	}
@@ -445,32 +445,6 @@ class Orders implements Serializable {
 
 }
 
-interface Payments {
-//	현금
-//	카드
-//	분할계산
-	public void pay();
-}
-
-class CashPayments implements Payments, Serializable {
-
-	@Override
-	public void pay() { // 일찬님
-		System.out.println(PayType.CASH);
-	}
-
-}
-
-class CardPayments implements Payments, Serializable {
-
-	@Override
-	public void pay() {// 신지혁
-		System.out.println(PayType.CARD);
-		System.out.println("카드계산 입니다...");
-	}
-
-}
-
 class Customers implements Serializable {
 
 	HashMap<String, Integer> customer;// 키값: 전화번호,
@@ -481,14 +455,12 @@ class Customers implements Serializable {
 	}
 
 	// 고객 추가
-	// FIX :if (customer.containsKey(phoneNumber))을 제거해야 함
+	// FIX : !customer.containsKey(phoneNumber))
 	public void addCustomers(String phoneNumber) {// 권순조
-//		Scanner sc = new Scanner(System.in);
-//		String PhonNum = sc.nextLine();
 		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
-//			if (customer.containsKey(phoneNumber)) {
+			if (!customer.containsKey(phoneNumber)) {
 				customer.put(phoneNumber, 0);
-//			}
+			}
 		}
 
 	}
@@ -567,7 +539,7 @@ class Pos implements Serializable {
 	// 시재금액
 	static int amount = 200000;
 	List<Orders> orders = new ArrayList<Orders>();
-	OrderList orderList;
+	Bucket orderList;
 	Table tables = new Table();
 	List<Menu> menuItem = new ArrayList<Menu>();
 	Customers customers = new Customers();
@@ -851,7 +823,7 @@ public class Pos_System {
 		System.out.println(order1.toString());
 
 		// OrderList 생성
-		OrderList orderList = new OrderList();
+		Bucket orderList = new Bucket();
 		orderList.addOrder(order1);
 		orderList.addOrder(order2);
 		orderList.addOrder(order3);
@@ -900,7 +872,7 @@ public class Pos_System {
 
 		int yourbill = 20000;
 		// cash
-		OrderList afterLunch = tables.tables.get(1);
+		Bucket afterLunch = tables.tables.get(1);
 		for (int i = 0; i < afterLunch.orderlist.size(); i++) {
 			afterLunch.orderlist.get(i).payment = new CashPayments();
 			yourbill -= afterLunch.orderlist.get(i).menuItem.price;
