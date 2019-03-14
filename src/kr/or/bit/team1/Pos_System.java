@@ -529,10 +529,8 @@ class Pos {
 
 				deleteMenu(menuName);
 				break;
-
 			case 4:
 				posStart();
-
 			default:
 				System.out.println("다시 입력하세요");
 
