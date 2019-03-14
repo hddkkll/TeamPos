@@ -388,8 +388,10 @@ class Customers {
 //		Scanner sc = new Scanner(System.in);
 //		String PhonNum = sc.nextLine();
 		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
-			customer.put(phoneNumber, 0);
-			System.out.println(customer);
+			if (!customer.containsKey(phoneNumber)) {
+				customer.put(phoneNumber, 0);
+				System.out.println(customer);
+			}
 		}
 	}
 
