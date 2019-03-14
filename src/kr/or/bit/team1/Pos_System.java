@@ -1,11 +1,16 @@
 package kr.or.bit.team1;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import kr.or.bit.team1.util.TeamFormat;
 
@@ -17,15 +22,22 @@ enum PayType {
 	CASH, CARD
 };
 
+
+
+
 class Menu {
 	String name;
 	int price;
+//	HashMap <String, Integer> menu;
 
+//	public Menu() {
+//		menu=new HashMap<String, Integer>();
+//	}
 	public Menu(String name, int price) {
 		super();
 		this.name = name;
 		this.price = price;
-	}
+	}	
 
 	@Override
 	public String toString() {
@@ -35,12 +47,13 @@ class Menu {
 
 class Table {
 
-	HashMap<Integer, OrderList> tables = new HashMap<Integer, OrderList>();
+	HashMap<Integer, OrderList> tables;
 	Date date;
 	boolean isPayed;
 
-	public Table(int tableNo, OrderList orderList) {
-		tables.put(tableNo, orderList);
+	//정일찬 : 생성자변경
+	public Table() {
+		tables = new HashMap<Integer, OrderList>();
 		this.date = new Date();
 		this.isPayed = false;
 
@@ -49,6 +62,32 @@ class Table {
 	public void showTable() {
 
 	}
+
+	// 정일찬 : 
+	// addOrdetList 추가
+	public void addOrderList(Integer tableNo, OrderList orderList) {
+		// 테이블에 order add
+		tables.put(tableNo, orderList);
+	}
+
+//	// 결제 (테이블)
+//	public void payTableCash(Integer tableNo, Integer amount) {// 이힘찬
+//		// 테이블에서 order를 하나씩 가져와서 결제함
+//	}
+//
+//	public void payTableCard(Integer tableNo) {// 권순조
+//		// 테이블에서 order를 하나씩 가져와서 결제함
+//	}
+//
+//	// 결제 (테이블)
+//	public void payTableCardAll(Integer tableNo) { // 일찬님
+//		// 테이블의 order를 한가지 결제형식으로
+//	}
+//
+//	public void payTableCashAll(Integer tableNo, Integer amount) {// 이힘찬
+//		// 테이블의 order를 한가지 결제형식으로
+//	}
+
 
 	// 테이블이동
 	public void moveTable(int fromTable, int toTable) {// 강기훈
@@ -62,6 +101,24 @@ class Table {
 	public void mergeTable(int fromTable, int toTable) {// 권예지
 
 	}
+	
+	// 테이블 추가
+	// 정일찬 OrderList orderList parameter 삭제
+	public void addTable(int tableNo) {// 권순조
+		this.tables.put(tableNo, null);
+		
+	}
+
+	// 테이블 삭제
+	// 정일찬  int tableNo parameter 추가
+	public void deleteTable(int tableNo) {// 강기훈
+		for(Map.Entry<Integer, OrderList> obj : tables.entrySet()) {
+		      if(obj.getValue().isPayed) {
+		    	  tables.put(obj.getKey(), new OrderList());
+		      }
+		}
+	}
+
 }
 
 // 중간에 담는 그릇이 필요
@@ -69,23 +126,23 @@ class OrderList {
 
 	ArrayList<Orders> orderlist;
 	Customers customer;
+	//강기훈 :  isPayed추가
+	boolean isPayed;
 
 	public OrderList() {
 		this.orderlist = new ArrayList<Orders>();
-		this.customer = new Customers();
+		this.customer = null;
+		this.isPayed=false;
 	}
 
 	// 주문내역을 보여줌
 	public void listOrders() {// 권순조
 		// 메뉴명-단가-수량-금액
-		for (Orders or : orderlist) {
-			System.out.println(or.menuItem.name + "/" + or.menuItem.price);
-		}
 	}
 
 	// 주문
 	public void addOrder(Orders order) { // Menu menu 신지혁
-
+		orderlist.add(order);
 	}
 
 	// 선택취소
@@ -95,6 +152,7 @@ class OrderList {
 				orderlist.remove(i);
 			}
 		}
+		order.orderId--;
 	}
 
 	// 전체취소
@@ -210,14 +268,14 @@ class OrderList {
 	}
 
 	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber, int amount) {// 강기훈
+	public void addPoints(Customers customers, String phoneNumber) {// 강기훈7
 		int currPoint = customers.customer.get(phoneNumber);
-		customers.customer.put(phoneNumber, (int) (currPoint + amount * 0.05));
+		customers.customer.put(phoneNumber, (int) (currPoint + orderSum() * 0.05));
 	}
 
 	// 포인트 사용
 	public void usePoints(Customers customers, String phoneNumber) {// 힘찬이
-
+          
 	}
 
 	/*
@@ -235,10 +293,10 @@ class OrderList {
 	 */
 	public int orderSum() {
 		int sum = 0; // 구매한 물품의 총합을 구하는 공간 선언
-		for (int i = 0; i < orderlist.size(); i++) {// 구매한 물품의 총합을 구하는 포문
-			Orders order = orderlist.get(i);
-			sum += order.menuItem.price; // sum에 저장
-		}
+//		for (int i = 0; i < orderlist.size(); i++) {// 구매한 물품의 총합을 구하는 포문
+//			Orders order = orderlist.get(i);
+//			sum += order.menuItem.price; // sum에 저장
+//		}
 		return sum;// 합계를 반환
 	}
 
@@ -259,7 +317,7 @@ class Orders {
 		orderId++;
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
-		this.payment = new CashPayments(); // initalization
+		this.payment = null; // initalization
 	}
 
 	public Orders(Menu menuItem, Payments payment) {
@@ -271,7 +329,7 @@ class Orders {
 
 	@Override
 	public String toString() {
-		return "Orders [orderDate=" + orderDate + ", menuItem=" + menuItem + ", payment=" + payment + "]";
+		return "Orders [orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + ", payment=" + payment + "]";
 	}
 
 }
@@ -292,13 +350,13 @@ class CashPayments implements Payments {
 	}
 
 	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber) { // 이힘찬
+	public void addPoints(Customers customers, String phoneNumber, int amount) { // 이힘찬
 
 	}
 
 	// 포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 권순조
-
+	public void usePoints(Customers customers, String phoneNumber, int amount) {// 권순조
+         
 	}
 
 }
@@ -316,13 +374,19 @@ class CardPayments implements Payments {
 	}
 
 	// 포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 강기훈
-
+	public int usePoints(Customers customers, String phoneNumber) {// 강기훈
+           
+		int currPoint = customers.customer.get(phoneNumber);
+		customers.customer.put(phoneNumber, 0);
+		
+		
+		return currPoint;
 	}
 
 }
 
 class Customers {
+
 	HashMap<String, Integer> customer;// 키값: 전화번호,
 	// 밸류값: 포인트
 
@@ -332,9 +396,12 @@ class Customers {
 
 	// 고객 추가
 	public void addCustomers(String phoneNumber) {// 권순조
-		Scanner sc = new Scanner(System.in);
-		String PhonNum = sc.nextLine();
-		customer.put(PhonNum, 0);
+//		Scanner sc = new Scanner(System.in);
+//		String PhonNum = sc.nextLine();
+		if(TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
+			customer.put(phoneNumber, 0);	
+		}
+		
 
 	}
 
@@ -389,6 +456,13 @@ class Customers {
 		}
 
 	}
+	
+	@Override
+	public String toString() {
+		return "Customers [customer=" + customer + "]";
+	}
+	
+	
 }
 
 class Pos {
@@ -399,78 +473,197 @@ class Pos {
 	String logPath = "C:\\temp\\log";
 
 	// 시재금액
-	Integer amount;
+	Integer amount=200000;
 	List<Orders> orders = new ArrayList<Orders>();
 	OrderList orderList;
+	Table tables = new Table();
+	List<Menu> menuItem = new ArrayList<Menu>();
+	Customers customers = new Customers();
 
+   void viewTable(int seatCount) {
+	 
+		for(int i = 1; i<=seatCount;i++) {
+			System.out.printf("[%d]",i);
+			if(i%3==0) {
+				System.out.println();
+			}
+			 
+		}
+	   
+   }
+  
+  void takeOrder() {
+	  int tableNum = 0;
+	  System.out.println("주문받을 테이블을 선택하세요! ");
+	  
+	  
+	  
+	  
+  }
+   
+   
+   void menuManage() {
+	  
+	   
+	   
+	while(true) {  
+	    System.out.println(menuItem.toString());
+		
+		 int menuNum=0;
+		   String menuName = null;
+		   String oldName = null;
+		   
+		   int menuPrice = 0;
+		   System.out.println("메뉴를 추가하거나 수정할 수 있습니다.");
+		   System.out.println("1.메뉴추가");
+		   System.out.println("2.메뉴수정");
+		   System.out.println("3.메뉴삭제");
+		   System.out.println("4.종료");
+		   System.out.println("원하는 번호를 입력하세요");
+		   
+		menuNum = Integer.parseInt(sc.nextLine());
+	  switch(menuNum) {
+	  
+	  case 1:
+		   System.out.println("메뉴이름: ");
+		   menuName = sc.nextLine();
+		   
+		   System.out.println("가격:");
+		   menuPrice = Integer.parseInt(sc.nextLine());
+		  
+		   addMenu(menuName,menuPrice);
+		   break;
+	  case 2:
+		  System.out.println("수정할 메뉴를 입력하세요 ");
+		  oldName = sc.nextLine();
+		  
+		  System.out.println("새로운 메뉴를 입력하세요 ");
+		  menuName = sc.nextLine();
+		  
+
+		  System.out.println("새로운 가격을 입력하세요 ");
+		   menuPrice = Integer.parseInt(sc.nextLine());
+		  
+		  
+		  modifyMenu(oldName, menuName,menuPrice);
+		  break;
+		  
+	  case 3:
+          System.out.println("삭제할 메뉴를 입력하세요: ");
+          
+          menuName = sc.nextLine();
+          
+          deleteMenu(menuName);
+          break;
+          
+          
+	  case 4:
+		    posStart();
+		    
+	  
+      default:
+		 System.out.println("다시 입력하세요");
+		  
+		  
+	  }
+		  
+	  
+	  
+	  
+	  
+	  
+	  
+	  }
+	   
+	   
+	   
+	   
+   }
+	
+	
+   public void posStart() {
+		 int menuNum = 0;
+		System.out.println("POS SYSTEM");
+		System.out.println("1.판매관리");
+		System.out.println("2.매출관리");
+		System.out.println("3.회원관리");
+	    System.out.println("4.메뉴관리");
+	    System.out.println("5.테이블관리");
+	    System.out.println("6.시스템종료");
+	    
+	    System.out.print("번호를 입력하세요:");
+	    menuNum = Integer.parseInt(sc.nextLine());
+	    
+	    switch(menuNum) {
+	    
+	    case 1:
+	    	 viewTable(9);
+	    	  break;
+	    case 4:
+	    	  menuManage();
+	    
+	          break;
+	    
+	    
+	    }
+	    	
+	    	
+	    
+		
+	}
 	// 판매관리, 매출관리, 회원관리, 메뉴관리, 테이블관리, 시스템 종료
 
-	// 주문(테이블)
-	public void orderTable(Integer tableNo, Menu menu) { // 일찬님
-		// 테이블에 order add
-	}
+//	// 주문(테이블)
+//	public void orderTable(Integer tableNo, Menu menu) { // 일찬님
+//		// 테이블에 order add
+//	}
+//
+//	// 결제 (테이블)
+//	public void payTableCash(Integer tableNo, Integer amount) {// 이힘찬
+//		// 테이블에서 order를 하나씩 가져와서 결제함
+//	}
+//
+//	public void payTableCard(Integer tableNo) {// 권순조
+//		// 테이블에서 order를 하나씩 가져와서 결제함
+//	}
+//
+//	// 결제 (테이블)
+//	public void payTableCardAll(Integer tableNo) { // 일찬님
+//		// 테이블의 order를 한가지 결제형식으로
+//	}
+//
+//	public void payTableCashAll(Integer tableNo, Integer amount) {// 이힘찬
+//		
+//	}
 
-	// 결제 (테이블)
-	public void payTableCash(Integer tableNo, Integer amount) {// 이힘찬
-		// 테이블에서 order를 하나씩 가져와서 결제함
-	}
-
-	public void payTableCard(Integer tableNo) {// 권순조
-		// 테이블에서 order를 하나씩 가져와서 결제함
-	}
-
-	// 결제 (테이블)
-	public void payTableCardAll(Integer tableNo) { // 일찬님
-		// 테이블의 order를 한가지 결제형식으로
-	}
-
-	public void payTableCashAll(Integer tableNo, Integer amount) {// 이힘찬
-		// 테이블의 order를 한가지 결제형식으로
-	}
-
-	List<Menu> menuItem = new ArrayList<Menu>();
 
 	// 메뉴관리
 	// 메뉴 추가
 	public void addMenu(String name, Integer price) {// 이힘찬
-
+		menuItem.add(new Menu(name, price));
 	}
 
 	// 메뉴 수정
 	public void modifyMenu(String oldname, String name, Integer price) {// 신지혁
-		for (int i = 0; i < menuItem.size(); i++) {
-			if (menuItem.get(i).name.equals(oldname)) {
-				System.out.println("dddddd");
-				menuItem.remove(i);
-				menuItem.add(new Menu(name, price));
-				break;
-			}
-		}
-		Customers c = new Customers();
-		c.addMembers("77777");
-		System.out.println(c);
 	}
 
 	// 메뉴 삭제
 	public void deleteMenu(String name) {// 권예지
 
 	}
-
-	// 테이블관리
-	List<Table> tables = new ArrayList<Table>();
-
-	// 테이블 추가
-	public void addTables() {// 권순조
-
-	}
-
-	// 테이블 삭제
-	public void deleteTables() {// 강기훈
+	
+	public Menu getMenu(String name) {
+		Menu menu=null;
+		for (Menu m : menuItem) {
+			if(m.name.trim().equalsIgnoreCase(name)) {
+				menu=m;
+			}
+		}
+		return menu;
 
 	}
 
 	// 고객관리
-	Customers customers = new Customers();
 
 	// 고객가입
 
@@ -493,11 +686,19 @@ class Pos {
 	// 메뉴별 매출 (일별)
 	public void printSalesMenu(String date) { // 강기훈
 		// 메뉴-수량-금액
+      
+		
+		
+		
+		
 	}
 
 	// 결제별 매출 (일별)
 	public void printSalesPayment(String date) { // 신지혁
 		// 메뉴-카드(현금)-수량-금액
+		
+		
+		
 	}
 
 	// 엑셀 export (메뉴별,결제별 매출)
@@ -505,10 +706,21 @@ class Pos {
 
 	}
 
-	// 데이터 저장 (시스템 종료시 데이터 저장)
+	
 	public void save(String date) { // 권예지
-
-	}
+        TeamFormat tf = new TeamFormat();
+        try {
+            FileOutputStream fos = new FileOutputStream(logPath, true);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(tf);
+            oos.close();
+            bos.close();
+            fos.close();
+            System.out.println(date + " 저장 완료");
+        } catch (Exception e) {
+        }
+    }
 
 	// 데이터 로드 (시스템 시작시 데이터 로드)
 	public void load(String date) {// 권예지
@@ -519,24 +731,65 @@ class Pos {
 
 public class Pos_System {
 	public static void main(String[] args) {
-		List<Menu> menuItem = new ArrayList<Menu>();
-		menuItem.add(new Menu("짜장", 5000));
-		menuItem.add(new Menu("짬뽕", 6000));
-		menuItem.add(new Menu("우동", 5500));
 
-//		System.out.println(menuItem.toString());
-//		System.out.println(menuItem.get(1));
-
-		Orders order = new Orders(menuItem.get(1));
-		Orders order2 = new Orders(menuItem.get(0));
-		// System.out.println(order.toString());
-
-		OrderList orderList = new OrderList();
-		orderList.orderlist.add(order);
-		orderList.orderlist.add(order2);
-		orderList.customer = new Customers();
-		System.out.println(orderList.toString());
-
-		System.out.println(TeamFormat.dateTimeFormat(new Date()));
+		Pos pos=new Pos();
+		pos.addMenu("짜장", 5000);
+		pos.addMenu("짬뽕", 6000);
+		pos.addMenu("우동", 5500);
+		
+//		Menu pickMenu=pos.getMenu("짜장");
+//
+//		System.out.println(pickMenu.toString());
+//
+//		// Order 생성
+//		Orders order1=new Orders(pos.getMenu("짜장"));
+//		Orders order2=new Orders(pos.getMenu("짬뽕"));
+//		
+//		System.out.println(order1.toString());
+//		
+//		// OrderList 생성
+//		OrderList orderList=new OrderList();
+//		orderList.addOrder(order1);
+//		orderList.addOrder(order2);
+//		System.out.println(orderList.toString());
+//		
+//		// Table 
+//		Table tables = new Table();
+//		
+//		// add table
+////		tables.addTable(1);
+////		tables.addTable(2);
+////		tables.addTable(3);
+////		tables.addTable(4);
+////		System.out.println(tables.tables.toString());
+//		// add OrderList to Table
+//		tables.addOrderList(1, orderList);
+//		System.out.println(tables.tables.toString());
+//		
+//		// 결제
+//		Customers sonnom = new Customers();
+//		sonnom.addCustomers("010-2222-3333");
+//		System.out.println("손님 : " + sonnom.customer.toString());
+//
+//		
+//		int yourbill = 20000;
+//		// cash
+//		OrderList afterLunch=tables.tables.get(1);
+//		for(int i=0; i<afterLunch.orderlist.size();i++) {
+//			afterLunch.orderlist.get(i).payment=new CashPayments();
+//			yourbill -= afterLunch.orderlist.get(i).menuItem.price;
+//			//point 적립
+//			int new_point=sonnom.customer.get("010-2222-3333") + (int)(afterLunch.orderlist.get(i).menuItem.price*0.05);
+//			sonnom.customer.put("010-2222-3333", new_point);
+//			afterLunch.orderlist.get(i).payment.pay();
+//			
+//		}
+//		// 결제완료
+//		afterLunch.isPayed=true;
+//		System.out.println(yourbill);
+//		System.out.println("손님의 포인트 : " + sonnom.customer.toString());
+		
+		pos.posStart();
+		
 	}
 }
