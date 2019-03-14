@@ -311,14 +311,56 @@ class OrderList {
 	}
 
 	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber, int amount) {// 강기훈
-		int currPoint = customers.customer.get(phoneNumber);
-		customers.customer.put(phoneNumber, (int) (currPoint + amount * 0.05));
+	public void addPoints(Customers customers, String phoneNumber, int amount) { // 권예지^^
+		OrderList orderlist = new OrderList();
+		int paypoint = customers.customer.get(phoneNumber);
+		customers.customer.put(phoneNumber, (int) (paypoint + (orderlist.orderSum() * 0.05)));
 	}
 
 	// 포인트 사용
-	public void usePoints(Customers customers, String phoneNumber) {// 힘찬이
+	public int usePoints(String phoneNumber) {// 권예지^^
+		int usePointsResult = 0;
+		int result = 0;
+		Customers cus = new Customers();
+		Scanner sc = new Scanner(System.in);
+		if (!cus.customer.containsKey(phoneNumber)) {
+			System.out.println("등록된 회원 번호가 없습니다.");
+			System.out.println("가입하시겠습니까?");
+			System.out.println("가입 : 1, 취소 : 2");
+			String st = sc.nextLine();
+			if (st == "1") {
+				System.out.println("가입을 진행합니다. 번호를 입력해주세요");
+				st = sc.nextLine();
+				cus.addCustomers(st);
+			} else if (st == "2") {
+				System.out.println("포인트 사용을 취소합니다.");
+			}
+		} else {
+			usePointsResult = cus.customer.get(phoneNumber);
+			cus.customer.put(phoneNumber, 0);
+		}
+		return usePointsResult;
+	}
 
+	public void isUsePoint() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("포인트를 사용하시겠습니까?");
+		String choice = sc.nextLine();// 포인트를 사용할지 확인하는 로직 시작
+		if (choice.equals("Y")) {
+			System.out.println("포인트사용 로직 시작합니다.");
+			String phNum = sc.nextLine();
+			usePoints(phNum);
+		} else if (choice.equals("N")) {
+			System.out.println("가입하시겠습니까? Y/N");
+			String choice2 = sc.nextLine();
+			if (choice.equals("Y")) {
+				choice2 = sc.nextLine();
+				Customers customers = new Customers();
+				customers.addCustomers(choice2);
+			} else if (choice.equals("N")) {
+				System.out.println("결제 로직 시작합니다.");
+			}
+		}
 	}
 
 	/*
@@ -364,52 +406,6 @@ class OrderList {
 			}
 		}
 		return order;
-	}
-
-	public int usePoints(String phoneNumber) {// 권순조
-		int usePointsResult = 0;
-		int result = 0;
-		Customers cus = new Customers();
-		Scanner sc = new Scanner(System.in);
-		String st = sc.nextLine();
-		if (!cus.customer.containsKey(phoneNumber)) {
-			System.out.println("등록된 회원 번호가 없습니다.");
-			System.out.println("가입하시겠습니까?");
-			System.out.println("가입 : 1, 취소 : 2");
-			st = sc.nextLine();
-			if (st == "1") {
-				System.out.println("가입을 진행합니다. 번호를 입력해주세요");
-				st = sc.nextLine();
-				cus.addCustomers(st);
-			} else if (st == "2") {
-				System.out.println("포인트 사용을 취소합니다.");
-			}
-		} else {
-			cus.customer.get(phoneNumber);
-			result = usePointsResult;
-		}
-		return result;
-	}
-
-	public void isUsePoint() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("포인트를 사용하시겠습니까?");
-		String choice = sc.nextLine();// 포인트를 사용할지 확인하는 로직 시작
-		if (choice.equals("Y")) {
-			System.out.println("포인트사용 로직 시작합니다.");
-			String phNum = sc.nextLine();
-			usePoints(phNum);
-		} else if (choice.equals("N")) {
-			System.out.println("가입하시겠습니까? Y/N");
-			String choice2 = sc.nextLine();
-			if (choice.equals("Y")) {
-				choice2 = sc.nextLine();
-				Customers customers = new Customers();
-				customers.addCustomers(choice2);
-			} else if (choice.equals("N")) {
-				System.out.println("결제 로직 시작합니다.");
-			}
-		}
 	}
 
 	@Override
@@ -466,36 +462,6 @@ class CashPayments implements Payments {
 		System.out.println(PayType.CASH);
 	}
 
-	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber, int amount) { // 이힘찬
-
-	}
-
-	// 포인트 사용
-	public int usePoints(String phoneNumber) {// 권순조
-		int usePointsResult = 0;
-		int result = 0;
-		Customers cus = new Customers();
-		Scanner sc = new Scanner(System.in);
-		String st = sc.nextLine();
-		if (!cus.customer.containsKey(st)) {
-			System.out.println("등록된 회원 번호가 없습니다.");
-			System.out.println("가입하시겠습니까?");
-			System.out.println("가입 : 1, 취소 : 2");
-			st = sc.nextLine();
-			if (st == "1") {
-				System.out.println("가입을 진행합니다. 번호를 입력해주세요");
-				st = sc.nextLine();
-				cus.addCustomers(st);
-			} else if (st == "2") {
-				System.out.println("포인트 사용을 취소합니다.");
-			}
-		} else {
-			result = usePointsResult;
-		}
-		return result;
-	}
-
 }
 
 class CardPayments implements Payments {
@@ -504,20 +470,6 @@ class CardPayments implements Payments {
 	public void pay() {// 신지혁
 		System.out.println(PayType.CARD);
 		System.out.println("카드계산 입니다...");
-	}
-
-	// 포인트 적립
-	public void addPoints(Customers customers, String phoneNumber) {// 권예지
-
-	}
-
-	// 포인트 사용
-	public int usePoints(Customers customers, String phoneNumber) {// 강기훈
-
-		int currPoint = customers.customer.get(phoneNumber);
-		customers.customer.put(phoneNumber, 0);
-
-		return currPoint;
 	}
 
 }
@@ -895,11 +847,10 @@ public class Pos_System {
 	public static void main(String[] args) {
 		Pos pos = new Pos();
 		pos.posStart();
-		
-		
-		//========================
-		//이하 테스트용도
-		
+
+		// ========================
+		// 이하 테스트용도
+
 		pos.addMenu("짜장", 5000);
 		pos.addMenu("짬뽕", 6000);
 		pos.addMenu("우동", 5500);
