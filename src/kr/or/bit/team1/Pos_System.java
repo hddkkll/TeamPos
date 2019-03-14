@@ -380,7 +380,6 @@ class CardPayments implements Payments {
 }
 
 class Customers {
-
 	HashMap<String, Integer> customer;// 키값: 전화번호,
 	// 밸류값: 포인트
 
@@ -394,13 +393,8 @@ class Customers {
 //		String PhonNum = sc.nextLine();
 		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
 			customer.put(phoneNumber, 0);
+			System.out.println(customer);
 		}
-
-	}
-
-	// 회원등록 OrderList클래스에서 이동받음..
-	public void addMembers(String phoneNumber) {// 신지혁
-		customer.put(phoneNumber, 0);
 	}
 
 	/*
@@ -436,9 +430,14 @@ class Customers {
 	}
 
 	// 고객 탈퇴
-	public void deleCustomers(String phoneNumber) { // 이힘찬
-
-	}
+		public void deleCustomers(String phoneNumber) { // 이힘찬
+			if(customer.get(phoneNumber) != null) {
+				customer.remove(phoneNumber);
+				System.out.println("탈퇴 되었습니다.");
+			}else {
+				System.out.println("해당 전화번호가 없습니다.");
+			}			
+		}
 
 	// 고객 현황
 	public void listCustomers() {// 강기훈
@@ -457,7 +456,6 @@ class Customers {
 }
 
 class Pos {
-
 	Scanner sc = new Scanner(System.in);
 
 	// log 저장디렉토리
@@ -472,15 +470,12 @@ class Pos {
 	Customers customers = new Customers();
 
 	void viewTable(int seatCount) {
-
 		for (int i = 1; i <= seatCount; i++) {
 			System.out.printf("[%d]", i);
 			if (i % 3 == 0) {
 				System.out.println();
 			}
-
 		}
-
 	}
 
 	void takeOrder() {
@@ -546,7 +541,64 @@ class Pos {
 				System.out.println("다시 입력하세요");
 
 			}
+		}
+	}
 
+	void memberManage() {
+		while (true) {
+			int num = 0;
+			String phoneNumber = "";
+			String oldphoneNumber = "";
+			System.out.println("회원을 추가, 수정, 조회, 탈퇴, 현황을 볼수 있습니다");
+			System.out.println("1.회원 추가");
+			System.out.println("2.회원 수정");
+			System.out.println("3.회원 조회");
+			System.out.println("4.회원 탈퇴");
+			System.out.println("5.회원 현황");
+			System.out.println("0.종료");
+			System.out.println("원하는 번호를 입력하세요");
+			num = Integer.parseInt(sc.nextLine());
+
+			switch (num) {
+			case 0:
+				posStart();
+				break;
+			case 1:
+				System.out.println("추가할 회원의 번호를 입력해주세요");
+				phoneNumber = sc.nextLine();
+				addMembers(phoneNumber);
+				break;
+
+			case 2:
+				System.out.println("회원정보를 수정합니다");
+				System.out.println("oldPhoneNumber를 입력해주세요");
+				oldphoneNumber = sc.nextLine();
+				System.out.println("새로운 PhoneNumber를 입력해주세요");
+				phoneNumber = sc.nextLine();
+				
+				modifyMembers(oldphoneNumber, phoneNumber);
+				break;
+
+			case 3:
+				System.out.println("조회할 전화번호를 입력해주세요");
+				phoneNumber = sc.nextLine();
+				findMembers(phoneNumber);
+				break;
+
+			case 4:
+				System.out.println("탈퇴할 전화번호를 입력해주세요");
+				phoneNumber = sc.nextLine();
+				deleteMembers(phoneNumber);
+				break;
+
+			case 5:
+				System.out.println("회원현황 입니다");
+				listMembers();
+				break;
+
+			default:
+				break;
+			}
 		}
 
 	}
@@ -567,24 +619,21 @@ class Pos {
 		switch (menuNum) {
 
 		case 1:
-			viewTable(9);
 			break;
 		case 2:
-			viewTable(9);
 			break;
 		case 3:
-			viewTable(9);
+			memberManage();
 			break;
 		case 4:
-			menuManage();
+
 		case 5:
 			viewTable(9);
 			break;
 		case 6:
-			viewTable(9);
 			break;
 		default:
-			System.out.println("잘못입력...");
+
 		}
 
 	}
@@ -652,10 +701,29 @@ class Pos {
 	// 회원등록
 	public void addMembers(String phoneNumber) {// 신지혁
 		customers.addCustomers(phoneNumber);
+		System.out.println(customers);
+	}
+	
+	//고객수정
+	public void modifyMembers(String oldPhoneNumber, String phoneNumber) {// 신지혁
+		customers.modifyCustomers(oldPhoneNumber, phoneNumber);
+
 	}
 	// 고객조회
+	public void findMembers(String phoneNumber) {// 신지혁
+		customers.findCustomers(phoneNumber);
+
+	}
 	// 고객탈퇴
+	public void deleteMembers(String phoneNumber) {// 신지혁
+		customers.deleCustomers(phoneNumber);
+
+	}
 	// 고객현황
+	public void listMembers() {// 신지혁
+		customers.listCustomers();
+
+	}
 
 	// overloading
 //	public void deleCustomers(String name) {
