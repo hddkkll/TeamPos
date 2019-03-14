@@ -10,7 +10,6 @@ public class Orders implements Serializable {
 	static Long orderId = 0L;
 	Date orderDate;
 	Menu menuItem;
-	Payments payment;
 	// OrderStatus orderStatus;
 
 	public Orders(Menu menuItem) {
@@ -18,7 +17,6 @@ public class Orders implements Serializable {
 		orderId++;
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
-		this.payment = null; // initalization
 		// this.orderStatus = OrderStatus.ORDER;
 	}
 
@@ -27,14 +25,12 @@ public class Orders implements Serializable {
 		orderId++;
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
-		this.payment = payment;
 		// this.orderStatus = OrderStatus.ORDER;
 	}
 
 	@Override
 	public String toString() {
-		return "Orders [orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + ", payment="
-				+ payment + "]";
+		return "Orders [orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + "]";
 	}
 
 }

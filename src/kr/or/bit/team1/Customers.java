@@ -140,6 +140,16 @@ public class Customers implements Serializable {
 
 		}
 	}
+	
+	public void setPoint(String phoneNumber, int point) {
+		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
+			if (customer.containsKey(phoneNumber)) {
+				customer.put(phoneNumber, point);
+			} else {
+				System.out.println("현재 가입된 고객이 아닙니다.");
+			}
+		}
+	}
 
 	@Override
 	public String toString() {

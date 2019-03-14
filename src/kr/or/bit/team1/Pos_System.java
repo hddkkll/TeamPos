@@ -92,14 +92,15 @@ class Table implements Serializable {
 }
 
 class Bucket implements Serializable {
-
 	ArrayList<Orders> orderlist;
 	Customers customer;
+	Payments payment;
 	boolean isPayed;
 
 	public Bucket() {
 		this.orderlist = new ArrayList<Orders>();
 		this.customer = null;
+		this.payment = null;
 		this.isPayed = false;
 	}
 
@@ -258,9 +259,8 @@ class Bucket implements Serializable {
 					change = amount + point - orderSum();// 받을금액, 받은금액, 거스름돈
 
 					Pos.amount = Pos.amount + amount - point - change;
-					this.isPayed = true;
 					this.customer = customer.findCustomers(s);
-
+					customer.setPoint(s, 0);                     // point 0
 					System.out.println("받을 금액 : " + orderSum());
 					System.out.println("포인트     : " + point);
 					System.out.println("받은 금액 : " + amount);
@@ -273,12 +273,14 @@ class Bucket implements Serializable {
 				change = amount - orderSum();
 
 				Pos.amount = Pos.amount + amount - change;
-				this.isPayed = true;
 
 				System.out.println("받을 금액 : " + orderSum());
 				System.out.println("받은 금액 : " + amount);
 				System.out.println("받은 금액 : " + change);
 			}
+
+			this.isPayed = true;
+			this.payment = new CashPayments();
 
 			printReceipt();// 영수증 출력
 		} else {
@@ -286,15 +288,49 @@ class Bucket implements Serializable {
 		}
 	}
 
-	// 전부 카드결제
-	// FIX
-	public void payCardAll() { // 이힘찬
-		// 받은금액
-		System.out.println("결제 금액 : " + orderSum());
-		// 테이블초기화
-		orderlist = null;
-		// 영수증출력
-		printReceipt();
+	/*
+	 * @method name : payCardAll
+	 *
+	 * @date : 2019.03.14
+	 *
+	 * @author : 이힘찬
+	 *
+	 * @description : 카드로 결제 금액 전액 처리한다.
+	 *
+	 * @parameters : Customers customer
+	 *
+	 * @return : void
+	 */
+	public void payCardAll(Customers customer) { // 이힘찬
+
+			Scanner sc = new Scanner(System.in);
+
+			System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
+			int i = Integer.parseInt(sc.nextLine());
+			if (i == 1) {
+				System.out.println("고객 핸드폰번호를 입력하세요");
+				String s = sc.nextLine();
+				if (customer.customer.containsKey(s)) {
+					int point = customer.customer.get(s);
+
+					this.customer = customer.findCustomers(s);
+					customer.setPoint(s, 0);                     // point 0
+					System.out.println("받을 금액 : " + orderSum());
+					System.out.println("포인트     : " + point);
+					System.out.println("결제 금액  : " + (orderSum()-point));
+				} else {
+					System.out.println("해당 고객이 없습니다.");
+					return;
+				}
+			} else if (i == 2) {
+				System.out.println("받을 금액 : " + orderSum());
+				System.out.println("결제 금액  : " + orderSum());
+			}
+
+			this.isPayed = true;
+			this.payment = new CardPayments();
+
+			printReceipt();// 영수증 출력
 	}
 
 	/*
@@ -504,8 +540,10 @@ class Bucket implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Bucket [orderlist=" + orderlist + ", customer=" + customer + ", isPayed=" + isPayed + "]";
+		return "Bucket [orderlist=" + orderlist + ", customer=" + customer + ", payment=" + payment + ", isPayed="
+				+ isPayed + "]";
 	}
+	
 }
 
 class Pos implements Serializable {
@@ -853,13 +891,11 @@ public class Pos_System {
 		// cash
 		Bucket afterLunch = tables.tables.get(1);
 		for (int i = 0; i < afterLunch.orderlist.size(); i++) {
-			afterLunch.orderlist.get(i).payment = new CashPayments();
 			yourbill -= afterLunch.orderlist.get(i).menuItem.price;
 			// point 적립
 			int new_point = sonnom.customer.get("010-2222-3333")
 					+ (int) (afterLunch.orderlist.get(i).menuItem.price * 0.05);
 			sonnom.customer.put("010-2222-3333", new_point);
-			afterLunch.orderlist.get(i).payment.pay();
 
 		}
 		// 결제완료
