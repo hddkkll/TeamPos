@@ -106,11 +106,7 @@ class Table {
 	// 테이블 삭제
 	// 정일찬 int tableNo parameter 추가
 	public void deleteTable(int tableNo) {// 강기훈
-		for (Map.Entry<Integer, OrderList> obj : tables.entrySet()) {
-			if (obj.getValue().isPayed) {
-				tables.put(obj.getKey(), new OrderList());
-			}
-		}
+		tables.remove(tableNo);
 	}
 
 }
@@ -430,14 +426,14 @@ class Customers {
 	}
 
 	// 고객 탈퇴
-		public void deleCustomers(String phoneNumber) { // 이힘찬
-			if(customer.get(phoneNumber) != null) {
-				customer.remove(phoneNumber);
-				System.out.println("탈퇴 되었습니다.");
-			}else {
-				System.out.println("해당 전화번호가 없습니다.");
-			}			
+	public void deleCustomers(String phoneNumber) { // 이힘찬
+		if (customer.get(phoneNumber) != null) {
+			customer.remove(phoneNumber);
+			System.out.println("탈퇴 되었습니다.");
+		} else {
+			System.out.println("해당 전화번호가 없습니다.");
 		}
+	}
 
 	// 고객 현황
 	public void listCustomers() {// 강기훈
@@ -575,7 +571,7 @@ class Pos {
 				oldphoneNumber = sc.nextLine();
 				System.out.println("새로운 PhoneNumber를 입력해주세요");
 				phoneNumber = sc.nextLine();
-				
+
 				modifyMembers(oldphoneNumber, phoneNumber);
 				break;
 
@@ -603,6 +599,37 @@ class Pos {
 
 	}
 
+	void tableManage() {
+		while (true) {
+			int num = 0;
+			System.out.println("테이블 관리 입니다");
+			System.out.println("1. 테이블추가");
+			System.out.println("2. 테이블삭제");
+			System.out.println("0. 종료");
+			System.out.println("번호를 입력하세요");
+			num = Integer.parseInt(sc.nextLine());
+
+			switch (num) {
+			case 0:
+				posStart();
+			case 1:
+				System.out.println("테이블 1개를 추가합니다");
+				num = tables.tables.size() + 1;
+				tables.addTable(num);
+				break;
+			case 2:
+				System.out.println("테이블 1개를 삭제합니다");
+				num = tables.tables.size() - 1;
+				tables.deleteTable(num);
+				break;
+
+			default:
+				break;
+			}
+
+		}
+	}
+
 	public void posStart() {
 		int menuNum = 0;
 		System.out.println("POS SYSTEM");
@@ -628,7 +655,8 @@ class Pos {
 		case 4:
 
 		case 5:
-			viewTable(9);
+			viewTable(tables.tables.size());
+			tableManage();
 			break;
 		case 6:
 			break;
@@ -654,6 +682,7 @@ class Pos {
 //	}
 //
 //	// 결제 (테이블)
+
 //	public void payTableCardAll(Integer tableNo) { // 일찬님
 //		// 테이블의 order를 한가지 결제형식으로
 //	}
@@ -703,22 +732,25 @@ class Pos {
 		customers.addCustomers(phoneNumber);
 		System.out.println(customers);
 	}
-	
-	//고객수정
+
+	// 고객수정
 	public void modifyMembers(String oldPhoneNumber, String phoneNumber) {// 신지혁
 		customers.modifyCustomers(oldPhoneNumber, phoneNumber);
 
 	}
+
 	// 고객조회
 	public void findMembers(String phoneNumber) {// 신지혁
 		customers.findCustomers(phoneNumber);
 
 	}
+
 	// 고객탈퇴
 	public void deleteMembers(String phoneNumber) {// 신지혁
 		customers.deleCustomers(phoneNumber);
 
 	}
+
 	// 고객현황
 	public void listMembers() {// 신지혁
 		customers.listCustomers();
