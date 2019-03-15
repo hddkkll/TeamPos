@@ -11,6 +11,11 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 
 class CustomerVo {
 	 
@@ -127,7 +132,7 @@ public class TeamFiles {
 			fis = new FileInputStream(file);
 			bis = new BufferedInputStream(fis);
 			ois = new ObjectInputStream(bis);
-
+			
 			obj = ois.readObject();
 
 		} catch (Exception e) {
@@ -157,68 +162,68 @@ public class TeamFiles {
         list.add(new CustomerVo("asdf5", "사용자5", "34", "asdf5@naver.com"));
 
         // 워크북 생성
-//        XSSFWorkbook workbook = new XSSFWorkbook();
-//        // 워크시트 생성
-//        XSSFSheet sheet = workbook.createSheet();
-//        // 행 생성
-//        XSSFRow row = sheet.createRow(0);
-//        // 쎌 생성
-//        XSSFCell cell;
-//        
-//        // 헤더 정보 구성
-//        cell = row.createCell(0);
-//        cell.setCellValue("아이디");
-//        
-//        cell = row.createCell(1);
-//        cell.setCellValue("이름");
-//        
-//        cell = row.createCell(2);
-//        cell.setCellValue("나이");
-//        
-//        cell = row.createCell(3);
-//        cell.setCellValue("이메일");
-//        
-//        // 리스트의 size 만큼 row를 생성
-//        CustomerVo vo;
-//        for(int rowIdx=0; rowIdx < list.size(); rowIdx++) {
-//            vo = list.get(rowIdx);
-//            
-//            // 행 생성
-//            row = sheet.createRow(rowIdx+1);
-//            
-//            cell = row.createCell(0);
-//            cell.setCellValue(vo.getCustId());
-//            
-//            cell = row.createCell(1);
-//            cell.setCellValue(vo.getCustName());
-//            
-//            cell = row.createCell(2);
-//            cell.setCellValue(vo.getCustAge());
-//            
-//            cell = row.createCell(3);
-//            cell.setCellValue(vo.getCustEmail());
-//            
-//        }
-//        
-//        // 입력된 내용 파일로 쓰기
-//        File file = new File("C:\\excel\\testWrite.xlsx");
-//        FileOutputStream fos = null;
-//        
-//        try {
-//            fos = new FileOutputStream(file);
-//            workbook.write(fos);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if(workbook!=null) workbook.close();
-//                if(fos!=null) fos.close();
-//                
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-//
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        // 워크시트 생성
+        XSSFSheet sheet = workbook.createSheet();
+        // 행 생성
+        XSSFRow row = sheet.createRow(0);
+        // 쎌 생성
+        XSSFCell cell;
+        
+        // 헤더 정보 구성
+        cell = row.createCell(0);
+        cell.setCellValue("아이디");
+        
+        cell = row.createCell(1);
+        cell.setCellValue("이름");
+        
+        cell = row.createCell(2);
+        cell.setCellValue("나이");
+        
+        cell = row.createCell(3);
+        cell.setCellValue("이메일");
+        
+        // 리스트의 size 만큼 row를 생성
+        CustomerVo vo;
+        for(int rowIdx=0; rowIdx < list.size(); rowIdx++) {
+            vo = list.get(rowIdx);
+            
+            // 행 생성
+            row = sheet.createRow(rowIdx+1);
+            
+            cell = row.createCell(0);
+            cell.setCellValue(vo.getCustId());
+            
+            cell = row.createCell(1);
+            cell.setCellValue(vo.getCustName());
+            
+            cell = row.createCell(2);
+            cell.setCellValue(vo.getCustAge());
+            
+            cell = row.createCell(3);
+            cell.setCellValue(vo.getCustEmail());
+            
+        }
+        
+        // 입력된 내용 파일로 쓰기
+        File file = new File("C:\\Temp\\testWrite.xlsx");
+        FileOutputStream fos = null;
+        
+        try {
+            fos = new FileOutputStream(file);
+            workbook.write(fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(workbook!=null) workbook.close();
+                if(fos!=null) fos.close();
+                
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
 	}
 }

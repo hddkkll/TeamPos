@@ -9,7 +9,7 @@ import kr.or.bit.team1.util.TeamLogger;
 
 public class Table implements Serializable {
 
-		HashMap<Integer, Bucket> tables;
+		HashMap<Integer, Bucket> tableList;
 		Date date;
 		boolean isPayed; // @ deprecated
 
@@ -28,7 +28,7 @@ public class Table implements Serializable {
 		 */
 		public Table() {
 			TeamLogger.info("Table()");
-			tables = new HashMap<Integer, Bucket>();
+			tableList = new HashMap<Integer, Bucket>();
 			this.date = new Date();
 			this.isPayed = false;
 
@@ -54,7 +54,7 @@ public class Table implements Serializable {
 		 */
 		public void addOrderList(Integer tableNo, Bucket orderList) {
 			TeamLogger.info("addOrderList(Integer tableNo, Bucket orderList)");
-			tables.put(tableNo, orderList);
+			tableList.put(tableNo, orderList);
 		}
 
 		/*
@@ -73,9 +73,9 @@ public class Table implements Serializable {
 		public void moveTable(int fromTable, int toTable) {// 강기훈
 			TeamLogger.info("moveTable(int fromTable, int toTable)");
 			Bucket temp = new Bucket();
-			temp = tables.get(fromTable);
-			tables.put(toTable, temp);
-			tables.put(fromTable, null);
+			temp = tableList.get(fromTable);
+			tableList.put(toTable, temp);
+			tableList.put(fromTable, null);
 		}
 
 		/*
@@ -93,11 +93,11 @@ public class Table implements Serializable {
 		 */
 		public void mergeTable(int fromTable, int toTable) {// 권예지
 			TeamLogger.info("mergeTable(int fromTable, int toTable)");
-			if(tables.get(fromTable)!=null && tables.get(toTable)!=null) {
+			if(tableList.get(fromTable)!=null && tableList.get(toTable)!=null) {
 				Bucket temp = new Bucket();
-				temp = tables.get(fromTable);
+				temp = tableList.get(fromTable);
 				Bucket temp2 = new Bucket();
-				temp2 = tables.get(toTable);
+				temp2 = tableList.get(toTable);
 
 				for (int i = 0; i < temp2.orderlist.size(); i++)
 					temp.orderlist.add(temp2.orderlist.get(i));
@@ -121,7 +121,7 @@ public class Table implements Serializable {
 		 */
 		public void addTable(int tableNo) {
 			TeamLogger.info("addTable(int tableNo)");
-			this.tables.put(tableNo, null);
+			this.tableList.put(tableNo, null);
 
 		}
 
@@ -140,8 +140,8 @@ public class Table implements Serializable {
 		 */
 		public void deleteTable(int tableNo) {
 			TeamLogger.info("deleteTable(int tableNo)");
-			if(tables.containsKey(tableNo)) {
-				tables.remove(tableNo);
+			if(tableList.containsKey(tableNo)) {
+				tableList.remove(tableNo);
 				System.out.println("테이블 " + tableNo + "이 삭제되었습니다.");
 			}
 			
@@ -162,9 +162,9 @@ public class Table implements Serializable {
 		 */
 		public void availableTable() {
 			TeamLogger.info("availableTable");
-			for (Map.Entry<Integer, Bucket> obj : tables.entrySet()) {
+			for (Map.Entry<Integer, Bucket> obj : tableList.entrySet()) {
 				if (obj.getValue().isPayed) {
-					tables.put(obj.getKey(), null);
+					tableList.put(obj.getKey(), null);
 				}
 			}
 		}

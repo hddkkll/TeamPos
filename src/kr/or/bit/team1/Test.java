@@ -36,8 +36,8 @@ public class Test {
 		pos.customers.addCustomers("010-1111-1111");
 		pos.customers.addCustomers("010-2222-2222");
 		
-		pos.tables.tables.put(1, null);
-		System.out.println(pos.tables.tables.get(1)==null);
+		pos.tables.tableList.put(1, null);
+		System.out.println(pos.tables.tableList.get(1)==null);
 //		System.out.println(pos.customers.findCustomers("010-1111-1111"));
 	
 		//bucketList.listOrders();
