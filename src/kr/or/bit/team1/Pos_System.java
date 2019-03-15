@@ -1,23 +1,16 @@
 package kr.or.bit.team1;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
-import kr.or.bit.team1.Bucket.Payments;
-import kr.or.bit.team1.util.TeamFiles;
 import kr.or.bit.team1.util.TeamFormat;
 import kr.or.bit.team1.util.TeamLogger;
 
@@ -28,22 +21,6 @@ enum OrderStatus {
 enum PayType {
 	CASH, CARD
 };
-
-class Menu implements Serializable {
-	String name;
-	int price;
-
-	public Menu(String name, int price) {
-		TeamLogger.info("Menu(String name, int price)");
-		this.name = name;
-		this.price = price;
-	}
-
-	@Override
-	public String toString() {
-		return "Menu [name=" + name + ", price=" + price + "]";
-	}
-}
 
 class Table implements Serializable {
 
@@ -60,9 +37,7 @@ class Table implements Serializable {
 
 	}
 
-	public void showTable() { // 정일찬
-
-	}
+	
 
 	// 정일찬 :
 	// addOrdetList 추가
@@ -114,50 +89,120 @@ class Table implements Serializable {
 
 }
 
-// 중간에 담는 그릇이 필요
 class Bucket implements Serializable {
-
 	ArrayList<Orders> orderlist;
 	Customers customer;
-	// 강기훈 : isPayed추가
+	Payments payment;
 	boolean isPayed;
 
 	public Bucket() {
 		this.orderlist = new ArrayList<Orders>();
 		this.customer = null;
+		this.payment = null;
 		this.isPayed = false;
 	}
 
-	// 주문내역을 보여줌
-	public void listOrders() {// 권순조
-		// 메뉴명-단가-수량-금액
-	}
+	/*
+	 * @method name : listOrders
+	 *
+	 * @date : 2019.03.14
+	 *
+	 * @author : 권순조
+	 *
+	 * @description : 주문내역을 보여준다
+	 *
+	 * @parameters :
+	 *
+	 * @return : void
+	 */
+	public void listOrders() {
+		TeamLogger.info("listOrders");
+		Set<String> menuSet = new HashSet<String>();
 
-	// 주문
-	public void addOrder(Orders order) { // Menu menu 신지혁
-		orderlist.add(order);
-	}
-
-	// 선택취소
-	public void deleteOrder(Orders order) { // 강기훈
 		for (int i = 0; i < orderlist.size(); i++) {
-			if (orderlist.get(i).orderId.equals(order.orderId)) {
-				orderlist.remove(i);
+			if (menuSet.add(orderlist.get(i).menuItem.name)) {
+				String name = orderlist.get(i).menuItem.name;
+				int price = orderlist.get(i).menuItem.price;
+				int quty = menuQty(orderlist.get(i).menuItem);
+				int bill = price * quty;
+				System.out.printf("메뉴: %s\t        단가: %d   수량: %d   금액: %d\n", name, price, quty, bill);
 			}
 		}
 	}
 
-	// 전체취소
-	// FIX
-	public void deleteOrderAll() { // 신지혁
-		int num = orderlist.size();
-		orderlist.removeAll(orderlist);
-		
-			
+	/*
+	 * @method name : addOrder
+	 *
+	 * @date : 2019.03.12
+	 *
+	 * @author : 신지혁
+	 *
+	 * @description : order를 추가한다.
+	 *
+	 * @parameters : Orders order
+	 *
+	 * @return : void
+	 */
+	public void addOrder(Orders order) {
+		TeamLogger.info("addOrder");
+		orderlist.add(order);
 	}
 
-	// 해당 메뉴를 2개 추가하면 qty=2, 2개 제외하면 qty=-2
-	public void changeQty(Menu menu, int qty) { // 일찬님
+	/*
+	 * @method name : deleteOrder
+	 *
+	 * @date : 2019.03.14
+	 *
+	 * @author : 강기훈
+	 *
+	 * @description : order를 제거한다.
+	 *
+	 * @parameters : Orders order
+	 *
+	 * @return : void
+	 */
+	public void deleteOrder(Orders order) { // 강기훈
+		TeamLogger.info("deleteOrder(Orders order)");
+		if (order != null) {
+			changeQty(order.menuItem, -1);
+		}
+	}
+
+	/*
+	 * @method name : deleteOrderAll
+	 *
+	 * @date : 2019.03.13
+	 *
+	 * @author : 신지혁
+	 *
+	 * @description : 전체 order를 제거한다.
+	 *
+	 * @parameters :
+	 *
+	 * @return : void
+	 */
+	public void deleteOrderAll() {
+		TeamLogger.info("deleteOrderAll");
+		int num = orderlist.size();
+		orderlist.removeAll(orderlist);
+	}
+
+	/*
+	 * @method name : changeQty
+	 *
+	 * @date : 2019.03.13
+	 *
+	 * @author : 신지혁
+	 *
+	 * @description : 전체 order를 제거한다.
+	 *
+	 * @parameters : Menu menu, int qty
+	 *
+	 * @return : void
+	 * 
+	 * @example 해당 메뉴를 2개 추가하면 qty=2, 2개 제외하면 qty=-2
+	 */
+	public void changeQty(Menu menu, int qty) {
 		TeamLogger.info("changeQty(Menu menu, int qty)");
 		if (qty < 0) { // 주문취소
 
@@ -184,75 +229,106 @@ class Bucket implements Serializable {
 	/*
 	 * @method name : payCashAll
 	 *
-	 * @date : 2019.03.12
+	 * @date : 2019.03.14
 	 *
 	 * @author : 권순조
 	 *
 	 * @description : 현금으로 결제 금액 전액 처리한다.
 	 *
-	 * @parameters : int amount
+	 * @parameters : int amount, Customers customer
 	 *
 	 * @return : void
 	 */
-	// ADD System.out.println("고객명을 입력하세요");
-	// FIX
-	public void payCashAll(int amount, int tableNum) {// 권순조 받은 현금이 물건의 총합보다 높으면 사용
-		int exchange = 0;// 거스름돈을 저장할 공간 선언
-		customer = new Customers();
-		Scanner sc = new Scanner(System.in);
-		int i = Integer.parseInt(sc.nextLine());
+	public void payCashAll(int amount, Customers customer) {
+		TeamLogger.info("payCashAll");
 
-		System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
-		if (i == 1) {
-			String s = sc.nextLine();
-			int point = customer.customer.get(s);
-			exchange = amount + point - orderSum();// 받을금액, 받은금액, 거스름돈
-		} else if (i == 2) {
-			exchange = amount - orderSum();
+		if (amount > orderSum()) {
+			int change = 0; // 거스름돈을 저장할 공간 선언
+
+			Scanner sc = new Scanner(System.in);
+
+			System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
+			int i = Integer.parseInt(sc.nextLine());
+			if (i == 1) {
+				System.out.println("고객 핸드폰번호를 입력하세요");
+				String s = sc.nextLine();
+				if (customer.customer.containsKey(s)) {
+					int point = customer.customer.get(s);
+					change = amount + point - orderSum();// 받을금액, 받은금액, 거스름돈
+
+					Pos.amount = Pos.amount + amount - point - change;
+					this.customer = customer.findCustomers(s);
+					customer.setPoint(s, 0);                     // point 0
+					System.out.println("받을 금액 : " + orderSum());
+					System.out.println("포인트     : " + point);
+					System.out.println("받은 금액 : " + amount);
+					System.out.println("받은 금액 : " + change);
+				} else {
+					System.out.println("해당 고객이 없습니다.");
+					return;
+				}
+			} else if (i == 2) {
+				change = amount - orderSum();
+
+				Pos.amount = Pos.amount + amount - change;
+
+				System.out.println("받을 금액 : " + orderSum());
+				System.out.println("받은 금액 : " + amount);
+				System.out.println("받은 금액 : " + change);
+			}
+
+			this.isPayed = true;
+			this.payment = new CashPayments();
+
+			printReceipt();// 영수증 출력
+		} else {
+			System.out.println("금액이 부족합니다.");
 		}
-		System.out.println(exchange);
-		Table tb = new Table();
-		tb.tablelist.remove(tableNum);
-		tb.tablelist.put(tableNum, new Bucket());// 테이블 초기화
-		printReceipt();// 영수증 출력
 	}
 
-	// 전부 카드결제
-	// FIX
-	public void payCardAll() { // 이힘찬
-		// 받은금액
-		System.out.println("결제 금액 : " + orderSum());
-		// 테이블초기화
-		orderlist = null;
-		// 영수증출력
-		printReceipt();
-	}
-	
-	interface Payments {
-//		현금
-//		카드
-//		분할계산
-		public void pay();
+	/*
+	 * @method name : payCardAll
+	 *
+	 * @date : 2019.03.14
+	 *
+	 * @author : 이힘찬
+	 *
+	 * @description : 카드로 결제 금액 전액 처리한다.
+	 *
+	 * @parameters : Customers customer
+	 *
+	 * @return : void
+	 */
+	public void payCardAll(Customers customer) { // 이힘찬
 
-	}
+			Scanner sc = new Scanner(System.in);
 
-	class CashPayments implements Payments {
+			System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
+			int i = Integer.parseInt(sc.nextLine());
+			if (i == 1) {
+				System.out.println("고객 핸드폰번호를 입력하세요");
+				String s = sc.nextLine();
+				if (customer.customer.containsKey(s)) {
+					int point = customer.customer.get(s);
 
-		@Override
-		public void pay() { // 일찬님
-			System.out.println(PayType.CASH);
-		}
+					this.customer = customer.findCustomers(s);
+					customer.setPoint(s, 0);                     // point 0
+					System.out.println("받을 금액 : " + orderSum());
+					System.out.println("포인트     : " + point);
+					System.out.println("결제 금액  : " + (orderSum()-point));
+				} else {
+					System.out.println("해당 고객이 없습니다.");
+					return;
+				}
+			} else if (i == 2) {
+				System.out.println("받을 금액 : " + orderSum());
+				System.out.println("결제 금액  : " + orderSum());
+			}
 
-	}
+			this.isPayed = true;
+			this.payment = new CardPayments();
 
-	class CardPayments implements Payments {
-
-		@Override
-		public void pay() {// 신지혁
-			System.out.println(PayType.CARD);
-			System.out.println("카드계산 입니다...");
-		}
-
+			printReceipt();// 영수증 출력
 	}
 
 	/*
@@ -285,7 +361,6 @@ class Bucket implements Serializable {
 		return result; // 리턴후 payDividieAmount에서 사용
 	}
 
-	
 	// FIX
 	public void payDivideAmount(int no, int amount) {// 일찬님
 		if (no == 3) {
@@ -368,7 +443,7 @@ class Bucket implements Serializable {
 	}
 
 	// FIX : 기존 customer객체를 가져와야 함
-	public void isUsePoint() {					// 권예지
+	public void isUsePoint() { // 권예지
 		Scanner sc = new Scanner(System.in);
 		System.out.println("포인트를 사용하시겠습니까?");
 		String choice = sc.nextLine();// 포인트를 사용할지 확인하는 로직 시작
@@ -403,15 +478,29 @@ class Bucket implements Serializable {
 	 * @return : int
 	 */
 	public int orderSum() {
-		int sum = 0; // 구매한 물품의 총합을 구하는 공간 선언
-		for (int i = 0; i < orderlist.size(); i++) {// 구매한 물품의 총합을 구하는 포문
+		TeamLogger.info("orderSum");
+		int sum = 0;
+		for (int i = 0; i < orderlist.size(); i++) {
 			Orders order = orderlist.get(i);
-			sum += order.menuItem.price; // sum에 저장
+			sum += order.menuItem.price;
 		}
 		return sum;// 합계를 반환
 	}
 
-	// 정일찬 추가 : 해당 메뉴별 수량을 반환
+	/*
+	 * @method name : menuQty
+	 *
+	 * @date : 2019.03.13
+	 *
+	 * @author : 정일찬
+	 *
+	 * @description : 해당 메뉴별 수량을 반환
+	 *
+	 * @parameters : Menu menu
+	 *
+	 * @return : int
+	 */
+
 	public int menuQty(Menu menu) {
 		TeamLogger.info("menuQty(Menu menu)");
 		int qty = 0;
@@ -423,8 +512,21 @@ class Bucket implements Serializable {
 		return qty;
 	}
 
-	// 정일찬 추가 :해당 메뉴에 해당하는 order를 반환
+	/*
+	 * @method name : getOrder
+	 *
+	 * @date : 2019.03.13
+	 *
+	 * @author : 정일찬
+	 *
+	 * @description : 해당 메뉴에 해당하는 order를 반환
+	 *
+	 * @parameters : Menu menu
+	 *
+	 * @return : Orders
+	 */
 	public Orders getOrder(Menu menu) {
+		TeamLogger.info("getOrder");
 		Orders order = null;
 		for (int i = 0; i < this.orderlist.size(); i++) {
 			if (orderlist.get(i).menuItem.equals(menu)) {
@@ -436,131 +538,16 @@ class Bucket implements Serializable {
 
 	@Override
 	public String toString() {
-		return "OrderList [orderlist=" + orderlist + ", customer=" + customer + "]";
+		return "Bucket [orderlist=" + orderlist + ", customer=" + customer + ", payment=" + payment + ", isPayed="
+				+ isPayed + "]";
 	}
-
-}
-
-class Orders implements Serializable {
-
-	static Long orderId = 0L;
-	Date orderDate;
-	Menu menuItem;
-	Payments payment;
-	// OrderStatus orderStatus;
-
-	public Orders(Menu menuItem) {
-		orderId++;
-		this.orderDate = new Date();
-		this.menuItem = menuItem;
-		this.payment = null; // initalization
-		// this.orderStatus = OrderStatus.ORDER;
-	}
-
-	public Orders(Menu menuItem, Payments payment) {
-		orderId++;
-		this.orderDate = new Date();
-		this.menuItem = menuItem;
-		this.payment = payment;
-		// this.orderStatus = OrderStatus.ORDER;
-	}
-
-	@Override
-	public String toString() {
-		return "Orders [orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + ", payment="
-				+ payment + "]";
-	}
-
-}
-
-class Customers implements Serializable {
-
-	HashMap<String, Integer> customer;// 키값: 전화번호,
-	// 밸류값: 포인트
-
-	public Customers() {
-		this.customer = new HashMap<String, Integer>();
-	}
-
-	// 고객 추가
-	// FIX : !customer.containsKey(phoneNumber))
-	public void addCustomers(String phoneNumber) {// 권순조
-		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
-			if (!customer.containsKey(phoneNumber)) {
-				customer.put(phoneNumber, 0);
-			}
-		}
-
-	}
-
-	// 회원등록 OrderList클래스에서 이동받음..
-	// FIX : 정규표현식 TeamFormat.iscellPhoneMetPattern(phoneNumber) 추가 필요
-//	public void addMembers(String phoneNumber) {// 신지혁
-//		customer.put(phoneNumber, 0);
-//		System.out.println(phoneNumber + "추가 완료");
-//	}
-
-	/*
-	 * @method name : modifyCustomers
-	 *
-	 * @date : 2019.03.12
-	 *
-	 * @author : 정일찬
-	 *
-	 * @description : 고객정보를 수정한다.
-	 *
-	 * @parameters : String oldPhoneNumber, String phoneNumber
-	 *
-	 * @return : void
-	 */
-	public void modifyCustomers(String oldPhoneNumber, String phoneNumber) {
-		if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // 핸드폰 정규표현식
-			if (customer.containsKey(oldPhoneNumber)) {
-				customer.put(phoneNumber, customer.get(oldPhoneNumber)); // 포인트를 새로운 핸드폰으로 옮김
-				customer.remove(oldPhoneNumber); // 기존 폰넘버 삭제
-			}
-		} else {
-			System.out.println("핸드폰번호를 확인하고 입력하세요");
-		}
-	}
-
-	// 고객 조회
-	public void findCustomers(String phoneNumber) { // 신지혁
-		if (customer.get(phoneNumber) != null)
-			System.out.println(phoneNumber + "의 포인트는 : " + customer.get(phoneNumber) + "원 입니다");
-		else
-			System.out.println("고객이아닙니다");
-	}
-
-	// 고객 탈퇴
-	public void deleCustomers(String phoneNumber) { // 이힘찬
-		if (customer.get(phoneNumber) != null) {
-			customer.remove(phoneNumber);
-			System.out.println("탈퇴 되었습니다.");
-		} else {
-			System.out.println("해당 전화번호가 없습니다.");
-		}
-	}
-
-	// 고객 현황
-	public void listCustomers() {// 강기훈
-		for (Map.Entry<String, Integer> obj : customer.entrySet()) {
-			System.out.println("전화번호:" + obj.getKey() + "/ Point:" + obj.getValue());
-
-		}
-	}
-
-	@Override
-	public String toString() {
-		return "Customers [customer=" + customer + "]";
-	}
-
+	
 }
 
 class Pos implements Serializable {
 
 	transient Scanner sc = new Scanner(System.in);
-    
+
 	// log 저장디렉토리
 	String logPath = "C:\\temp\\log";
 
@@ -568,7 +555,7 @@ class Pos implements Serializable {
 	static int amount = 200000;
 	List<Orders> orders = new ArrayList<Orders>();
 	Bucket orderList;
-	Table tables ;
+	Table tables = new Table();
 	List<Menu> menuList = new ArrayList<Menu>();
 	Customers customers = new Customers();
 
@@ -580,253 +567,30 @@ class Pos implements Serializable {
 
 		// load(date);
 	}
-	 void createTable(int tableNum) {
-		 
-		
-		 orderList = new Bucket();
-		  tables = new Table();
-		  tables.tablelist.put(tableNum,orderList);
-	 }
-	
-	 void showMenu(int tableNum) {
-		  int menuNum = 0; 
-		  
-		  createTable(tableNum);
-		   
-		 while(true) {
-			 System.out.println("메뉴를 선택하세요");
-			 System.out.println("1.주문하기");
-			 System.out.println("2.주문삭제");
-			 System.out.println("3.주문전체삭제");
-			 System.out.println("4.수량변경");
-			 System.out.println("5.결제하기");
-			 System.out.println("0.뒤로가기");
-			 
-			 menuNum = Integer.parseInt(sc.nextLine());
-			 
-			 
-			 
-			 
-			 switch(menuNum) {
-			 case 0 :
-				   return;
-			 
-			 case 1 :
-		    	 
-		       
-		       while(true) { 
-		    	   
-		        System.out.println("메뉴를 선택하세요. 뒤로가기는 0번");
-		        System.out.println(menuList.toString());
-		      
-		       String menuName=sc.nextLine();
-		        if(menuName.equals("0")) {
-		           break;
-		        }
-		        	
-		        for(int i =0; i<menuList.size(); i++) {
-		          if(menuName.equals(menuList.get(i).name)) {
-		              tables.tablelist.get(tableNum).orderlist.add(new Orders(menuList.get(i)));
-		               System.out.println(menuList.get(i).name+"가 주문되었습니다.");
-		           }
-		        }
-		        
-		        }
-		    	     break;
-		            
-			case 2 :
-		    	   System.out.println("취소할 주문을 선택하세요");
-		    	   System.out.println(tables.tablelist.get(tableNum).orderlist);
-		    	   
-		         
-		           String menuName2=sc.nextLine();
-		           if(menuName2.equals("0")) {
-		           	selectTable();
-		           }
-		        	
-		           for(int i =0; i<tables.tablelist.get(tableNum).orderlist.size(); i++) {
-		              if(tables.tablelist.get(tableNum).orderlist.get(i).menuItem.name.equals(menuName2)) {
-		            	  tables.tablelist.get(tableNum).orderlist.remove(i);
-		            	  //orderList.deleteOrder(orderList.getOrder(menuItem.get(i)));
-		                  //orderlist.orderlist.remove(menuItem.get(i));
-		                  System.out.println(menuList.get(i).name+"가 취소되었습니다.");
-		              }
-		           } 
-		    	 
-		    	   break;
-		    	 
-		     case 3 :
-		    	 
-		    	 orderList.deleteOrderAll();
-		    	 System.out.println("모든 주문이 삭제되었습니다.");
-		    	 break;
-		    	 
-		     case 4 :
-		    	 System.out.println("수량변경 할 메뉴를 선택하세요");
-		    	 String menuName3 = sc.nextLine();
-		    	 System.out.println("수량을 입력하세요");
-		    	 int qty = Integer.parseInt(sc.nextLine());
-		        
-		    	 for(int i =0; i<menuList.size(); i++){
-		    		 if(menuName3.equals(menuList.get(i).name)) {
-		           	    orderList.changeQty(menuList.get(i),qty);
-		              
-		                 System.out.println(menuList.get(i).name+"이 "+qty+"개로 변경되었습니다.");
-		             }
-		    	 }
-		         
-		    	 
-		     case 5 :
-		    	 
-		    	 
-		    	 
-		     }
-			 
-		 }
-			 }
-		  
-	void selectTable() {
-	      
-		  int tableNum = 0;
-		  System.out.println("테이블을 선택하세요! ");
-		  tableNum = Integer.parseInt(sc.nextLine());
-		  showMenu(tableNum);
-		
-		 //System.out.println(orderlist.listOrders()); listOrders(): 반환값을 스트링으로 리턴해줄 것 ! 
-		 
-		 
-		 }
-	public void viewTable(int seatCount) {
 
+	public void viewTable(int seatCount) {
+		
+		
 		for (int i = 1; i <= seatCount; i++) {
-			System.out.printf("[%d]", i);
+		 if(tables.tablelist.get(i)!=null) {	
+			 System.out.printf("[%d ■]", i);
+		 }else {
+			 System.out.printf("[%d □]", i);
+			 
+		 }
+			 
 			if (i % 3 == 0) {
 				System.out.println();
 			}
 
 		}
+	     
+	     System.out.println("■: 손님이 있는 테이블 , □: 빈 테이블");
 
 	}
 
 	
-	void memberManage() {
-		while (true) {
-			int num = 0;
-			String phoneNumber = "";
-			String oldphoneNumber = "";
-			System.out.println("회원을 추가, 수정, 조회, 탈퇴, 현황을 볼수 있습니다");
-			System.out.println("1.회원 추가");
-			System.out.println("2.회원 수정");
-			System.out.println("3.회원 조회");
-			System.out.println("4.회원 탈퇴");
-			System.out.println("5.회원 현황");
-			System.out.println("0.종료");
-			System.out.println("원하는 번호를 입력하세요");
-			num = Integer.parseInt(sc.nextLine());
 
-			switch (num) {
-			case 0:
-				posStart();
-				break;
-			case 1:
-				System.out.println("추가할 회원의 번호를 입력해주세요");
-				phoneNumber = sc.nextLine();
-				addMembers(phoneNumber);
-				break;
-
-			case 2:
-				System.out.println("회원정보를 수정합니다");
-				System.out.println("oldPhoneNumber를 입력해주세요");
-				oldphoneNumber = sc.nextLine();
-				System.out.println("새로운 PhoneNumber를 입력해주세요");
-				phoneNumber = sc.nextLine();
-
-				modifyMembers(oldphoneNumber, phoneNumber);
-				break;
-
-			case 3:
-				System.out.println("조회할 전화번호를 입력해주세요");
-				phoneNumber = sc.nextLine();
-				findMembers(phoneNumber);
-				break;
-
-			case 4:
-				System.out.println("탈퇴할 전화번호를 입력해주세요");
-				phoneNumber = sc.nextLine();
-				deleteMembers(phoneNumber);
-				break;
-
-			case 5:
-				System.out.println("회원현황 입니다");
-				listMembers();
-				break;
-
-			default:
-				break;
-			}
-		}
-
-	}
-	public void addMembers(String phoneNumber) {// 신지혁
-		customers.addCustomers(phoneNumber);
-		System.out.println(customers);
-	}
-
-	// 고객수정
-	public void modifyMembers(String oldPhoneNumber, String phoneNumber) {// 신지혁
-		customers.modifyCustomers(oldPhoneNumber, phoneNumber);
-
-	}
-
-	// 고객조회
-	public void findMembers(String phoneNumber) {// 신지혁
-		customers.findCustomers(phoneNumber);
-
-	}
-
-	// 고객탈퇴
-	public void deleteMembers(String phoneNumber) {// 신지혁
-		customers.deleCustomers(phoneNumber);
-
-	}
-
-	// 고객현황
-	public void listMembers() {// 신지혁
-		customers.listCustomers();
-
-	}
-
-	void tableManage() {
-		while (true) {
-			int num = 0;
-			System.out.println("테이블 관리 입니다");
-			System.out.println("1. 테이블추가");
-			System.out.println("2. 테이블삭제");
-			System.out.println("0. 종료");
-			System.out.println("번호를 입력하세요");
-			num = Integer.parseInt(sc.nextLine());
-
-			switch (num) {
-			case 0:
-				posStart();
-			case 1:
-				System.out.println("테이블 1개를 추가합니다");
-				num = tables.tablelist.size() + 1;
-				tables.addTable(num);
-				break;
-			case 2:
-				System.out.println("테이블 1개를 삭제합니다");
-				num = tables.tablelist.size() - 1;
-				tables.deleteTable(num);
-				break;
-
-			default:
-				break;
-			}
-
-		}
-	}
-	
 	void menuManage() {
 
 		while (true) {
@@ -835,7 +599,7 @@ class Pos implements Serializable {
 			int menuNum = 0;
 			String menuName = null;
 			String oldName = null;
-        
+
 			int menuPrice = 0;
 			System.out.println("메뉴를 추가하거나 수정할 수 있습니다.");
 			System.out.println("1.메뉴추가");
@@ -888,29 +652,48 @@ class Pos implements Serializable {
 		}
 
 	}
+	  
+	void selectTable() {
+		  viewTable(9);
+		  int tableNum = 0;
+		  System.out.println();
+		  System.out.println("테이블을 선택하세요!  0번: 뒤로가기");
+		  tableNum = Integer.parseInt(sc.nextLine());
+		  if(tableNum == 0) {
+			  posStart();
+		  }
+		 if(tables.tablelist.get(tableNum)==null) {
+		  createTable( tableNum );
+		 }
+		  showMenu(tableNum);
+		
+		 //System.out.println(orderlist.listOrders()); listOrders(): 반환값을 스트링으로 리턴해줄 것 ! 
+		 
+		 
+		 }
+	
+	public int displayMenu() {
+		 int menuNum = 0;
+			System.out.println("=====POS SYSTEM=====");
+			System.out.println();
+			System.out.println("1.판매관리");
+			System.out.println("2.매출관리");
+			System.out.println("3.회원관리");
+		    System.out.println("4.메뉴관리");
+		    System.out.println("5.테이블관리");
+		    System.out.println("6.시스템종료");
+		    
+		    System.out.print("번호를 입력하세요:");
+		    menuNum = Integer.parseInt(sc.nextLine());
+		return menuNum;
+	}
 
 	 public void posStart() {
-		 int menuNum = 0;
-		System.out.println("POS SYSTEM");
-		System.out.println("1.판매관리");
-		System.out.println("2.매출관리");
-		System.out.println("3.회원관리");
-	    System.out.println("4.메뉴관리");
-	    System.out.println("5.테이블관리");
-	    System.out.println("6.시스템종료");
-	    
-	    System.out.print("번호를 입력하세요:");
-	    menuNum = Integer.parseInt(sc.nextLine());
+		
 	  
-	    switch(menuNum) {
-	   
-	   
-	    
-	    
+	    switch(displayMenu()) {
 	    
 	    case 1:
-	    	 
-	    	 viewTable(9);
 	    	 selectTable();
 	    	 
 	    	  break;
@@ -931,6 +714,142 @@ class Pos implements Serializable {
 	    
 		
 	}
+	 void createTable(int tableNum) {
+		 
+			 
+		 orderList = new Bucket();
+		  tables.tablelist.put(tableNum,orderList);
+	 }
+	
+	 void showMenu(int tableNum) {
+		  int menuNum = 0; 
+		  
+		  
+		 
+		   
+		 while(true) {
+			 System.out.println("메뉴를 선택하세요");
+			 System.out.println("1.주문하기");
+			 System.out.println("2.주문삭제");
+			 System.out.println("3.주문전체삭제");
+			 System.out.println("4.수량변경");
+			 System.out.println("5.결제하기");
+			 System.out.println("0.뒤로가기");
+			 
+			 menuNum = Integer.parseInt(sc.nextLine());
+			 
+			 while(menuNum<0 || menuNum>5) {
+				 System.out.println("잘못입력하셨습니다. 다시 입력하세요");
+				 menuNum = Integer.parseInt(sc.nextLine());
+			 }
+			 
+			 
+			 switch(menuNum) {
+			 case 0 :
+				  selectTable();
+			 
+			 case 1 :
+				
+			        System.out.println("======== MENU ========");
+			        for(int i =0; i< menuList.size();i++) {
+			        	System.out.printf("%d. %s : %d 원\n",i+1,menuList.get(i).name,menuList.get(i).price);
+			        	
+			        }
+		       
+		       while(true) { 
+		    	   System.out.println("메뉴를 선택하세요. 뒤로가기는 0번");	   
+		        
+		       String menuName=sc.nextLine();
+		        if(menuName.equals("0")) {
+		           break;
+		        }
+		          
+		         
+		          //tables.tablelist.get(tableNum).orderlist.add(new Orders(getMenu(menuName)));
+		          tables.tablelist.get(tableNum).addOrder(new Orders(getMenu(menuName)));
+		          System.out.println(menuName+"이(가) 주문되었습니다.");
+		           }
+		        
+		        
+		        
+		    	     break;
+		            
+			case 2 :
+		    	   System.out.println("취소할 주문을 선택하세요");
+		    	   
+		    	   
+		    	    tables.tablelist.get(tableNum).listOrders();
+		    	   
+		         
+		           String menuName2=sc.nextLine();
+		           if(menuName2.equals("0")) {
+		           	 return;
+		           }
+	           
+		           tables.tablelist.get(tableNum).deleteOrder(tables.tablelist.get(tableNum).getOrder(getMenu(menuName2)));
+		           System.out.println(menuName2+"이(가) 취소되었습니다.");
+		          
+		    	   break;
+		    	 
+		     case 3 :
+		    	 
+		    	 tables.tablelist.get(tableNum).deleteOrderAll();
+		    	 System.out.println("모든 주문이 삭제되었습니다.");
+		    	 break;
+		    	 
+		     case 4 :
+		    	 System.out.println("수량을 변경할 메뉴를 선택하세요");
+		    	 String menuName3 = sc.nextLine();
+		    	 System.out.println("추가하고 싶은 수량을 입력하세요");
+		    	 int qty = Integer.parseInt(sc.nextLine());
+		        
+		    	 for(int i =0; i<menuList.size(); i++){
+		    		 if(menuName3.equals(menuList.get(i).name)) {
+		           	   tables.tablelist.get(tableNum).changeQty(menuList.get(i),qty);
+		              
+		                 System.out.println(menuList.get(i).name+"의 수량이 변경되었습니다.");
+		             }
+		    	 }
+		          break;
+		    	 
+		     case 5 :
+		    	 
+		    	 
+		    	 
+		     }
+			 
+		 }
+			 }
+	 void tableManage() {
+			while (true) {
+				int num = 0;
+				System.out.println("테이블 관리 입니다");
+				System.out.println("1. 테이블추가");
+				System.out.println("2. 테이블삭제");
+				System.out.println("0. 종료");
+				System.out.println("번호를 입력하세요");
+				num = Integer.parseInt(sc.nextLine());
+
+				switch (num) {
+				case 0:
+					posStart();
+				case 1:
+					System.out.println("테이블 1개를 추가합니다");
+					num = tables.tablelist.size() + 1;
+					tables.addTable(num);
+					break;
+				case 2:
+					System.out.println("테이블 1개를 삭제합니다");
+					num = tables.tablelist.size() - 1;
+					tables.deleteTable(num);
+					break;
+
+				default:
+					break;
+				}
+
+			}
+		}
 
 	// 판매관리, 매출관리, 회원관리, 메뉴관리, 테이블관리, 시스템 종료
 
@@ -1009,9 +928,9 @@ class Pos implements Serializable {
 	// 고객관리
 
 	// 고객가입
-//	public void addMembers(String phoneNumber) {// 신지혁
-//		customers.addCustomers(phoneNumber);
-//	}
+	public void addMembers(String phoneNumber) {// 신지혁
+		customers.addCustomers(phoneNumber);
+	}
 	// 고객조회
 	// 고객탈퇴
 	// 고객현황
@@ -1043,26 +962,21 @@ class Pos implements Serializable {
 
 	}
 
-	// 데이터 저장 
-	public void save(String date) { // 권예지
+	// 데이터 저장
+	public void save(Object object, String pathFile) { // 권예지
 	}
 
 	// 데이터 로드 (시스템 시작시 데이터 로드)
-	public void load() {// 권예지
-		
+	public void load(Object object, String pathFile) {// 권예지
+
 	}
 }
 
 public class Pos_System {
 	public static void main(String[] args) {
 		Pos pos = new Pos();
-		
-		
-	    pos.addMenu("짜장", 5000);
-	    pos.addMenu("짬뽕", 5000);
-	    pos.addMenu("탕수육",7000);
-		
-	    pos.posStart();
+		pos.tables = new Table();
+
 //		// 데이터 로드 (시스템 시작시 데이터 로드)
 //		String pathFile = "C:\\Temp\\pos.obj";
 //		pos=(Pos)TeamFiles.loadObject(pathFile);
@@ -1072,12 +986,97 @@ public class Pos_System {
 //
 //		// 데이터 저장 (시스템 종료시 데이터 저장)
 //		TeamFiles.saveObject(pos, "pathFile");
-		
 
-		
 		// ========================
 		// 이하 테스트용도
 
-		
-}
+//		Customers client = new Customers();
+//		client.addCustomers("010-1111-1111");
+//		client.addCustomers("010-2222-2222");
+//		client.addCustomers("010-3333-3333");
+//		client.deleCustomers("010-1111-2222");
+//		client.findCustomers("010-2222-1111");
+
+//		System.out.println(client.toString());
+
+		pos.addMenu("짜장", 5000);
+		pos.addMenu("짬뽕", 6000);
+		pos.addMenu("우동", 5500);
+
+//		Menu pickMenu = pos.getMenu("짜장");
+
+//		System.out.println(pickMenu.toString());
+
+//		// Order 생성
+//		Orders order1 = new Orders(pos.getMenu("짜장"));
+//		Orders order2 = new Orders(pos.getMenu("짬뽕"));
+//		Orders order3 = new Orders(pos.getMenu("짬뽕"));
+//
+//		System.out.println(order1.toString());
+//
+//		// OrderList 생성
+//		Bucket orderList = new Bucket();
+//		orderList.addOrder(order1);
+//		orderList.addOrder(order2);
+//		orderList.addOrder(order3);
+//
+//		System.out.println("짜장 주문수 : " + orderList.menuQty(pos.getMenu("짜장")));
+//		System.out.println("짬뽕 주문수 : " + orderList.menuQty(pos.getMenu("짬뽕")));
+//
+//		System.out.println("짜장 5개 추가");
+//		orderList.changeQty(pos.getMenu("짜장"), 5);
+//
+//		System.out.println("짜장 주문수 : " + orderList.menuQty(pos.getMenu("짜장")));
+//		System.out.println("짬뽕 주문수 : " + orderList.menuQty(pos.getMenu("짬뽕")));
+//
+//		System.out.println("짜장 6개 취소");
+//		orderList.changeQty(pos.getMenu("짜장"), -6);
+//
+//		System.out.println("짜장 주문수 : " + orderList.menuQty(pos.getMenu("짜장")));
+//		System.out.println("짬뽕 주문수 : " + orderList.menuQty(pos.getMenu("짬뽕")));
+//
+//		System.out.println("우동 3개 추가");
+//		orderList.changeQty(pos.getMenu("우동"), 3);
+//
+//		System.out.println("짜장 주문수 : " + orderList.menuQty(pos.getMenu("짜장")));
+//		System.out.println("짬뽕 주문수 : " + orderList.menuQty(pos.getMenu("짬뽕")));
+//		System.out.println("우동 주문수 : " + orderList.menuQty(pos.getMenu("우동")));
+//
+//		System.out.println(orderList.toString());
+
+//		// Table
+//		Table tables = new Table();
+//
+//		// add table
+//		tables.addTable(1);
+//		tables.addTable(2);
+//		tables.addTable(3);
+//		tables.addTable(4);
+//		System.out.println(tables.tablelist.toString());
+//		// add OrderList to Table
+//		tables.addOrderList(1, orderList);
+//		System.out.println(tables.tablelist.toString());
+//
+//		// 결제
+//		Customers sonnom = new Customers();
+//		sonnom.addCustomers("010-2222-3333");
+//		System.out.println("손님 : " + sonnom.customer.toString());
+//
+//		int yourbill = 20000;
+//		// cash
+//		Bucket afterLunch = tables.tablelist.get(1);
+//		for (int i = 0; i < afterLunch.orderlist.size(); i++) {
+//			yourbill -= afterLunch.orderlist.get(i).menuItem.price;
+//			// point 적립
+//			int new_point = sonnom.customer.get("010-2222-3333")
+//					+ (int) (afterLunch.orderlist.get(i).menuItem.price * 0.05);
+//			sonnom.customer.put("010-2222-3333", new_point);
+//
+//		}
+//		// 결제완료
+//		afterLunch.isPayed = true;
+//		System.out.println(yourbill);
+//		System.out.println("손님의 포인트 : " + sonnom.customer.toString());
+        pos.posStart();
+	}
 }
