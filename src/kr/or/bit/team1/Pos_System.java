@@ -934,6 +934,8 @@ class Pos {
 	public void exportToExcel(String salesType) {// 일찬님
 
 	}
+	
+	
 
 	public void totalsales() {
 		int num = 0;
