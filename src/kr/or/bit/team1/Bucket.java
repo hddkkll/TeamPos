@@ -274,6 +274,7 @@ public class Bucket implements Serializable {
 		 */
 		public void payCardAll(Customers customer) { // 이힘찬
 			TeamLogger.info("payCardAll");
+			int receivable = orderSum();
 			int amount = 0;
 			int point = 0;
 			int change = 0; // 거스름돈을 저장할 공간 선언
@@ -287,10 +288,11 @@ public class Bucket implements Serializable {
 
 				String phoneNumber = sc.nextLine();
 				if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
-					point = usePoints(phoneNumber, customer);
+					point = -1*usePoints(phoneNumber, customer);
 				}
 				if (customer.customer.containsKey(phoneNumber)) {
 					// int point = customer.customer.get(s);
+					receivable += point;
 					this.customer = customer.findCustomers(phoneNumber);
 				} else {
 					System.out.println("해당 고객이 없습니다.");
@@ -323,7 +325,7 @@ public class Bucket implements Serializable {
 			}
 			this.payment = new CardPayments();
 
-			printReceipt(orderSum(), point, amount, change);// 영수증 출력
+			printReceipt(receivable, point, receivable, change);// 영수증 출력
 
 		}
 
