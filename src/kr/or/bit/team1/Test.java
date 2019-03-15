@@ -17,40 +17,43 @@ public class Test {
 		Orders order2 = new Orders(pos.getMenu("짬뽕"));
 		Orders order3 = new Orders(pos.getMenu("짬뽕"));
 
-		System.out.println(order1.toString());
-		System.out.println(order2.toString());
-		System.out.println(order3.toString());
+//		System.out.println(order1.toString());
+//		System.out.println(order2.toString());
+//		System.out.println(order3.toString());
 
 		Bucket bucketList = new Bucket();
 		bucketList.addOrder(order1);
 		bucketList.addOrder(order2);
 		bucketList.addOrder(order3);
 		
-		System.out.println(bucketList.orderlist.toString());
-		//bucketList.changeQty(pos.getMenu("우동"), -1);
-		System.out.println("짜장 주문수 : " + bucketList.menuQty(pos.getMenu("짜장")));
-		System.out.println("짬뽕 주문수 : " + bucketList.menuQty(pos.getMenu("짬뽕")));
+//		System.out.println(bucketList.orderlist.toString());
+//		//bucketList.changeQty(pos.getMenu("우동"), -1);
+//		System.out.println("짜장 주문수 : " + bucketList.menuQty(pos.getMenu("짜장")));
+//		System.out.println("짬뽕 주문수 : " + bucketList.menuQty(pos.getMenu("짬뽕")));
 
-		System.out.println(bucketList.orderSum());
+//		System.out.println(bucketList.orderSum());
 		
 		pos.customers.addCustomers("010-1111-1111");
 		pos.customers.addCustomers("010-2222-2222");
 		
-		System.out.println(pos.customers.findCustomers("010-1111-1111"));
+		pos.tables.tables.put(1, null);
+		System.out.println(pos.tables.tables.get(1)==null);
+//		System.out.println(pos.customers.findCustomers("010-1111-1111"));
 	
 		//bucketList.listOrders();
 		
 		//bucketList.payCashAll(20000, pos.customers);
 		//bucketList.payCashAll(20000, pos.customers);
-		bucketList.payCardAll(pos.customers);
+		//bucketList.payCardAll(pos.customers);
 		
-		pos.orderList=bucketList;
-		System.out.println(pos.getQtyPerMenu("20190315", pos.getMenu("짜장"), PayType.CASH));
+		//pos.orderList=bucketList;
+		//System.out.println(pos.getQtyPerMenu("20190315", pos.getMenu("짬뽕"), PayType.CARD));
 		
 		//bucketList.payCardAll(pos.customers);
-		bucketList.test();
-		System.out.println(bucketList.toString());
 		
+//		System.out.println(bucketList.toString());
+//		System.out.println(bucketList.orderlist.indexOf(bucketList.getOrder(2)));
+		bucketList.payDutch(pos.customers);
 //		System.out.println("짬뽕의 object " + bucketList.getOrder(pos.getMenu("짬뽕")).toString());
 //		//bucketList.deleteOrder(bucketList.getOrder(pos.getMenu("짬뽕")));
 //		//bucketList.deleteOrder(bucketList.getOrder(pos.getMenu("짬뽕")));

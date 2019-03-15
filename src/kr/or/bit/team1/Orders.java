@@ -12,7 +12,7 @@ public class Orders implements Serializable {
 	Date orderDate;
 	Menu menuItem;
 	Payments payment;
-	// OrderStatus orderStatus;
+	OrderStatus orderStatus;
 
 	public Orders(Menu menuItem) {
 		TeamLogger.info("Orders :" + menuItem.name);
@@ -20,7 +20,7 @@ public class Orders implements Serializable {
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
 		this.payment = new CashPayments(); // default로 cash
-		// this.orderStatus = OrderStatus.ORDER;
+		this.orderStatus = OrderStatus.ORDER;
 	}
 
 	public Orders(Menu menuItem, Payments payment) {
@@ -29,7 +29,7 @@ public class Orders implements Serializable {
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
 		this.payment = new CashPayments(); // default로 cash
-		// this.orderStatus = OrderStatus.ORDER;
+		this.orderStatus = OrderStatus.ORDER;
 	}
 
 	
