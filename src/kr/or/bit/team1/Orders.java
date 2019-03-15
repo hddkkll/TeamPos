@@ -7,16 +7,19 @@ import kr.or.bit.team1.util.TeamFormat;
 import kr.or.bit.team1.util.TeamLogger;
 
 public class Orders implements Serializable {
-	static Long orderId = 0L;
+	static Long sequence= 1L;
+	Long orderId; 
 	Date orderDate;
 	Menu menuItem;
+	Payments payment;
 	// OrderStatus orderStatus;
 
 	public Orders(Menu menuItem) {
 		TeamLogger.info("Orders :" + menuItem.name);
-		orderId++;
+		orderId = sequence++;
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
+		this.payment = new CashPayments(); // default로 cash
 		// this.orderStatus = OrderStatus.ORDER;
 	}
 
@@ -25,12 +28,14 @@ public class Orders implements Serializable {
 		orderId++;
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
+		this.payment = new CashPayments(); // default로 cash
 		// this.orderStatus = OrderStatus.ORDER;
 	}
 
+	
 	@Override
 	public String toString() {
-		return "Orders [orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + "]";
+		return "Orders [orderId " + orderId + ", + orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + "]";
 	}
 
 }
