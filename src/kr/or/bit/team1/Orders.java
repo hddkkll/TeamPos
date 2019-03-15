@@ -19,7 +19,7 @@ public class Orders implements Serializable {
 		orderId = sequence++;
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
-		this.payment = null;
+		this.payment = new CashPayments(); // default로 cash
 		// this.orderStatus = OrderStatus.ORDER;
 	}
 
@@ -28,10 +28,11 @@ public class Orders implements Serializable {
 		orderId++;
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
-		this.payment = null;
+		this.payment = new CashPayments(); // default로 cash
 		// this.orderStatus = OrderStatus.ORDER;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "Orders [orderId " + orderId + ", + orderDate=" + TeamFormat.dateTimeFormat(orderDate) + ", menuItem=" + menuItem + "]";

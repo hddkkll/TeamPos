@@ -92,12 +92,15 @@ class Table implements Serializable {
 }
 
 class Bucket implements Serializable {
+	static long sequence = 1L;
+	long bucketId;
 	ArrayList<Orders> orderlist;
 	Customers customer;
 	Payments payment;
 	boolean isPayed;
 
 	public Bucket() {
+		this.bucketId = sequence++;
 		this.orderlist = new ArrayList<Orders>();
 		this.customer = null;
 		this.payment = null;
@@ -243,80 +246,70 @@ class Bucket implements Serializable {
 	 */
 	public void payCashAll(int amount, Customers customer) {
 		TeamLogger.info("payCashAll");
-		int point=0;
-		// <Enter> 결제 1. 포인트 사용 2: 포인트 적립 3:회원추가
+		int point = 0;
 		if (amount > orderSum()) {
 			int change = 0; // 거스름돈을 저장할 공간 선언
 
 			Scanner sc = new Scanner(System.in);
 
 			System.out.println("<Enter>결제    1.포인트 사용  2:포인트 적립  3:회원추가 ");
-			int choice = Integer.parseInt(sc.nextLine());
-			if (choice == 1) {
+			String choice = sc.nextLine();
+			if (choice.equalsIgnoreCase("1")) {
 				System.out.println("고객 핸드폰번호를 입력하세요");
+
 				String phoneNumber = sc.nextLine();
-				point=usePoints(phoneNumber, customer);
+				if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
+					point = usePoints(phoneNumber, customer);
+				}
 				if (customer.customer.containsKey(phoneNumber)) {
-					//int point = customer.customer.get(s);
+					// int point = customer.customer.get(s);
 					change = amount + point - orderSum();// 받을금액, 받은금액, 거스름돈
 
 					Pos.amount = Pos.amount + amount - point - change;
 					this.customer = customer.findCustomers(phoneNumber);
-					System.out.println("받을 금액 : " + orderSum());
-					System.out.println("포인트     : " + point);
-					System.out.println("받은 금액 : " + amount);
-					System.out.println("거스름돈 : " + change);
 				} else {
 					System.out.println("해당 고객이 없습니다.");
 					return;
 				}
-			} else if (choice == 2) {
+			} else if (choice.equalsIgnoreCase("2")) {
 				System.out.println("고객 핸드폰번호를 입력하세요");
 				String phoneNumber = sc.nextLine();
 
 				change = amount - orderSum();
 
 				Pos.amount = Pos.amount + amount - change;
-				
-				if(!phoneNumber.equalsIgnoreCase("\n")) {			// <enter>일때 에러가 나는 문제 미해결
-					point=addPoints(customer, phoneNumber, amount);	
+
+				if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
+					point = addPoints(customer, phoneNumber, amount);
 				}
-				System.out.println("받을 금액 : " + orderSum());
-				System.out.println("적립포인트: " + point);
-				System.out.println("받은 금액 : " + amount);
-				System.out.println("받은 금액 : " + change);
-				
-			} else if(choice==3) {
+
+			} else if (choice.equalsIgnoreCase("3")) {
 				addMember(customer);
-				System.out.println("고객 입력이 완료됬습니다.");
 				System.out.println("고객 핸드폰번호를 입력하세요");
 				String phoneNumber = sc.nextLine();
 
 				change = amount - orderSum();
 
 				Pos.amount = Pos.amount + amount - change;
-				
-				if(!phoneNumber.equalsIgnoreCase("\n")) {			// <enter>일때 에러가 나는 문제 미해결
-					point=addPoints(customer, phoneNumber, amount);	
+
+				if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
+					point = addPoints(customer, phoneNumber, amount);
 				}
-				System.out.println("받을 금액 : " + orderSum());
-				System.out.println("적립포인트: " + point);
-				System.out.println("받은 금액 : " + amount);
-				System.out.println("받은 금액 : " + change);
-				
-		}else {
+
+			} else {
 				change = amount - orderSum();
 
 				Pos.amount = Pos.amount + amount - change;
-				System.out.println("받을 금액 : " + orderSum());
-				System.out.println("적립포인트: " + point);
-				System.out.println("받은 금액 : " + amount);
-				System.out.println("받은 금액 : " + change);
 			}
+
+			System.out.println("받을 금액 : " + orderSum());
+			System.out.println("적립포인트: " + point);
+			System.out.println("받은 금액 : " + amount);
+			System.out.println("받은 금액 : " + change);
 
 			this.isPayed = true;
 			for (int i = 0; i < this.orderlist.size(); i++) {
-				this.orderlist.get(i).payment = new CardPayments();
+				this.orderlist.get(i).payment = new CashPayments();
 			}
 			this.payment = new CashPayments();
 
@@ -341,30 +334,61 @@ class Bucket implements Serializable {
 	 */
 	public void payCardAll(Customers customer) { // 이힘찬
 		TeamLogger.info("payCardAll");
+		int amount = 0;
+		int point = 0;
+		int change = 0; // 거스름돈을 저장할 공간 선언
+
 		Scanner sc = new Scanner(System.in);
 
-//		System.out.println("포인트 사용 : 1, 포인트 미사용 :2");
-//		int choice = Integer.parseInt(sc.nextLine());
-//		if (choice == 1) {
-//				int point = usePoints(customer);
-//
-//				this.customer = customer.findCustomers(s);
-//				customer.setPoint(s, 0); // point 0
-//				System.out.println("받을 금액 : " + orderSum());
-//				System.out.println("포인트     : " + point);
-//				System.out.println("결제 금액  : " + (orderSum() - point));
-//		} else if (choice == 2) {
-//			System.out.println("받을 금액 : " + orderSum());
-//			System.out.println("결제 금액  : " + orderSum());
-//		}
-//
-//		this.isPayed = true;
-//		for (int i = 0; i < this.orderlist.size(); i++) {
-//			this.orderlist.get(i).payment = new CardPayments();
-//		}
-//		this.payment = new CardPayments();
+		System.out.println("<Enter>결제    1.포인트 사용  2:포인트 적립  3:회원추가 ");
+		String choice = sc.nextLine();
+		if (choice.equalsIgnoreCase("1")) {
+			System.out.println("고객 핸드폰번호를 입력하세요");
+
+			String phoneNumber = sc.nextLine();
+			if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
+				point = usePoints(phoneNumber, customer);
+			}
+			if (customer.customer.containsKey(phoneNumber)) {
+				// int point = customer.customer.get(s);
+				this.customer = customer.findCustomers(phoneNumber);
+			} else {
+				System.out.println("해당 고객이 없습니다.");
+				return;
+			}
+		} else if (choice.equalsIgnoreCase("2")) {
+			System.out.println("고객 핸드폰번호를 입력하세요");
+			String phoneNumber = sc.nextLine();
+
+			if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
+				point = addPoints(customer, phoneNumber, amount);
+			}
+
+		} else if (choice.equalsIgnoreCase("3")) {
+			addMember(customer);
+			System.out.println("고객 핸드폰번호를 입력하세요");
+			String phoneNumber = sc.nextLine();
+
+			if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
+				point = addPoints(customer, phoneNumber, amount);
+			}
+
+		} else { // 결제 (지우지 마세요)
+		}
+
+		System.out.println("받을 금액 : " + orderSum());
+		System.out.println("적립포인트: " + point);
+		System.out.println("받은 금액 : " + amount);
+		System.out.println("받은 금액 : " + change);
+
+		this.isPayed = true;
+		for (int i = 0; i < this.orderlist.size(); i++) {
+			this.orderlist.get(i).payment = new CardPayments();
+		}
+		this.payment = new CashPayments();
 
 		printReceipt();// 영수증 출력
+
 	}
 
 	/*
@@ -480,7 +504,6 @@ class Bucket implements Serializable {
 //	print receipt
 	// ADJUST tf
 	public void printReceipt() {// 권예지, 파라메터에table의주솟값을받게바꿔야할것같습니다..
-		TeamFormat tf = new TeamFormat();
 		Pos pos = new Pos();
 		Table t = new Table();
 		CardPayments cp = new CardPayments();
@@ -488,7 +511,7 @@ class Bucket implements Serializable {
 
 		PayType paytype = null;
 		System.out.println("테이블번호: " + t.tables.get(0) + "\n");
-		System.out.println("거래일시: " + tf.dateTimeFormat(t.date));
+		System.out.println("거래일시: " + TeamFormat.dateTimeFormat(new Date()));
 		System.out.println("거래유형: " + paytype);
 		System.out.println("할부기간: 일시불");
 		System.out.println("=====================================");
@@ -502,17 +525,39 @@ class Bucket implements Serializable {
 
 	}
 
-
-	// 포인트 적립
-	public int addPoints(Customers customer, String phoneNumber, int amount) { // 권예지^^
+	/*
+	 * @method name : addPoints
+	 *
+	 * @date : 2019.03.14
+	 *
+	 * @author : 권예지
+	 *
+	 * @description : 포인트 추가
+	 *
+	 * @parameters : Customers customer, String phoneNumber, int amount
+	 *
+	 * @return : void
+	 */
+	public int addPoints(Customers customer, String phoneNumber, int amount) {
 		int paypoint = customer.customer.get(phoneNumber);
 		customer.customer.put(phoneNumber, (int) (paypoint + (orderSum() * 0.05)));
 		return customer.customer.get(phoneNumber);
 	}
 
-	// 포인트 사용
-	// FIX customer를 받아야 함
-	public int usePoints(String phoneNumber, Customers customer) {// 권예지^^
+	/*
+	 * @method name : usePoints
+	 *
+	 * @date : 2019.03.15
+	 *
+	 * @author : 권예지
+	 *
+	 * @description : 포인트를 사용한다. 사용후 포인트는 0
+	 *
+	 * @parameters : Customers customer
+	 *
+	 * @return : void
+	 */
+	public int usePoints(String phoneNumber, Customers customer) {
 		int usePointsResult = 0;
 		int result = 0;
 		Scanner sc = new Scanner(System.in);
@@ -527,9 +572,21 @@ class Bucket implements Serializable {
 		return usePointsResult;
 	}
 
-	// FIX : 기존 customer객체를 가져와야 함
-	// 삭제예정
+	/*
+	 * @method name : addMember
+	 *
+	 * @date : 2019.03.15
+	 *
+	 * @author : 권예지
+	 *
+	 * @description : 회원을 추가한다.
+	 *
+	 * @parameters : Customers customer
+	 *
+	 * @return : void
+	 */
 	public void addMember(Customers customer) { // 권예지
+		TeamLogger.info("addMember");
 		Scanner sc = new Scanner(System.in);
 		System.out.println("가입하시겠습니까? Y/N");
 		String choice = sc.nextLine();
@@ -537,6 +594,7 @@ class Bucket implements Serializable {
 			System.out.println("핸드폰 번호를 입력하세요");
 			String phoneNumber = sc.nextLine();
 			customer.addCustomers(phoneNumber);
+			System.out.println("고객 가입이 완료되었습니다.");
 		} else {
 			System.out.println("가입 취소");
 		}
@@ -644,6 +702,21 @@ class Pos implements Serializable {
 		TeamLogger.info("@copyleft TeamSoft 2019");
 
 		// load(date);
+	}
+
+	public int getQtyPerMenu(String date, Menu menu, PayType payType) {
+		int qty = 0;
+		for (int i = 0; i < this.orderList.orderlist.size(); i++) {
+			if (TeamFormat.dateFormat(this.orderList.orderlist.get(i).orderDate)
+					.equalsIgnoreCase(date)) {
+				if (orderList.orderlist.get(i).menuItem.name.trim().equalsIgnoreCase(menu.name.trim())) {
+					if (orderList.orderlist.get(i).payment.getPayType().equals(payType)) {
+						qty++;
+					}
+				}
+			}
+		}
+		return qty;
 	}
 
 	public void viewTable(int seatCount) {
