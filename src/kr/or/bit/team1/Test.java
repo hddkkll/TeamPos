@@ -40,7 +40,9 @@ public class Test {
 	
 		//bucketList.listOrders();
 		
-		//bucketList.payCashAll(20000, pos.customers);
+		bucketList.payCashAll(20000, pos.customers);
+		System.out.println(pos.customers.findCustomers("010-1111-1111"));
+
 		//bucketList.payCardAll(pos.customers);
 		bucketList.test();
 		System.out.println(bucketList.toString());
