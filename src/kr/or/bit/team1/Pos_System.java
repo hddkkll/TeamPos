@@ -18,7 +18,10 @@ enum PayType {
 };
 
 class Pos implements Serializable {
-	transient Scanner sc = new Scanner(System.in);
+	
+	private static final long serialVersionUID = 1L;
+	
+	static Scanner sc = new Scanner(System.in);
 
 	// log 저장디렉토리
 	String logPath = "C:\\temp\\log";
@@ -114,7 +117,7 @@ class Pos implements Serializable {
 			System.out.println("3.메뉴삭제");
 			System.out.println("4.종료");
 			System.out.println("원하는 번호를 입력하세요");
-
+			System.out.println();
 			menuNum = Integer.parseInt(sc.nextLine());
 			switch (menuNum) {
 
@@ -628,129 +631,38 @@ class Pos implements Serializable {
 	}
 
 	// 데이터 로드 (시스템 시작시 데이터 로드)
-	public static void load(Object object, String pathFile) {// 권예지
+//	public static void load(Object object, String pathFile) {// 권예지
+//		TeamLogger.info("load");
+//		File file = new File(pathFile);
+//		if (file.exists()) {
+//			object = (Pos) TeamFiles.loadObject(pathFile);
+//		}
+//
+//	}
+	
+	public static Pos load(String pathFile) {// 권예지
 		TeamLogger.info("load");
+		Pos pos=null;
 		File file = new File(pathFile);
 		if (file.exists()) {
-			object = (Pos) TeamFiles.loadObject(pathFile);
+			System.out.println("로드 : ");
+			pos = (Pos) TeamFiles.loadObject(pathFile);
 		}
+		return pos;
 
 	}
+
 }
 
 public class Pos_System {
 	public static void main(String[] args) {
 		Pos pos = new Pos();
-		Pos.load(pos, "c:\\Temp\\Pos.obj"); // posStart() 시작전
-//		pos.addMenu("짜장", 5000);
-//		pos.addMenu("짬뽕", 6000);
-//		pos.addMenu("우동", 5500);
-
+		pos=Pos.load("c:\\Temp\\Pos.obj"); // posStart() 시작전
 		pos.posStart();
 		Pos.save(pos, "c:\\Temp\\Pos.obj"); // posStart() 종료전
-
 		
 		
-//		// 데이터 로드 (시스템 시작시 데이터 로드)
-//		String pathFile = "C:\\Temp\\pos.obj";
-//		pos=(Pos)TeamFiles.loadObject(pathFile);
-//		
-//		
-//		pos.posStart();
-//
-//		// 데이터 저장 (시스템 종료시 데이터 저장)
-//		TeamFiles.saveObject(pos, "pathFile");
-
-		// ========================
-		// 이하 테스트용도
-
-		Customers client = new Customers();
-		client.addCustomers("010-1111-1111");
-		client.addCustomers("010-2222-2222");
-		client.addCustomers("010-3333-3333");
-		client.deleCustomers("010-1111-2222");
-		client.findCustomers("010-2222-1111");
-
-		System.out.println(client.toString());
-
-		pos.addMenu("짜장", 5000);
-		pos.addMenu("짬뽕", 6000);
-		pos.addMenu("우동", 5500);
-
-		Menu pickMenu = pos.getMenu("짜장");
-
-		System.out.println(pickMenu.toString());
-
-		// Order 생성
-		Orders order1 = new Orders(pos.getMenu("짜장"));
-		Orders order2 = new Orders(pos.getMenu("짬뽕"));
-		Orders order3 = new Orders(pos.getMenu("짬뽕"));
-
-		System.out.println(order1.toString());
-
-		// OrderList 생성
-		Bucket orderList = new Bucket();
-		orderList.addOrder(order1);
-		orderList.addOrder(order2);
-		orderList.addOrder(order3);
-
-		System.out.println("짜장 주문수 : " + orderList.menuQty(pos.getMenu("짜장")));
-		System.out.println("짬뽕 주문수 : " + orderList.menuQty(pos.getMenu("짬뽕")));
-
-		System.out.println("짜장 5개 추가");
-		orderList.changeQty(pos.getMenu("짜장"), 5);
-
-		System.out.println("짜장 주문수 : " + orderList.menuQty(pos.getMenu("짜장")));
-		System.out.println("짬뽕 주문수 : " + orderList.menuQty(pos.getMenu("짬뽕")));
-
-		System.out.println("짜장 6개 취소");
-		orderList.changeQty(pos.getMenu("짜장"), -6);
-
-		System.out.println("짜장 주문수 : " + orderList.menuQty(pos.getMenu("짜장")));
-		System.out.println("짬뽕 주문수 : " + orderList.menuQty(pos.getMenu("짬뽕")));
-
-		System.out.println("우동 3개 추가");
-		orderList.changeQty(pos.getMenu("우동"), 3);
-
-		System.out.println("짜장 주문수 : " + orderList.menuQty(pos.getMenu("짜장")));
-		System.out.println("짬뽕 주문수 : " + orderList.menuQty(pos.getMenu("짬뽕")));
-		System.out.println("우동 주문수 : " + orderList.menuQty(pos.getMenu("우동")));
-
-		System.out.println(orderList.toString());
-
-		// Table
-		Table tables = new Table();
-
-		// add table
-		tables.addTable(1);
-		tables.addTable(2);
-		tables.addTable(3);
-		tables.addTable(4);
-		System.out.println(tables.tableList.toString());
-		// add OrderList to Table
-		tables.addOrderList(1, orderList);
-		System.out.println(tables.tableList.toString());
-
-		// 결제
-		Customers sonnom = new Customers();
-		sonnom.addCustomers("010-2222-3333");
-		System.out.println("손님 : " + sonnom.customer.toString());
-
-		int yourbill = 20000;
-		// cash
-		Bucket afterLunch = tables.tableList.get(1);
-		for (int i = 0; i < afterLunch.orderlist.size(); i++) {
-			yourbill -= afterLunch.orderlist.get(i).menuItem.price;
-			// point 적립
-			int new_point = sonnom.customer.get("010-2222-3333")
-					+ (int) (afterLunch.orderlist.get(i).menuItem.price * 0.05);
-			sonnom.customer.put("010-2222-3333", new_point);
-
-		}
-		// 결제완료
-		afterLunch.isPayed = true;
-		System.out.println(yourbill);
-		System.out.println("손님의 포인트 : " + sonnom.customer.toString());
-
+		
+		
 	}
 }
