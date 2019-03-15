@@ -501,21 +501,11 @@ class Pos implements Serializable {
 	// 판매관리, 매출관리, 회원관리, 메뉴관리, 테이블관리, 시스템 종료
 	// 테이블 주문 합치기
 	public void mergeTable(int fromTable, int toTable) {// 권예지
-		Bucket temp = new Bucket();
-		temp = tables.tableList.get(fromTable);
-		Bucket temp2 = new Bucket();
-		temp2 = tables.tableList.get(toTable);
-
-		for (int i = 0; i < temp2.orderlist.size(); i++)
-			temp2.orderlist.add(temp.orderlist.get(i));
-
-		for (int i = 0; i < temp2.orderlist.size(); i++)
-			temp.orderlist.remove(i);
+		this.tables.mergeTable(fromTable, toTable);
 	}
 
 	// 주문(테이블)
 	public void orderTable(Integer tableNo, Menu menu) { // 일찬님
-		// 테이블에 order add
 	}
 
 	public void payTableCash(Integer tableNo) {// 이힘찬
