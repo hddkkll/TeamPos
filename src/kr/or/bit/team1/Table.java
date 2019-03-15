@@ -75,7 +75,7 @@ public class Table implements Serializable {
 			Bucket temp = new Bucket();
 			temp = tables.get(fromTable);
 			tables.put(toTable, temp);
-			tables.remove(fromTable);
+			tables.put(fromTable, null);
 		}
 
 		/*
