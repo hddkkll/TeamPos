@@ -3,10 +3,12 @@ package kr.or.bit.team1;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
 import kr.or.bit.team1.util.TeamFiles;
+import kr.or.bit.team1.util.TeamFormat;
 import kr.or.bit.team1.util.TeamLogger;
 
 enum OrderStatus {
@@ -599,14 +601,170 @@ public class Pos implements Serializable {
 		}
 
 		// 매출
-		// 메뉴별 매출 (일별)
-		public void printSalesMenu(String date) { // 강기훈
+		/*
+		 * @method name : printSalesPayment
+		 *
+		 * @date : 2019.03.16
+		 *
+		 * @author : 강기훈 
+		 *
+		 * @description : 일별 메뉴별 매출액을 구한다  
+		 *
+		 * @parameters : String date
+		 *
+		 * @return : void 
+		 */
+		public void printSalesMenu(String date) { // 강기훈			
 			// 메뉴-수량-금액
+			TeamLogger.info("printSalesMenu(String date)");
+			String menuName = "";
+			int price = 0;
+			int qty = 0;
+			int sales = 0;
+			int totalSales = 0;
+
+			Iterator<Menu> itr = menuList.iterator();
+
+			System.out.println("일별매출 ");
+			System.out.println("DATE: " + date);
+			System.out.println("=================================================");
+			System.out.println("메뉴이름\t\t단가\t수량\t금액\t");
+			System.out.println("=================================================");
+
+			while (itr.hasNext()) {
+				Menu menu = itr.next();
+				menuName = menu.name;
+				price = menu.price;
+				qty = getQtyPerMenu(date, menu);
+				sales = price * qty;
+				totalSales += sales;
+				System.out.printf("%s\t        %d      %d      %s\n", menuName, price, qty, TeamFormat.amountFormat(sales));
+			}
+			System.out.println("=================================================");
+			System.out.println("총매출 : " + TeamFormat.amountFormat(totalSales));
+			System.out.println("=================================================");
 		}
 
-		// 결제별 매출 (일별)
-		public void printSalesPayment(String date) { // 신지혁
+		/*
+		 * @method name : printSalesPayment
+		 *
+		 * @date : 2019.03.16
+		 *
+		 * @author : 신지혁 
+		 *
+		 * @description : 일별 메뉴별, 현금, 카드별 매출액을 구한다  
+		 *
+		 * @parameters : String date
+		 *
+		 * @return : void 
+		 */
+		public void printSalesPayment(String date) { 
+			TeamLogger.info("printSalesPayment(String date)");
 			// 메뉴-카드(현금)-수량-금액
+			printSalesPayment(date, PayType.CASH);
+			printSalesPayment(date, PayType.CARD);
+			
+		}
+		
+		/*
+		 * @method name : printSalesPayment
+		 *
+		 * @date : 2019.03.16
+		 *
+		 * @author : 정일찬 
+		 *
+		 * @description : 일별 메뉴별, 결제별 매출액을 구한다  
+		 *
+		 * @parameters : String date, PayType payType
+		 *
+		 * @return : void 
+		 */
+		public void printSalesPayment(String date, PayType payType) {
+			TeamLogger.info("printSalesPayment(String date, PayType payType)");
+			String menuName = "";
+			int price = 0;
+			int qty = 0;
+			int sales = 0;
+			int totalSales = 0;
+
+			Iterator<Menu> itr = menuList.iterator();
+
+			System.out.println("일별매출 : " + payType);
+			System.out.println("DATE: " + date);
+			System.out.println("=================================================");
+			System.out.println("메뉴이름\t\t단가\t수량\t금액\t");
+			System.out.println("=================================================");
+
+			while (itr.hasNext()) {
+				Menu menu = itr.next();
+				menuName = menu.name;
+				price = menu.price;
+				qty = getQtyPerMenu(date, menu, payType);
+				sales = price * qty;
+				totalSales += sales;
+				System.out.printf("%s\t        %d      %d      %s\n", menuName, price, qty, TeamFormat.amountFormat(sales));
+			}
+			System.out.println("=================================================");
+			System.out.println("총매출 : " + TeamFormat.amountFormat(totalSales));
+			System.out.println("=================================================");
+			
+		}
+		
+		/*
+		 * @method name : getQtyPerMenu
+		 *
+		 * @date : 2019.03.15
+		 *
+		 * @author : 정일찬 
+		 *
+		 * @description : 일별, 메뉴멸 판매수량을 구한다 
+		 *
+		 * @parameters : String date, Menu menu, PayType payType
+		 *
+		 * @return : int
+		 */
+		public int getQtyPerMenu(String date, Menu menu, PayType payType) {
+			TeamLogger.info("getQtyPerMenu(String date, Menu menu, PayType payType)");
+			int qty = 0;
+			for (int i = 0; i < this.orders.size(); i++) {
+				if (TeamFormat.dateFormat(this.orders.get(i).orderDate)
+						.equalsIgnoreCase(date)) {
+					if (orders.get(i).menuItem.name.trim().equalsIgnoreCase(menu.name.trim())) {
+						if (orders.get(i).payment.getPayType().equals(payType)) {
+							qty++;
+						}
+					}
+				}
+			}
+			return qty;
+		}
+		
+		/*
+		 * @method name : getQtyPerMenu
+		 *
+		 * @date : 2019.03.15
+		 *
+		 * @author : 정일찬 
+		 *
+		 * @description : 일별, 메뉴별 판매수량을 구한다 
+		 *
+		 * @parameters : String date, Menu menu
+		 *
+		 * @return : int
+		 */
+		public int getQtyPerMenu(String date, Menu menu) {
+			TeamLogger.info("getQtyPerMenu(String date, Menu menu)");
+			int qty = 0;
+			System.out.println(this.orders.size());
+			for (int i = 0; i < this.orders.size(); i++) {
+				if (TeamFormat.dateFormat(this.orders.get(i).orderDate)
+						.equalsIgnoreCase(date)) {
+					if (this.orders.get(i).menuItem.name.trim().equalsIgnoreCase(menu.name.trim())) {
+							qty++;
+					}
+				}
+			}
+			return qty;
 		}
 
 		// 엑셀 export (메뉴별,결제별 매출)
@@ -614,23 +772,38 @@ public class Pos implements Serializable {
 
 		}
 
-		// 데이터 저장
-		public static void save(Object object, String pathFile) { // 권예지
+		/*
+		 * @method name : save
+		 *
+		 * @date : 2019.03.14
+		 *
+		 * @author : 권예지
+		 *
+		 * @description : Object 파일 save
+		 *
+		 * @parameters : Object object, String pathFile
+		 *
+		 * @return : void
+		 */
+		public static void save(Object object, String pathFile) { 
 			TeamLogger.info("save");
 			TeamFiles.saveObject(object, pathFile);
 		}
-
-		// 데이터 로드 (시스템 시작시 데이터 로드)
-//		public static void load(Object object, String pathFile) {// 권예지
-//			TeamLogger.info("load");
-//			File file = new File(pathFile);
-//			if (file.exists()) {
-//				object = (Pos) TeamFiles.loadObject(pathFile);
-//			}
-	//
-//		}
 		
-		public static Pos load(String pathFile) {// 권예지
+		/*
+		 * @method name : load
+		 *
+		 * @date : 2019.03.14
+		 *
+		 * @author : 권예지
+		 *
+		 * @description : Object 파일 load
+		 *
+		 * @parameters : String pathFile
+		 *
+		 * @return : void
+		 */
+		public static Pos load(String pathFile) {
 			TeamLogger.info("load");
 			Pos pos=null;
 			File file = new File(pathFile);

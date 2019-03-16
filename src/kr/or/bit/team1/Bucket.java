@@ -561,16 +561,16 @@ public class Bucket implements Serializable {
 			System.out.println("거래일시: " + TeamFormat.dateTimeFormat(new Date()));
 			System.out.println("거래유형: " + this.payment.getPayType());
 			System.out.println("할부기간: 일시불");
-			System.out.println("=====================================");
+			System.out.println("=================================================");
 			System.out.println("메뉴이름\t\t단가\t수량\t금액\t");
-			System.out.println("=====================================");
+			System.out.println("=================================================");
 			listOrders();
-			System.out.println("=====================================");
+			System.out.println("=================================================");
 			System.out.println("받을 금액 : " + totalAmount);
 			System.out.println("적립포인트: " + point);
 			System.out.println("받은 금액 : " + cashAmount);
 			System.out.println("거스름돈  : " + change);
-			System.out.println("=====================================");
+			System.out.println("=================================================");
 
 		}
 
@@ -580,17 +580,17 @@ public class Bucket implements Serializable {
 			System.out.println("거래일시: " + TeamFormat.dateTimeFormat(new Date()));
 			System.out.println("거래유형: " + order.payment.getPayType());
 			System.out.println("할부기간: 일시불");
-			System.out.println("=====================================");
+			System.out.println("=================================================");
 			System.out.println("메뉴이름\t\t단가\t수량\t금액\t");
-			System.out.println("=====================================");
+			System.out.println("=================================================");
 			System.out.printf("메뉴: %s\t        단가: %d   수량: %d   금액: %d\n", order.menuItem.name, order.menuItem.price, 1,
 					order.menuItem.price);
-			System.out.println("=====================================");
+			System.out.println("=================================================");
 			System.out.println("받을 금액 : " + totalAmount);
 			System.out.println("적립포인트: " + point);
 			System.out.println("받은 금액 : " + cashAmount);
 			System.out.println("거스름돈  : " + change);
-			System.out.println("=====================================");
+			System.out.println("=================================================");
 
 		}
 

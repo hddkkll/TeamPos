@@ -1,5 +1,6 @@
 package kr.or.bit.team1.util;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -24,6 +25,12 @@ public class TeamFormat {
 		String dateFormat=df.format(date);
 		return dateFormat;
 		
+	}
+	
+	public static String amountFormat(int amount) {
+		DecimalFormat df = new DecimalFormat("###,###");
+		String amountFormat = df.format(amount);
+		return amountFormat;
 	}
 
 }
