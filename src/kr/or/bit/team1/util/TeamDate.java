@@ -117,6 +117,13 @@ public class TeamDate {
 		return isLeap;
 		
 	}
+	 public static String DateString(Calendar date) {
+	        return date.get(Calendar.YEAR) + "년" + (date.get(Calendar.MONTH) + 1) + "월" + date.get(Calendar.DATE) + "일";
+	    }
+
+	    public static String DateString(Calendar date, String opr) {
+	        return date.get(Calendar.YEAR) + opr + (date.get(Calendar.MONTH) + 1) + opr + date.get(Calendar.DATE);
+	    }
 	
 
 }

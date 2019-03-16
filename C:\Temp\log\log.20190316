@@ -1,0 +1,302 @@
+2019.03.16 13:00:20  Table()
+2019.03.16 13:00:20  POS System v0.1
+2019.03.16 13:00:20  @copyleft TeamSoft 2019
+2019.03.16 13:00:20  Table()
+2019.03.16 13:00:20  Menu(String name, int price)
+2019.03.16 13:00:20  Menu(String name, int price)
+2019.03.16 13:00:20  Menu(String name, int price)
+2019.03.16 13:00:33  Orders :짜장
+2019.03.16 13:00:44  payCardAll
+2019.03.16 13:00:46  addMember
+2019.03.16 13:01:16  Table()
+2019.03.16 13:01:16  POS System v0.1
+2019.03.16 13:01:16  @copyleft TeamSoft 2019
+2019.03.16 13:01:16  Table()
+2019.03.16 13:01:16  Menu(String name, int price)
+2019.03.16 13:01:16  Menu(String name, int price)
+2019.03.16 13:01:16  Menu(String name, int price)
+2019.03.16 13:01:21  Orders :짜장
+2019.03.16 13:01:32  payCardAll
+2019.03.16 13:01:34  addMember
+2019.03.16 13:01:50  addCustomers
+2019.03.16 13:01:55  orderSum
+2019.03.16 13:01:55  orderSum
+2019.03.16 13:01:55  printReceipt : Bucket
+2019.03.16 13:01:55  listOrders
+2019.03.16 13:01:55  menuQty(Menu menu)
+2019.03.16 13:02:01  Orders :짜장
+2019.03.16 13:02:08  payCardAll
+2019.03.16 13:02:15  orderSum
+2019.03.16 13:02:15  orderSum
+2019.03.16 13:02:15  printReceipt : Bucket
+2019.03.16 13:02:15  listOrders
+2019.03.16 13:02:15  menuQty(Menu menu)
+2019.03.16 13:06:50  Table()
+2019.03.16 13:06:50  POS System v0.1
+2019.03.16 13:06:50  @copyleft TeamSoft 2019
+2019.03.16 13:06:50  Table()
+2019.03.16 13:06:50  Menu(String name, int price)
+2019.03.16 13:06:50  Menu(String name, int price)
+2019.03.16 13:06:50  Menu(String name, int price)
+2019.03.16 13:07:24  Orders :짜장
+2019.03.16 13:07:37  payCardAll
+2019.03.16 13:07:37  orderSum
+2019.03.16 13:07:43  addMember
+2019.03.16 13:07:49  addCustomers
+2019.03.16 13:07:54  orderSum
+2019.03.16 13:07:54  printReceipt : Bucket
+2019.03.16 13:07:54  listOrders
+2019.03.16 13:07:54  menuQty(Menu menu)
+2019.03.16 13:08:02  Orders :짜장
+2019.03.16 13:08:06  payCardAll
+2019.03.16 13:08:06  orderSum
+2019.03.16 13:08:12  printReceipt : Bucket
+2019.03.16 13:08:12  listOrders
+2019.03.16 13:08:12  menuQty(Menu menu)
+2019.03.16 13:10:59  Table()
+2019.03.16 13:10:59  POS System v0.1
+2019.03.16 13:10:59  @copyleft TeamSoft 2019
+2019.03.16 13:10:59  Table()
+2019.03.16 13:10:59  Menu(String name, int price)
+2019.03.16 13:10:59  Menu(String name, int price)
+2019.03.16 13:10:59  Menu(String name, int price)
+2019.03.16 13:16:18  Table()
+2019.03.16 13:16:18  POS System v0.1
+2019.03.16 13:16:18  @copyleft TeamSoft 2019
+2019.03.16 13:16:18  Table()
+2019.03.16 13:16:18  Menu(String name, int price)
+2019.03.16 13:16:18  Menu(String name, int price)
+2019.03.16 13:16:18  Menu(String name, int price)
+2019.03.16 13:18:39  Table()
+2019.03.16 13:18:39  POS System v0.1
+2019.03.16 13:18:39  @copyleft TeamSoft 2019
+2019.03.16 13:18:39  Table()
+2019.03.16 13:18:39  Menu(String name, int price)
+2019.03.16 13:18:39  Menu(String name, int price)
+2019.03.16 13:18:39  Menu(String name, int price)
+2019.03.16 13:24:08  Table()
+2019.03.16 13:24:08  POS System v0.1
+2019.03.16 13:24:08  @copyleft TeamSoft 2019
+2019.03.16 13:24:08  Table()
+2019.03.16 13:24:08  Menu(String name, int price)
+2019.03.16 13:24:08  Menu(String name, int price)
+2019.03.16 13:24:08  Menu(String name, int price)
+2019.03.16 13:24:35  Orders :짜장
+2019.03.16 13:25:40  payCash
+2019.03.16 13:25:40  getOrder
+2019.03.16 13:25:42  printReceipt : Bucket
+2019.03.16 13:25:42  listOrders
+2019.03.16 13:25:42  menuQty(Menu menu)
+2019.03.16 13:26:00  Orders :짜장
+2019.03.16 13:26:01  Orders :짬뽕
+2019.03.16 13:26:04  Orders :우동
+2019.03.16 14:26:02  Table()
+2019.03.16 14:26:02  POS System v0.1
+2019.03.16 14:26:02  @copyleft TeamSoft 2019
+2019.03.16 14:26:02  Table()
+2019.03.16 14:26:02  Menu(String name, int price)
+2019.03.16 14:26:02  Menu(String name, int price)
+2019.03.16 14:26:02  Menu(String name, int price)
+2019.03.16 14:26:13  Orders :짜장
+2019.03.16 14:26:14  Orders :짬뽕
+2019.03.16 14:26:15  Orders :우동
+2019.03.16 14:26:36  payCash
+2019.03.16 14:26:36  getOrder
+2019.03.16 14:26:37  printReceipt : Bucket
+2019.03.16 14:26:37  listOrders
+2019.03.16 14:26:37  menuQty(Menu menu)
+2019.03.16 14:26:37  menuQty(Menu menu)
+2019.03.16 14:26:37  menuQty(Menu menu)
+2019.03.16 14:59:51  Table()
+2019.03.16 14:59:51  POS System v0.1
+2019.03.16 14:59:51  @copyleft TeamSoft 2019
+2019.03.16 14:59:51  Table()
+2019.03.16 14:59:51  Menu(String name, int price)
+2019.03.16 14:59:51  Menu(String name, int price)
+2019.03.16 14:59:51  Menu(String name, int price)
+2019.03.16 14:59:56  Orders :짜장
+2019.03.16 14:59:56  Orders :짬뽕
+2019.03.16 14:59:57  Orders :우동
+2019.03.16 15:00:08  listOrders
+2019.03.16 15:00:08  menuQty(Menu menu)
+2019.03.16 15:00:08  menuQty(Menu menu)
+2019.03.16 15:00:08  menuQty(Menu menu)
+2019.03.16 15:00:17  getOrder
+2019.03.16 15:00:17  deleteOrder(Orders order)
+2019.03.16 15:00:17  changeQty(Menu menu, int qty)
+2019.03.16 15:00:17  menuQty(Menu menu)
+2019.03.16 15:00:17  getOrder
+2019.03.16 15:00:17  getOrder
+2019.03.16 15:04:38  Table()
+2019.03.16 15:04:38  POS System v0.1
+2019.03.16 15:04:38  @copyleft TeamSoft 2019
+2019.03.16 15:04:38  Table()
+2019.03.16 15:04:38  Menu(String name, int price)
+2019.03.16 15:04:38  Menu(String name, int price)
+2019.03.16 15:04:38  Menu(String name, int price)
+2019.03.16 15:04:46  Orders :짜장
+2019.03.16 15:04:47  Orders :짬뽕
+2019.03.16 15:04:47  Orders :우동
+2019.03.16 15:04:51  listOrders
+2019.03.16 15:04:51  menuQty(Menu menu)
+2019.03.16 15:04:51  menuQty(Menu menu)
+2019.03.16 15:04:51  menuQty(Menu menu)
+2019.03.16 15:05:04  getOrder
+2019.03.16 15:05:04  deleteOrder(Orders order)
+2019.03.16 15:05:08  Table()
+2019.03.16 15:05:08  POS System v0.1
+2019.03.16 15:05:08  @copyleft TeamSoft 2019
+2019.03.16 15:05:08  Table()
+2019.03.16 15:05:08  Menu(String name, int price)
+2019.03.16 15:05:08  Menu(String name, int price)
+2019.03.16 15:05:08  Menu(String name, int price)
+2019.03.16 15:05:13  Orders :짜장
+2019.03.16 15:05:14  Orders :짬뽕
+2019.03.16 15:05:14  Orders :우동
+2019.03.16 15:05:19  listOrders
+2019.03.16 15:05:19  menuQty(Menu menu)
+2019.03.16 15:05:19  menuQty(Menu menu)
+2019.03.16 15:05:19  menuQty(Menu menu)
+2019.03.16 15:05:24  getOrder
+2019.03.16 15:05:24  deleteOrder(Orders order)
+2019.03.16 15:05:24  changeQty(Menu menu, int qty)
+2019.03.16 15:05:24  menuQty(Menu menu)
+2019.03.16 15:05:24  getOrder
+2019.03.16 15:05:24  getOrder
+2019.03.16 15:18:02  Table()
+2019.03.16 15:18:02  POS System v0.1
+2019.03.16 15:18:02  @copyleft TeamSoft 2019
+2019.03.16 15:18:02  Table()
+2019.03.16 15:18:02  Menu(String name, int price)
+2019.03.16 15:18:02  Menu(String name, int price)
+2019.03.16 15:18:02  Menu(String name, int price)
+2019.03.16 15:18:10  Orders :짜장
+2019.03.16 15:18:10  Orders :짬뽕
+2019.03.16 15:18:11  Orders :우동
+2019.03.16 15:18:13  Orders :짜장
+2019.03.16 15:20:01  Table()
+2019.03.16 15:20:01  POS System v0.1
+2019.03.16 15:20:01  @copyleft TeamSoft 2019
+2019.03.16 15:20:01  Table()
+2019.03.16 15:20:01  Menu(String name, int price)
+2019.03.16 15:20:01  Menu(String name, int price)
+2019.03.16 15:20:01  Menu(String name, int price)
+2019.03.16 15:20:07  Orders :짜장
+2019.03.16 15:20:07  Orders :짬뽕
+2019.03.16 15:20:07  Orders :우동
+2019.03.16 15:20:09  Orders :짬뽕
+2019.03.16 15:20:56  Table()
+2019.03.16 15:20:56  POS System v0.1
+2019.03.16 15:20:56  @copyleft TeamSoft 2019
+2019.03.16 15:20:56  Table()
+2019.03.16 15:20:56  Menu(String name, int price)
+2019.03.16 15:20:56  Menu(String name, int price)
+2019.03.16 15:20:56  Menu(String name, int price)
+2019.03.16 15:21:00  Orders :짜장
+2019.03.16 15:21:00  Orders :짬뽕
+2019.03.16 15:21:01  Orders :우동
+2019.03.16 15:21:01  Orders :짜장
+2019.03.16 15:21:02  Orders :짬뽕
+2019.03.16 15:32:10  Table()
+2019.03.16 15:32:10  POS System v0.1
+2019.03.16 15:32:10  @copyleft TeamSoft 2019
+2019.03.16 15:32:10  Table()
+2019.03.16 15:32:10  Menu(String name, int price)
+2019.03.16 15:32:10  Menu(String name, int price)
+2019.03.16 15:32:10  Menu(String name, int price)
+2019.03.16 15:34:03  Table()
+2019.03.16 15:34:03  POS System v0.1
+2019.03.16 15:34:03  @copyleft TeamSoft 2019
+2019.03.16 15:34:03  Table()
+2019.03.16 15:34:03  Menu(String name, int price)
+2019.03.16 15:34:03  Menu(String name, int price)
+2019.03.16 15:34:03  Menu(String name, int price)
+2019.03.16 15:34:25  Table()
+2019.03.16 15:34:25  POS System v0.1
+2019.03.16 15:34:25  @copyleft TeamSoft 2019
+2019.03.16 15:34:25  Table()
+2019.03.16 15:34:25  Menu(String name, int price)
+2019.03.16 15:34:25  Menu(String name, int price)
+2019.03.16 15:34:25  Menu(String name, int price)
+2019.03.16 15:35:52  Table()
+2019.03.16 15:35:52  POS System v0.1
+2019.03.16 15:35:52  @copyleft TeamSoft 2019
+2019.03.16 15:35:52  Table()
+2019.03.16 15:35:52  Menu(String name, int price)
+2019.03.16 15:35:52  Menu(String name, int price)
+2019.03.16 15:35:52  Menu(String name, int price)
+2019.03.16 15:36:29  Table()
+2019.03.16 15:36:29  POS System v0.1
+2019.03.16 15:36:29  @copyleft TeamSoft 2019
+2019.03.16 15:36:29  Table()
+2019.03.16 15:36:29  Menu(String name, int price)
+2019.03.16 15:36:29  Menu(String name, int price)
+2019.03.16 15:36:29  Menu(String name, int price)
+2019.03.16 15:37:08  Table()
+2019.03.16 15:37:08  POS System v0.1
+2019.03.16 15:37:08  @copyleft TeamSoft 2019
+2019.03.16 15:37:08  Table()
+2019.03.16 15:37:08  Menu(String name, int price)
+2019.03.16 15:37:08  Menu(String name, int price)
+2019.03.16 15:37:08  Menu(String name, int price)
+2019.03.16 15:38:06  Table()
+2019.03.16 15:38:06  POS System v0.1
+2019.03.16 15:38:06  @copyleft TeamSoft 2019
+2019.03.16 15:38:06  Table()
+2019.03.16 15:38:06  Menu(String name, int price)
+2019.03.16 15:38:06  Menu(String name, int price)
+2019.03.16 15:38:06  Menu(String name, int price)
+2019.03.16 15:41:26  Table()
+2019.03.16 15:41:26  POS System v0.1
+2019.03.16 15:41:26  @copyleft TeamSoft 2019
+2019.03.16 15:41:26  Table()
+2019.03.16 15:41:26  Menu(String name, int price)
+2019.03.16 15:41:26  Menu(String name, int price)
+2019.03.16 15:41:26  Menu(String name, int price)
+2019.03.16 15:52:14  Table()
+2019.03.16 15:52:14  POS System v0.1
+2019.03.16 15:52:14  @copyleft TeamSoft 2019
+2019.03.16 15:52:14  Table()
+2019.03.16 15:52:14  Menu(String name, int price)
+2019.03.16 15:52:14  Menu(String name, int price)
+2019.03.16 15:52:14  Menu(String name, int price)
+2019.03.16 15:53:17  Table()
+2019.03.16 15:53:17  POS System v0.1
+2019.03.16 15:53:17  @copyleft TeamSoft 2019
+2019.03.16 15:53:17  Table()
+2019.03.16 15:53:17  Menu(String name, int price)
+2019.03.16 15:53:17  Menu(String name, int price)
+2019.03.16 15:53:17  Menu(String name, int price)
+2019.03.16 15:54:13  Table()
+2019.03.16 15:54:13  POS System v0.1
+2019.03.16 15:54:13  @copyleft TeamSoft 2019
+2019.03.16 15:54:13  Table()
+2019.03.16 15:54:13  Menu(String name, int price)
+2019.03.16 15:54:13  Menu(String name, int price)
+2019.03.16 15:54:13  Menu(String name, int price)
+2019.03.16 15:55:22  Table()
+2019.03.16 15:55:22  POS System v0.1
+2019.03.16 15:55:22  @copyleft TeamSoft 2019
+2019.03.16 15:55:22  Table()
+2019.03.16 15:55:22  Menu(String name, int price)
+2019.03.16 15:55:22  Menu(String name, int price)
+2019.03.16 15:55:22  Menu(String name, int price)
+2019.03.16 15:55:46  Table()
+2019.03.16 15:55:46  POS System v0.1
+2019.03.16 15:55:46  @copyleft TeamSoft 2019
+2019.03.16 15:55:46  Table()
+2019.03.16 15:55:46  Menu(String name, int price)
+2019.03.16 15:55:46  Menu(String name, int price)
+2019.03.16 15:55:46  Menu(String name, int price)
+2019.03.16 16:19:04  Table()
+2019.03.16 16:19:04  POS System v0.1
+2019.03.16 16:19:04  @copyleft TeamSoft 2019
+2019.03.16 16:19:04  Table()
+2019.03.16 16:19:04  Menu(String name, int price)
+2019.03.16 16:19:04  Menu(String name, int price)
+2019.03.16 16:19:04  Menu(String name, int price)
+2019.03.16 16:19:13  Orders :짜장
+2019.03.16 16:21:42  Orders :짜장
+2019.03.16 16:21:42  Orders :짜장
+2019.03.16 16:21:52  listOrders
+2019.03.16 16:21:52  menuQty(Menu menu)

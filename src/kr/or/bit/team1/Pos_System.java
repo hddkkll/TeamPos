@@ -2,9 +2,12 @@ package kr.or.bit.team1;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
+
+import kr.or.bit.team1.util.TeamDate;
 import kr.or.bit.team1.util.TeamLogger;
 
 enum OrderStatus {
@@ -53,9 +56,8 @@ class Pos implements Serializable {
         num = sc.nextLine();
         switch (num) {
         case "1":
-            System.out.print("메뉴 입력 : ");
-            date = sc.nextLine();
-            printSalesMenu(date);
+            
+            printSalesMenu();
             break;
         case "2":
             System.out.print("결제 방식 입력(카드or현금) : ");
@@ -249,12 +251,16 @@ class Pos implements Serializable {
     }
 	  
 	void selectTable() {
+	while(true) {
 		  viewTable(tableCount);
-		  int tableNum = 0;
+		  String tableSelect = "";
+		  //int tableNum = Integer.parseInt(tableSelect);
 		  System.out.println();
 		  System.out.println("테이블을 선택하세요!  0번: 뒤로가기");
-		  tableNum = Integer.parseInt(sc.nextLine());
-		  if(tableNum == 0) {
+		  tableSelect = sc.nextLine();
+		  int tableNum = Integer.parseInt(tableSelect);
+		  
+		  if(tableNum==0) {
 			  return;
 		  }
 		 if(tables.tablelist.get(tableNum)==null) {
@@ -263,12 +269,12 @@ class Pos implements Serializable {
 		  showMenu(tableNum);
 		
 		 //System.out.println(orderlist.listOrders()); listOrders(): 반환값을 스트링으로 리턴해줄 것 ! 
-		 
+	}
 		 
 		 }
 	
 	public int displayMenu() {
-		 int menuNum = 0;
+		 String menuSelect ="";
 			System.out.println("=====POS SYSTEM=====");
 			System.out.println();
 			System.out.println("1.판매관리");
@@ -279,22 +285,23 @@ class Pos implements Serializable {
 		    System.out.println("6.시스템종료");
 		    
 		    System.out.print("번호를 입력하세요:");
-		    menuNum = Integer.parseInt(sc.nextLine());
+		    menuSelect = sc.nextLine();
+		    int menuNum = Integer.parseInt(menuSelect);
 		return menuNum;
 	}
 
 	 public void posStart() {
 		
-	  
+	 while(true) { 
 	   switch(displayMenu()) {
 	    
 	    case 1:
 	    	 selectTable();
 	    	 
-	    	  break;
+             break;
 	    	  
 	    case 2: 
-	    	totalsales(); 
+	    	 totalsales();
 	    	break;
 	    	  
 	    case 3:
@@ -311,12 +318,10 @@ class Pos implements Serializable {
             break;      
 	          
 	    case 6 : 
-	    	break;
-	    }
-	   System.exit(0);
+	    	System.exit(0);
 	    	
-	    	
-	    
+	   }	
+	 }
 		
 	}
 	 void createTable(int tableNum) {
@@ -326,13 +331,14 @@ class Pos implements Serializable {
 		  tables.tablelist.put(tableNum,orderList);
 	 }
 	
-	 void showMenu(int tableNum) {
-		  int menuNum = 0; 
+	 void showMenu(Integer tableNum) {
+		  String menuSelect = ""; 
+		  int menuNum =0;
 		  
 		  
 		 
 		   
-		 while(true) {
+		a: while(true) {
 			 System.out.println("메뉴를 선택하세요");
 			 System.out.println("1.주문하기");
 			 System.out.println("2.주문삭제");
@@ -344,19 +350,21 @@ class Pos implements Serializable {
 			 System.out.println("8.결제하기");
 			 System.out.println("0.뒤로가기");
 			 
-			 menuNum = Integer.parseInt(sc.nextLine());
-			 
+			 menuSelect = sc.nextLine();
+			 menuNum = Integer.parseInt(menuSelect);
+
 			 while(menuNum<0 || menuNum>8) {
 				 System.out.println("잘못입력하셨습니다. 다시 입력하세요");
-				 menuNum = Integer.parseInt(sc.nextLine());
+				 menuSelect = sc.nextLine();
 			 }
 			 
 			 
-			 switch(menuNum) {
-			 case 0 :
-			    return;
+			 switch(menuSelect) {
+			 case "0" :
+				  
+			    break a;
 			 
-			 case 1 :
+			 case "1" :
 				
 			        System.out.println("======== MENU ========");
 			        for(int i =0; i< menuList.size();i++) {
@@ -375,6 +383,7 @@ class Pos implements Serializable {
 			        }
 		    	  
 		    	 tables.tablelist.get(tableNum).orderlist.add(new Orders(getMenu(menuList.get(choiceNum -1).name)));
+		    	  menuList.get(choiceNum-1).salesCnt++;
 		    	 System.out.println(menuList.get(choiceNum -1).name+"이(가) 주문되었습니다. "); 
 		    			  
 		    		  
@@ -383,7 +392,7 @@ class Pos implements Serializable {
 		       
 		    	     break;
 		            
-			 case 2 :
+			 case "2" :
 		    	   System.out.println("취소할 주문을 선택하세요");
 		    	   
 		    	   
@@ -396,11 +405,22 @@ class Pos implements Serializable {
 		           }
 	           
 		           tables.tablelist.get(tableNum).deleteOrder(tables.tablelist.get(tableNum).getOrder(getMenu(menuName2)));
+		           for(int i = 0; i<menuList.size();i++) {
+		        	   if(menuList.get(i).name.equals(menuName2)) {
+		        		   menuList.get(i).salesCnt--;
+		        		   
+		        	   }
+		        	   
+		        	   
+		           }
+		        	   
+		           
+		           
 		           System.out.println(menuName2+"이(가) 취소되었습니다.");
 		        
 		        	   
 		    	   break;
-		     case 3 :
+		     case "3" :
 		    	 
 		    	 tables.tablelist.get(tableNum).deleteOrderAll();
 		    	 System.out.println("모든 주문이 삭제되었습니다.");
@@ -412,7 +432,7 @@ class Pos implements Serializable {
 		     
 		     
 		     
-		     case 4 :
+		     case "4" :
 		          System.out.println("========주문 내역========");
 		          if(tables.tablelist.get(tableNum).orderlist.isEmpty()) {
 		        	  System.out.println("주문 내역이 없습니다.");
@@ -421,7 +441,7 @@ class Pos implements Serializable {
 		          }
 		          break;
 		     
-		     case 5 :
+		     case "5" :
 		    	 System.out.println("수량을 변경할 메뉴를 선택하세요");
 		    	 String menuName3 = sc.nextLine();
 		    	 System.out.println("추가하고 싶은 수량을 입력하세요");
@@ -436,30 +456,31 @@ class Pos implements Serializable {
 		    	 }
 		          break;
 		    	 
-		     case 6:
+		     case "6":
 	                System.out.println("이동할곳의 테이블번호를 입력하세요");
 	                int toTable = Integer.parseInt(sc.nextLine());
 	                tables.moveTable(tableNum, toTable);
 	                break;
-	         case 7:
+	         case "7":
 	                System.out.println("합석할 테이블을 선택하세요");
 	                toTable = Integer.parseInt(sc.nextLine());
 	                tables.mergeTable(tableNum, toTable);
 	                
 	                break;	 
 	                
-	         case 8:
-	        	   int payMenu = 0;
+	         case "8":
+	        	   String paySelect = "";
 	        
 	        	   System.out.println("카드결제와 현금결제중에 선택하세요!");
 	        	   System.out.println("1.카드결제");
 	        	   System.out.println("2.현금결제");
 	        	   System.out.println("3.분할계산");
-	        	   payMenu = Integer.parseInt(sc.nextLine());
+	        	   paySelect = sc.nextLine();
+	        	   int payMenu = Integer.parseInt(paySelect);
                    
-	        	   switch(payMenu) {
+	        	   switch(paySelect) {
 	        	   
-	        	   case 1:
+	        	   case "1":
 	        		   
 	        		      tables.tablelist.get(tableNum).payCardAll(customers);
 
@@ -467,7 +488,7 @@ class Pos implements Serializable {
 	        		   
 	        		   break;
 	        		   
-	        	   case 2:
+	        	   case "2":
 	        		   int amount = 0;
 	        		   
 	        		   System.out.println(tables.tablelist.get(tableNum).orderSum()+"원입니다. 돈을 주세요:");
@@ -478,7 +499,7 @@ class Pos implements Serializable {
                       tables.tablelist.put(tableNum,new Bucket());
 	        		   
 	        		    break;
-	        	   case 3:
+	        	   case "3":
 	        		   System.out.println();
 	        		  tables.tablelist.get(tableNum).payDutch(customers);
 	        	       
@@ -497,25 +518,25 @@ class Pos implements Serializable {
 	 
 	 void tableManage() {
 			while (true) {
-				int num = 0;
+				String num = "";
 				System.out.println("테이블 관리 입니다");
 				System.out.println("현재 테이블의 개수는 "+ tableCount+"개 입니다.");
 				System.out.println("1. 테이블추가");
 				System.out.println("2. 테이블삭제");
 				System.out.println("0. 종료");
 				System.out.println("번호를 입력하세요");
-				num = Integer.parseInt(sc.nextLine());
+				num = sc.nextLine();
 
 				switch (num) {
-				case 0:
+				case "0":
 					posStart();
-				case 1:
+				case "1":
 					System.out.println("테이블 1개를 추가합니다");
 				    
 					   tableCount++;
 		
 					break;
-				case 2:
+				case "2":
 					System.out.println("테이블 1개를 삭제합니다");
 					tableCount--;
 					break;
@@ -638,8 +659,19 @@ class Pos implements Serializable {
 
 	// 매출
 	// 메뉴별 매출 (일별)
-	public void printSalesMenu(String date) { // 강기훈
+	public void printSalesMenu() { // 강기훈
 		// 메뉴-수량-금액
+	  // Calendar cal = Calendar.getInstance();
+		TeamDate today = new TeamDate();
+		
+	   String date2 = today.DateString(Calendar.getInstance(),".");
+       System.out.println("Date: "+date2);
+		
+		
+	  for(int i =0; i<menuList.size();i++) {
+		System.out.println("메뉴: "+menuList.get(i).name+"  수량:"+menuList.get(i).salesCnt + " 금액: "+ menuList.get(i).price* menuList.get(i).salesCnt+"원");;
+		
+	  }
 	}
 
 	// 결제별 매출 (일별)
