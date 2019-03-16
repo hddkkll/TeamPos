@@ -59,7 +59,8 @@ public class Test {
 
 		String date = TeamFormat.dateFormat(new Date());
 //		pos.printSalesMenu(date);
-		pos.printSalesPayment(date);
+		//pos.printSalesPayment(date);
+		pos.exportToExcel(date);
 //		String menuName = "";
 //		int price = 0;
 //		int qty = 0;

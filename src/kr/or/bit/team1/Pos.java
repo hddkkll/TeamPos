@@ -767,9 +767,39 @@ public class Pos implements Serializable {
 			return qty;
 		}
 
-		// 엑셀 export (메뉴별,결제별 매출)
-		public void exportToExcel(String salesType) {// 일찬님
+		/*
+		 * @method name : exportToExcel
+		 *
+		 * @date : 2019.03.15
+		 *
+		 * @author : 정일찬 
+		 *
+		 * @description : 일별 판매수량을 엑셀파일로 저장한다. 
+		 *
+		 * @parameters : String date
+		 *
+		 * @return : void
+		 */
+		public void exportToExcel(String date) {
+			String menuName = "";
+			int price = 0;
+			int qty = 0;
+			int sales = 0;
 
+			List<Sales> list=new ArrayList<Sales>();
+			Iterator<Menu> itr = menuList.iterator();
+
+			while (itr.hasNext()) {
+				Menu menu = itr.next();
+				menuName = menu.name;
+				price = menu.price;
+				qty = getQtyPerMenu(date, menu);
+				sales = price * qty;
+				list.add(new Sales(date, menuName, price, qty, sales));
+			}
+			
+			TeamFiles.saveExcel(list, "C:\\temp\\Sales.xlsx");
+			//TeamFiles.saveExcel(list, "Sales.xlsx");
 		}
 
 		/*
