@@ -224,7 +224,7 @@ public class Bucket implements Serializable {
 					Pos.amount = Pos.amount + amount - change;
 
 					if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
-						point = addPoints(customer, phoneNumber, amount);
+						point = addPoints(customer, phoneNumber, orderSum());
 					}
 
 				} else if (choice.equalsIgnoreCase("3")) {
@@ -237,7 +237,7 @@ public class Bucket implements Serializable {
 					Pos.amount = Pos.amount + amount - change;
 
 					if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
-						point = addPoints(customer, phoneNumber, amount);
+						point = addPoints(customer, phoneNumber, orderSum());
 					}
 
 				} else {
@@ -275,7 +275,7 @@ public class Bucket implements Serializable {
 		public void payCardAll(Customers customer) { // 이힘찬
 			TeamLogger.info("payCardAll");
 			int receivable = orderSum();
-			int amount = 0;
+			int amount = receivable;
 			int point = 0;
 			int change = 0; // 거스름돈을 저장할 공간 선언
 
@@ -292,7 +292,7 @@ public class Bucket implements Serializable {
 				}
 				if (customer.customer.containsKey(phoneNumber)) {
 					// int point = customer.customer.get(s);
-					receivable += point;
+					amount += point;
 					this.customer = customer.findCustomers(phoneNumber);
 				} else {
 					System.out.println("해당 고객이 없습니다.");
@@ -325,7 +325,7 @@ public class Bucket implements Serializable {
 			}
 			this.payment = new CardPayments();
 
-			printReceipt(receivable, point, receivable, change);// 영수증 출력
+			printReceipt(receivable, point, amount, change);// 영수증 출력
 
 		}
 
@@ -381,7 +381,7 @@ public class Bucket implements Serializable {
 					Pos.amount = Pos.amount + amount - change;
 
 					if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
-						point = addPoints(customer, phoneNumber, amount);
+						point = addPoints(customer, phoneNumber, this.orderlist.get(i).menuItem.price);
 					}
 
 				} else if (choice.equalsIgnoreCase("3")) {
@@ -394,7 +394,7 @@ public class Bucket implements Serializable {
 					Pos.amount = Pos.amount + amount - change;
 
 					if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) { // <enter>일때 에러가 나는 문제 미해결
-						point = addPoints(customer, phoneNumber, amount);
+						point = addPoints(customer, phoneNumber, this.orderlist.get(i).menuItem.price);
 					}
 
 				} else {
@@ -430,8 +430,9 @@ public class Bucket implements Serializable {
 
 		public void payCard(int orderId, Customers customer) {// 권예지
 			int i = this.orderlist.indexOf(this.getOrder(orderId));
-
-			int amount = 0;
+			
+			int receivable=this.orderlist.get(i).menuItem.price;
+			int amount = receivable;
 			int point = 0;
 			int change = 0; // 거스름돈을 저장할 공간 선언
 
@@ -443,11 +444,13 @@ public class Bucket implements Serializable {
 				System.out.println("고객 핸드폰번호를 입력하세요");
 
 				String phoneNumber = sc.nextLine();
+				
 				if (TeamFormat.iscellPhoneMetPattern(phoneNumber)) {
-					point = usePoints(phoneNumber, customer);
+					point = -1*usePoints(phoneNumber, customer);
 				}
 				if (customer.customer.containsKey(phoneNumber)) {
 					// int point = customer.customer.get(s);
+					amount += point;
 					this.customer = customer.findCustomers(phoneNumber);
 				} else {
 					System.out.println("해당 고객이 없습니다.");
@@ -478,7 +481,7 @@ public class Bucket implements Serializable {
 			this.orderlist.get(i).orderStatus = OrderStatus.PAYED;
 			this.payment = new CardPayments();
 
-			printReceipt(this.orderlist.get(i).menuItem.price, point, amount, change);// 영수증 출력
+			printReceipt(receivable, point, amount, change);// 영수증 출력
 
 		}
 
@@ -567,6 +570,8 @@ public class Bucket implements Serializable {
 			System.out.println("적립포인트: " + point);
 			System.out.println("받은 금액 : " + cashAmount);
 			System.out.println("거스름돈  : " + change);
+			System.out.println("=====================================");
+
 		}
 
 		public void printReceipt(Orders order, int totalAmount, int point, int cashAmount, int change) {
@@ -585,6 +590,8 @@ public class Bucket implements Serializable {
 			System.out.println("적립포인트: " + point);
 			System.out.println("받은 금액 : " + cashAmount);
 			System.out.println("거스름돈  : " + change);
+			System.out.println("=====================================");
+
 		}
 
 		/*
