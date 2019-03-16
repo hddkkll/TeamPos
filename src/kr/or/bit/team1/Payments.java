@@ -5,4 +5,6 @@ public interface Payments {
 //		카드
 //		분할계산
 		public void pay();
+		
+		public PayType getPayType();
 }

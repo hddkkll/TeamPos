@@ -10,14 +10,16 @@ public class Orders implements Serializable {
 	static Long orderId = 0L;
 	Date orderDate;
 	Menu menuItem;
-	// OrderStatus orderStatus;
+	Payments payment;
+    OrderStatus orderStatus;
 
 	public Orders(Menu menuItem) {
 		TeamLogger.info("Orders :" + menuItem.name);
 		orderId++;
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
-		// this.orderStatus = OrderStatus.ORDER;
+		this.payment = new CashPayments();
+		 this.orderStatus = OrderStatus.ORDER;
 	}
 
 	public Orders(Menu menuItem, Payments payment) {
@@ -25,7 +27,8 @@ public class Orders implements Serializable {
 		orderId++;
 		this.orderDate = new Date();
 		this.menuItem = menuItem;
-		// this.orderStatus = OrderStatus.ORDER;
+		this.payment = new CashPayments();
+		this.orderStatus = OrderStatus.ORDER;
 	}
 
 	@Override
