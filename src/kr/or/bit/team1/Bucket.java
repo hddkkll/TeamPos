@@ -191,7 +191,7 @@ public class Bucket implements Serializable {
 		public void payCashAll(int amount, Customers customer) {
 			TeamLogger.info("payCashAll");
 			int point = 0;
-			if (amount > orderSum()) {
+			if (amount >= orderSum()) {
 				int change = 0; // 거스름돈을 저장할 공간 선언
 
 				Scanner sc = new Scanner(System.in);

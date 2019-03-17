@@ -139,6 +139,7 @@ class Pos implements Serializable {
 			case "2":
 				System.out.println("수정할 메뉴를 입력하세요 ");
 				oldName = sc.nextLine();
+				
 
 				System.out.println("새로운 메뉴를 입력하세요 ");
 				menuName = sc.nextLine();
@@ -442,6 +443,12 @@ class Pos implements Serializable {
 		          break;
 		     
 		     case "5" :
+		    	 if(tables.tablelist.get(tableNum).orderlist.isEmpty()) {
+		        	  System.out.println("주문 내역이 없습니다.");
+		          }else {
+		          tables.tablelist.get(tableNum).listOrders();
+		          }
+		    	 
 		    	 System.out.println("수량을 변경할 메뉴를 선택하세요");
 		    	 String menuName3 = sc.nextLine();
 		    	 System.out.println("추가하고 싶은 수량을 입력하세요");
@@ -550,18 +557,7 @@ class Pos implements Serializable {
 
 	// 판매관리, 매출관리, 회원관리, 메뉴관리, 테이블관리, 시스템 종료
 	// 테이블 주문 합치기
-	    public void mergeTable(int fromTable, int toTable) {// 권예지
-	        Bucket temp = new Bucket();
-	        temp = tables.tablelist.get(fromTable);
-	        Bucket temp2 = new Bucket();
-	        temp2 = tables.tablelist.get(toTable);
-
-	        for (int i = 0; i < temp2.orderlist.size(); i++)
-	            temp2.orderlist.add(temp.orderlist.get(i));
-	        
-	        for (int i = 0; i < temp2.orderlist.size(); i++)
-	            temp.orderlist.remove(i);
-	    }
+	   
 	// 주문(테이블)
 	public void orderTable(Integer tableNo, Menu menu) { // 일찬님
 		// 테이블에 order add

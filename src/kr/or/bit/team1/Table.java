@@ -75,7 +75,7 @@ public class Table implements Serializable {
 			Bucket temp = new Bucket();
 			temp = tablelist.get(fromTable);
 			tablelist.put(toTable, temp);
-			tablelist.put(fromTable, null);
+			tablelist.put(fromTable,new Bucket());
 		}
 
 		/*
@@ -99,9 +99,11 @@ public class Table implements Serializable {
 				Bucket temp2 = new Bucket();
 				temp2 = tablelist.get(toTable);
 
-				for (int i = 0; i < temp2.orderlist.size(); i++)
-					temp.orderlist.add(temp2.orderlist.get(i));
-				
+				for (int i = 0; i < temp.orderlist.size(); i++)
+					tablelist.get(toTable).orderlist.add(temp.orderlist.get(i));
+				 
+		        for (int i = 0; i < temp.orderlist.size(); i++)
+		        	tablelist.get(fromTable).orderlist.remove(i);
 			}
 
 		}
