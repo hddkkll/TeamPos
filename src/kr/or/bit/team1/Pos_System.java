@@ -1,13 +1,17 @@
 package kr.or.bit.team1;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
 
 import kr.or.bit.team1.util.TeamDate;
+import kr.or.bit.team1.util.TeamFiles;
+import kr.or.bit.team1.util.TeamFormat;
 import kr.or.bit.team1.util.TeamLogger;
 
 enum OrderStatus {
@@ -674,21 +678,119 @@ class Pos implements Serializable {
 	public void printSalesPayment(String date) { // 신지혁
 		// 메뉴-카드(현금)-수량-금액
 	}
-
-	// 엑셀 export (메뉴별,결제별 매출)
-	public void exportToExcel(String salesType) {// 일찬님
-
+	/*
+	 * @method name : getQtyPerMenu
+	 *
+	 * @date : 2019.03.15
+	 *
+	 * @author : 정일찬 
+	 *
+	 * @description : 일별, 메뉴멸 판매수량을 구한다 
+	 *
+	 * @parameters : String date, Menu menu, PayType payType
+	 *
+	 * @return : int
+	 */
+	public int getQtyPerMenu(String date, Menu menu, PayType payType) {
+		TeamLogger.info("getQtyPerMenu(String date, Menu menu, PayType payType)");
+		int qty = 0;
+		for (int i = 0; i < this.orders.size(); i++) {
+			if (TeamFormat.dateFormat(this.orders.get(i).orderDate)
+					.equalsIgnoreCase(date)) {
+				if (orders.get(i).menuItem.name.trim().equalsIgnoreCase(menu.name.trim())) {
+					if (orders.get(i).payment.getPayType().equals(payType)) {
+						qty++;
+					}
+				}
+			}
+		}
+		return qty;
+	}
+	
+	/*
+	 * @method name : getQtyPerMenu
+	 *
+	 * @date : 2019.03.15
+	 *
+	 * @author : 정일찬 
+	 *
+	 * @description : 일별, 메뉴별 판매수량을 구한다 
+	 *
+	 * @parameters : String date, Menu menu
+	 *
+	 * @return : int
+	 */
+	public int getQtyPerMenu(String date, Menu menu) {
+		TeamLogger.info("getQtyPerMenu(String date, Menu menu)");
+		int qty = 0;
+		System.out.println(this.orders.size());
+		for (int i = 0; i < this.orders.size(); i++) {
+			if (TeamFormat.dateFormat(this.orders.get(i).orderDate)
+					.equalsIgnoreCase(date)) {
+				if (this.orders.get(i).menuItem.name.trim().equalsIgnoreCase(menu.name.trim())) {
+						qty++;
+				}
+			}
+		}
+		return qty;
 	}
 
+
+	/*
+	 * @method name : exportToExcel
+	 *
+	 * @date : 2019.03.15
+	 *
+	 * @author : 정일찬 
+	 *
+	 * @description : 일별 판매수량을 엑셀파일로 저장한다. 
+	 *
+	 * @parameters : String date
+	 *
+	 * @return : void
+	 */
+	public void exportToExcel(String date) {
+		String menuName = "";
+		int price = 0;
+		int qty = 0;
+		int sales = 0;
+
+		List<Sales> list=new ArrayList<Sales>();
+		Iterator<Menu> itr = menuList.iterator();
+
+		while (itr.hasNext()) {
+			Menu menu = itr.next();
+			menuName = menu.name;
+			price = menu.price;
+			qty = getQtyPerMenu(date, menu);
+			sales = price * qty;
+			list.add(new Sales(date, menuName, price, qty, sales));
+		}
+		
+		TeamFiles.saveExcel(list, "C:\\temp\\Sales.xlsx");
+		//TeamFiles.saveExcel(list, "Sales.xlsx");
+	}
 	// 데이터 저장
-	public void save(Object object, String pathFile) { // 권예지
+	public static void save(Object object, String pathFile) { 
+		TeamLogger.info("save");
+		TeamFiles.saveObject(object, pathFile);
 	}
 
 	// 데이터 로드 (시스템 시작시 데이터 로드)
-	public void load(Object object, String pathFile) {// 권예지
+	public static Pos load(String pathFile) {
+		TeamLogger.info("load");
+		Pos pos=null;
+		File file = new File(pathFile);
+		if (file.exists()) {
+			System.out.println("로드 : ");
+			pos = (Pos) TeamFiles.loadObject(pathFile);
+		}
+		return pos;
 
 	}
+
 }
+
 
 public class Pos_System {
 	
